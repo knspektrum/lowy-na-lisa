@@ -1,0 +1,4 @@
+# default_fqbn: rp2040:rp2040:rpipico2w
+# default_port: /dev/sda
+default_fqbn: esp32:esp32:esp32c3
+default_port: /dev/ttyUSB0
