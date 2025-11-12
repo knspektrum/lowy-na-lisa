@@ -1,6 +1,4 @@
-#ifndef ESP32
-#define SERVER
-#endif
+//#define SERVER
 
 #include <SPI.h>
 #ifdef ESP32
@@ -55,92 +53,44 @@ void nRF905_onRxInvalid(nRF905* device) {
 
 
 
-#ifdef ESP32
-// ESP32C3 devkit configuration
-#define SS SS            // SPI SS (chip select)
-#define CE GPIO_NUM_9    // CE (standby)
-#define TRX GPIO_NUM_3   // TRX (RX/TX mode)
-#define PWR GPIO_NUM_18  // PWR (power down)
-#define CD GPIO_NUM_1    // CD (carrier detect / collision avoid)
-#define DR GPIO_NUM_8    // DR (data ready)
-#define AM GPIO_NUM_2    // AM (address match)
+// ESP32 D1 R32 devkit configuration
+// #define SS SS            // SPI SS (chip select)
+#define CE GPIO_NUM_16   // CE (standby)
+#define TRX GPIO_NUM_27  // TRX (RX/TX mode)
+#define PWR GPIO_NUM_14  // PWR (power down)
+#define CD GPIO_NUM_17   // CD (carrier detect / collision avoid)
+#define DR GPIO_NUM_26   // DR (data ready)
+#define AM GPIO_NUM_25   // AM (address match)
 
-#define LED GPIO_NUM_7
-#elifdef PICO_RP2350
-// pico 2w configuration
-#define SS 17   // SPI SS (chip select)
-#define CE 13   // CE (standby)
-#define TRX 11  // TRX (RX/TX mode)
-#define PWR 12  // PWR (power down)
-#define CD 20   // CD (carrier detect / collision avoid)
-#define DR 14   // DR (data ready)
-#define AM 15   // AM (address match)
 
-#define LED 21
-#endif
+#define LED GPIO_NUM_12
 
 
 void setup() {
-  pinMode(LED, OUTPUT);
-  digitalWrite(LED, digitalRead(LED) ? LOW : HIGH);
-  delay(1000);
-  pinMode(LED, OUTPUT);
-  digitalWrite(LED, digitalRead(LED) ? LOW : HIGH);
-  delay(1000);
-  pinMode(LED, OUTPUT);
-  digitalWrite(LED, digitalRead(LED) ? LOW : HIGH);
-  delay(1000);
-#ifdef PICO_RP2350
-  Serial.begin();
-#else
   Serial.begin(115200);
-#endif
 
   Serial.println("spi begin...");
 
 
-#ifdef PICO_RP2350
   SPI.begin();
-  SPI.setSCK(18);
-  SPI.setTX(19);
-  SPI.setRX(16);
-  SPI.setCS(SS);
-#else
-  SPI.begin();
-#endif
 
   Serial.println(F("ok"));
 
   Serial.println(F("transceiver begin..."));
-  // #ifdef ESP32
-  // transceiver.begin(
-  //   &SPI,               // SPI bus to use (SPI, SPI1, SPI2 etc)
-  //   10000000,           // SPI Clock speed (10MHz)
-  //   SS,                 // SPI SS
-  //   NRF905_PIN_UNUS  
-  //   TRX,                // TRX (RX/TX mode)
-  //   NRF905_PIN_UNUS  
-  //   NRF905_PIN_UNUSED,  // CD (collision avoid)
-  //   NRF905_PIN_UNUSED,  // DR (data ready)
-  //   NRF905_PIN_UNUSED,  // AM (address match)
-  //   NULL,               // Interrupt function for DR
-  //   NULL                // Interrupt function for AM
-  // );
-  // #else
-    transceiver.begin(
-      &SPI,           // SPI bus to use (SPI, SPI1, SPI2 etc)
-      10000000,       // SPI Clock speed (10MHz)
-      SS,             // SPI SS
-      CE,             // CE (standby)
-      TRX,            // TRX (RX/TX mode)
-      PWR,            // PWR (power down)
-      CD,             // CD (collision avoid)
-      DR,             // DR (data ready)
-      AM,             // AM (address match)
-      nRF905_int_dr,  // Interrupt function for DR
-      nRF905_int_am   // Interrupt function for AM
-    );
-  // #endif
+  transceiver.begin(
+    &SPI,           // SPI bus to use (SPI, SPI1, SPI2 etc)
+    10000000,       // SPI Clock speed (10MHz)
+    SS,             // SPI SS
+    CE,             // CE (standby)
+    TRX,            // TRX (RX/TX mode)
+    PWR,            // PWR (power down)
+    CD,             // CD (collision avoid)
+    DR,             // DR (data ready)
+    AM,             // AM (address match)
+    nRF905_int_dr,  // Interrupt function for DR
+    nRF905_int_am   // Interrupt function for AM
+  );
+
   Serial.println(F("ok"));
 
 
@@ -154,6 +104,7 @@ void setup() {
   Serial.println(F("ok"));
 
 
+  transceiver.setTransmitPower(NRF905_PWR_10);
 
   uint8_t regs[NRF905_REGISTER_COUNT];
   Serial.println(F("REGS"));
@@ -176,8 +127,6 @@ void setup() {
     Serial.print(regs[i], HEX);
   Serial.println(F("\nREGS END"));
 
-  Serial.println(F("set band..."));
-  transceiver.setBand(NRF905_BAND_433);
 
   Serial.println(F("REGS"));
   transceiver.getConfigRegisters(regs);
@@ -210,12 +159,12 @@ void loop() {
 
   // Wait for data
   while (packetStatus == PACKET_NONE) {
-// #ifdef ESP32
-//     transceiver.poll();
-// #endif
-    pinMode(LED, OUTPUT);
-    digitalWrite(LED, digitalRead(LED) ? LOW : HIGH);
-    delay(100);
+    // #ifdef ESP32
+    //     transceiver.poll();
+    // #endif
+    // pinMode(LED, OUTPUT);
+    // digitalWrite(LED, digitalRead(LED) ? LOW : HIGH);
+    // delay(100);
   }
 
   if (packetStatus != PACKET_OK) {
@@ -294,7 +243,7 @@ void loop() {
 }
 #else
 
-#define TIMEOUT 500  // 500ms ping timeout
+#define TIMEOUT 500 * 1000  // 500ms ping timeout
 
 void loop() {
   pinMode(LED, OUTPUT);
@@ -332,7 +281,7 @@ void loop() {
   // Write reply data and destination address to radio IC
   transceiver.write(TXADDR, buffer, sizeof(buffer));
 
-  uint32_t startTime = millis();
+  uint32_t startTime = micros();
 
   // Send the data (send fails if other transmissions are going on, keep trying until success) and enter RX mode on completion
   while (!transceiver.TX(NRF905_NEXTMODE_RX, true)) {
@@ -347,7 +296,7 @@ void loop() {
   uint8_t success;
 
   // Wait for reply with timeout
-  uint32_t sendStartTime = millis();
+  unsigned long sendStartTime = micros();
   while (1) {
     // Uncomment this line if the library is running in polling mode
     //		transceiver.poll();
@@ -355,7 +304,7 @@ void loop() {
     success = packetStatus;
     if (success != PACKET_NONE)
       break;
-    else if (millis() - sendStartTime > TIMEOUT)
+    else if (micros() - sendStartTime > TIMEOUT)
       break;
   }
 
@@ -366,7 +315,7 @@ void loop() {
     Serial.println(F("Invalid packet!"));
     invalids++;
   } else {
-    uint16_t totalTime = millis() - startTime;
+    unsigned long totalTime = micros() - startTime;
     replies++;
 
     // If success toggle LED and send ping time over serial
@@ -374,7 +323,7 @@ void loop() {
 
     Serial.print(F("Ping time: "));
     Serial.print(totalTime);
-    Serial.println(F("ms"));
+    Serial.println(F("micros"));
 
     // Get the reply data
     uint8_t replyBuffer[PAYLOAD_SIZE];
@@ -410,7 +359,5 @@ void loop() {
   Serial.print(F(" Bad      "));
   Serial.println(badData);
   Serial.println(F("------"));
-
-  delay(500);
 }
 #endif
