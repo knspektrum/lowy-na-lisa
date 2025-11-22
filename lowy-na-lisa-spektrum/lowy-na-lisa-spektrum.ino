@@ -53,11 +53,13 @@ public:
     return sendCommand(buf);
   }
 
-  int setBaudRate(int n) {
+  int setBaudRate(int n, int baud) {
     // 0–9 according to datasheet
     char buf[20];
     sprintf(buf, "AT+SPR=%d", n);
-    return sendCommand(buf);
+    int res = sendCommand(buf);
+    serial.updateBaudRate(baud);
+    return res;
   }
 
   int setSyncWord(const char *hexString) {
@@ -147,7 +149,7 @@ HopeRF radio(Serial1, CONFIG_PIN);
 
 void setup() {
   Serial.begin(115200);
-  radio.begin(9600);
+  radio.begin(115200);
 
   delay(50);  // 12ms init
 
@@ -169,6 +171,12 @@ void setup() {
     while (1);
   }
 
+  // res = radio.setBaudRate(9, 115200);
+  // if (res != 0) {
+  //   Serial.printf("set baud failed: %d\n", res);
+  //   while (1);
+  // }
+
   Serial.println("set power successful :)");
 
   Serial.printf("readPower: %d\r\nreadBaudRate: %d\r\nreadSyncWordLength: %d\r\nreadMode: %d\r\nreadBand: %d\r\n", radio.readPower(), radio.readBaudRate(), radio.readSyncWordLength(), radio.readMode(), radio.readBand());
@@ -177,6 +185,9 @@ void setup() {
 }
 
 const char *commands_to_try[] = {
+  "BAND",
+  "SYNL",
+  "POWER",
   "SPR",
   "HELP",
   "VER",
@@ -339,30 +350,70 @@ const char *commands_to_try[] = {
   NULL,
 };
 
-const char **cmd_ptr = commands_to_try;
+#define MAX_LEN 5
+
+uint64_t counter = 0;  // brute force counter
+
+// Compute 26^n
+uint64_t pow26(int n) {
+  uint64_t r = 1;
+  while (n--) r *= 26ULL;
+  return r;
+}
+
+// Convert counter -> variable-length A-Z string
+int indexToWord(uint64_t idx, char *out) {
+  // Determine the length of the word (1 to MAX_LEN)
+  uint64_t base = 0;
+  int len = 1;
+
+  for (; len <= MAX_LEN; len++) {
+    uint64_t next = base + pow26(len);
+    if (idx < next) break;
+    base = next;
+  }
+
+  if (len > MAX_LEN) {
+    out[0] = 0;
+    return 0;  // Finished all combinations
+  }
+
+  // Convert (idx - base) to base-26 of length len
+  uint64_t off = idx - base;
+  for (int i = 0; i < len; i++) {
+    out[i] = 'A' + (off % 26);
+    off /= 26;
+  }
+  out[len] = 0;
+  return len;
+}
 
 void loop() {
-  if (*cmd_ptr != NULL) {
-    char buf[30];
-    sprintf(buf, "AT");
+  static bool done = false;
+  if (done) return;
 
-    radio.serial.print(buf);
-    radio.serial.print("\r\n");
-    Serial.print(buf);
-    Serial.print("\r\n");
+  char word[MAX_LEN + 1];
+  int len = indexToWord(counter, word);
 
-    cmd_ptr++;
-
-    unsigned long start = millis();
-    while (millis() - start < 1500) {
-      while (radio.serial.available() > 0) {
-        Serial.write(radio.serial.read());
-      }
-
-      while (Serial.available() > 0) {
-        radio.serial.write(Serial.read());
-      }
-      delay(1);
-    }
+  if (len == 0) {
+    done = true;
+    return;
   }
+
+  // Build AT command
+  char buf[40];
+  sprintf(buf, "AT+%s=?", word);
+
+  radio.serial.print(buf);
+  radio.serial.print("\r\n");
+
+  String res = radio.serial.readStringUntil('\n');
+  res.trim();
+
+  if (res.startsWith("+") || counter % 10000 == 0) {
+    Serial.println(buf);
+    Serial.println(res);
+  }
+
+  counter++;
 }
