@@ -250,169 +250,6 @@
 			)
 			(embedded_fonts no)
 		)
-		(symbol "Connector:Conn_01x02_Pin"
-			(pin_names
-				(offset 1.016)
-				(hide yes)
-			)
-			(exclude_from_sim no)
-			(in_bom yes)
-			(on_board yes)
-			(property "Reference" "J"
-				(at 0 2.54 0)
-				(effects
-					(font
-						(size 1.27 1.27)
-					)
-				)
-			)
-			(property "Value" "Conn_01x02_Pin"
-				(at 0 -5.08 0)
-				(effects
-					(font
-						(size 1.27 1.27)
-					)
-				)
-			)
-			(property "Footprint" ""
-				(at 0 0 0)
-				(effects
-					(font
-						(size 1.27 1.27)
-					)
-					(hide yes)
-				)
-			)
-			(property "Datasheet" "~"
-				(at 0 0 0)
-				(effects
-					(font
-						(size 1.27 1.27)
-					)
-					(hide yes)
-				)
-			)
-			(property "Description" "Generic connector, single row, 01x02, script generated"
-				(at 0 0 0)
-				(effects
-					(font
-						(size 1.27 1.27)
-					)
-					(hide yes)
-				)
-			)
-			(property "ki_locked" ""
-				(at 0 0 0)
-				(effects
-					(font
-						(size 1.27 1.27)
-					)
-				)
-			)
-			(property "ki_keywords" "connector"
-				(at 0 0 0)
-				(effects
-					(font
-						(size 1.27 1.27)
-					)
-					(hide yes)
-				)
-			)
-			(property "ki_fp_filters" "Connector*:*_1x??_*"
-				(at 0 0 0)
-				(effects
-					(font
-						(size 1.27 1.27)
-					)
-					(hide yes)
-				)
-			)
-			(symbol "Conn_01x02_Pin_1_1"
-				(rectangle
-					(start 0.8636 0.127)
-					(end 0 -0.127)
-					(stroke
-						(width 0.1524)
-						(type default)
-					)
-					(fill
-						(type outline)
-					)
-				)
-				(rectangle
-					(start 0.8636 -2.413)
-					(end 0 -2.667)
-					(stroke
-						(width 0.1524)
-						(type default)
-					)
-					(fill
-						(type outline)
-					)
-				)
-				(polyline
-					(pts
-						(xy 1.27 0) (xy 0.8636 0)
-					)
-					(stroke
-						(width 0.1524)
-						(type default)
-					)
-					(fill
-						(type none)
-					)
-				)
-				(polyline
-					(pts
-						(xy 1.27 -2.54) (xy 0.8636 -2.54)
-					)
-					(stroke
-						(width 0.1524)
-						(type default)
-					)
-					(fill
-						(type none)
-					)
-				)
-				(pin passive line
-					(at 5.08 0 180)
-					(length 3.81)
-					(name "Pin_1"
-						(effects
-							(font
-								(size 1.27 1.27)
-							)
-						)
-					)
-					(number "1"
-						(effects
-							(font
-								(size 1.27 1.27)
-							)
-						)
-					)
-				)
-				(pin passive line
-					(at 5.08 -2.54 180)
-					(length 3.81)
-					(name "Pin_2"
-						(effects
-							(font
-								(size 1.27 1.27)
-							)
-						)
-					)
-					(number "2"
-						(effects
-							(font
-								(size 1.27 1.27)
-							)
-						)
-					)
-				)
-			)
-			(embedded_fonts no)
-		)
 		(symbol "Connector:Conn_01x04_Pin"
 			(pin_names
 				(offset 1.016)
@@ -5068,18 +4905,6 @@
 		(uuid 72d8240e-4a1f-448b-a07b-b08ea29f9c22)
 	)
 	(rectangle
-		(start 255.27 13.97)
-		(end 281.94 55.88)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(fill
-			(type none)
-		)
-		(uuid 7572fe70-4d96-46ea-a313-cb70fb5a2ad9)
-	)
-	(rectangle
 		(start 64.77 153.67)
 		(end 140.97 195.58)
 		(stroke
@@ -5190,16 +5015,6 @@
 			)
 		)
 		(uuid "31ea7e74-317e-4ba8-9e3f-64b80baee9d3")
-	)
-	(text "Battery Connector"
-		(exclude_from_sim no)
-		(at 264.922 16.002 0)
-		(effects
-			(font
-				(size 1.27 1.27)
-			)
-		)
-		(uuid "3bad0f94-51ad-4f9e-8b9d-2c35f2e2e3a7")
 	)
 	(text "2.4V max"
 		(exclude_from_sim no)
@@ -5359,12 +5174,6 @@
 		(diameter 0)
 		(color 0 0 0 0)
 		(uuid "0363fae2-5e4d-4a32-876c-4c76dc54762e")
-	)
-	(junction
-		(at 278.13 35.56)
-		(diameter 0)
-		(color 0 0 0 0)
-		(uuid "1011bd89-95f4-44fb-9685-7431ea983919")
 	)
 	(junction
 		(at 257.81 68.58)
@@ -5581,6 +5390,12 @@
 		(diameter 0)
 		(color 0 0 0 0)
 		(uuid "a4638c97-1f29-44e8-b0c5-d0024b464319")
+	)
+	(junction
+		(at 102.87 138.43)
+		(diameter 0)
+		(color 0 0 0 0)
+		(uuid "a4d6ecbe-a1f7-41a7-b76f-c0a00b9b139e")
 	)
 	(junction
 		(at 213.36 38.1)
@@ -6246,16 +6061,6 @@
 	)
 	(wire
 		(pts
-			(xy 278.13 35.56) (xy 278.13 38.1)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "26f457a1-8425-49ea-a266-e3d07c20106e")
-	)
-	(wire
-		(pts
 			(xy 35.56 175.26) (xy 40.64 175.26)
 		)
 		(stroke
@@ -6703,6 +6508,16 @@
 			(type default)
 		)
 		(uuid "4f9cc778-d1e9-4cb2-94f6-2ad2ecde899d")
+	)
+	(wire
+		(pts
+			(xy 102.87 139.7) (xy 102.87 138.43)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "4fd81ba7-ae21-4fec-8082-b355f62f3af7")
 	)
 	(wire
 		(pts
@@ -7486,16 +7301,6 @@
 	)
 	(wire
 		(pts
-			(xy 264.16 35.56) (xy 278.13 35.56)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "a1a29e80-37ed-4816-857d-db5327f68efc")
-	)
-	(wire
-		(pts
 			(xy 67.31 138.43) (xy 67.31 140.97)
 		)
 		(stroke
@@ -7723,16 +7528,6 @@
 			(type default)
 		)
 		(uuid "b6be5f9c-3343-415a-92b1-55af90dd7741")
-	)
-	(wire
-		(pts
-			(xy 278.13 34.29) (xy 278.13 35.56)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "ba013317-ea30-4ebd-9925-651cdbb00303")
 	)
 	(wire
 		(pts
@@ -8303,16 +8098,6 @@
 			(type default)
 		)
 		(uuid "f8cd730a-b2e6-4e5d-8389-4e3574314b83")
-	)
-	(wire
-		(pts
-			(xy 264.16 38.1) (xy 266.7 38.1)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "f90cad07-078f-4895-8bf3-f3464ee44010")
 	)
 	(wire
 		(pts
@@ -10974,28 +10759,6 @@
 			)
 		)
 	)
-	(global_label "VBAT"
-		(shape input)
-		(at 266.7 38.1 0)
-		(fields_autoplaced yes)
-		(effects
-			(font
-				(size 1.27 1.27)
-			)
-			(justify left)
-		)
-		(uuid "fe6ec429-70a2-4a5d-abf2-927a87b9193d")
-		(property "Intersheetrefs" "${INTERSHEET_REFS}"
-			(at 274.1 38.1 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left)
-				(hide yes)
-			)
-		)
-	)
 	(symbol
 		(lib_id "Device:R")
 		(at 50.8 130.81 180)
@@ -12446,7 +12209,7 @@
 		(dnp no)
 		(fields_autoplaced yes)
 		(uuid "413be5ed-d109-40fe-9824-1fb44483d938")
-		(property "Reference" "J4"
+		(property "Reference" "J3"
 			(at 144.78 97.79 0)
 			(effects
 				(font
@@ -12543,7 +12306,7 @@
 		(instances
 			(project ""
 				(path "/a5474e04-ba65-41a7-9e5c-ab57fc53d54d"
-					(reference "J4")
+					(reference "J3")
 					(unit 1)
 				)
 			)
@@ -14559,7 +14322,7 @@
 				(justify left)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Connector_PinHeader_2.54mm:PinHeader_1x02_P2.54mm_Vertical"
 			(at 102.87 130.556 90)
 			(effects
 				(font
@@ -14720,7 +14483,7 @@
 				)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Jumper:SolderJumper-3_P1.3mm_Bridged2Bar12_Pad1.0x1.5mm"
 			(at 177.8 44.45 0)
 			(effects
 				(font
@@ -15558,74 +15321,6 @@
 		)
 	)
 	(symbol
-		(lib_id "Connector:Conn_01x02_Pin")
-		(at 259.08 35.56 0)
-		(unit 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(dnp no)
-		(fields_autoplaced yes)
-		(uuid "def19d2c-9ce4-4492-bc26-e8cdb236d002")
-		(property "Reference" "J3"
-			(at 259.715 30.48 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Value" "Battery"
-			(at 259.715 33.02 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Footprint" "Connector_PinHeader_2.54mm:PinHeader_1x02_P2.54mm_Vertical"
-			(at 259.08 35.56 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Datasheet" "~"
-			(at 259.08 35.56 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Description" "Generic connector, single row, 01x02, script generated"
-			(at 259.08 35.56 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(pin "2"
-			(uuid "0bcac105-bb5f-4018-96aa-02813b580cc2")
-		)
-		(pin "1"
-			(uuid "5a9dafd8-3be3-4094-b8ca-cdfdc65c4d01")
-		)
-		(instances
-			(project "plytka"
-				(path "/a5474e04-ba65-41a7-9e5c-ab57fc53d54d"
-					(reference "J3")
-					(unit 1)
-				)
-			)
-		)
-	)
-	(symbol
 		(lib_id "library:TP4054")
 		(at 67.31 118.11 0)
 		(unit 1)
@@ -16153,71 +15848,6 @@
 		)
 	)
 	(symbol
-		(lib_id "power:GND")
-		(at 278.13 38.1 0)
-		(unit 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(dnp no)
-		(uuid "f7d47d48-affc-497f-b740-617a87ea225c")
-		(property "Reference" "#PWR02"
-			(at 278.13 44.45 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Value" "GND"
-			(at 278.13 42.164 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Footprint" ""
-			(at 278.13 38.1 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Datasheet" ""
-			(at 278.13 38.1 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Description" "Power symbol creates a global label with name \"GND\" , ground"
-			(at 278.13 38.1 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(pin "1"
-			(uuid "a86927dd-c3f5-408f-ba86-8f083d0fcf70")
-		)
-		(instances
-			(project "plytka"
-				(path "/a5474e04-ba65-41a7-9e5c-ab57fc53d54d"
-					(reference "#PWR02")
-					(unit 1)
-				)
-			)
-		)
-	)
-	(symbol
 		(lib_id "Device:R")
 		(at 22.86 180.34 0)
 		(mirror y)
@@ -16289,7 +15919,7 @@
 	)
 	(symbol
 		(lib_id "power:PWR_FLAG")
-		(at 278.13 34.29 0)
+		(at 102.87 139.7 180)
 		(unit 1)
 		(exclude_from_sim no)
 		(in_bom yes)
@@ -16297,7 +15927,7 @@
 		(dnp no)
 		(uuid "fc95ef37-f056-447a-a0cd-f799c9b83865")
 		(property "Reference" "#FLG01"
-			(at 278.13 32.385 0)
+			(at 102.87 141.605 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -16306,7 +15936,7 @@
 			)
 		)
 		(property "Value" "GND"
-			(at 278.13 30.226 0)
+			(at 102.87 143.764 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -16314,7 +15944,7 @@
 			)
 		)
 		(property "Footprint" ""
-			(at 278.13 34.29 0)
+			(at 102.87 139.7 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -16323,7 +15953,7 @@
 			)
 		)
 		(property "Datasheet" "~"
-			(at 278.13 34.29 0)
+			(at 102.87 139.7 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -16332,7 +15962,7 @@
 			)
 		)
 		(property "Description" "Special symbol for telling ERC where power comes from"
-			(at 278.13 34.29 0)
+			(at 102.87 139.7 0)
 			(effects
 				(font
 					(size 1.27 1.27)
