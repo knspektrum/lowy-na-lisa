@@ -10778,7 +10778,7 @@
 				(justify right)
 			)
 		)
-		(property "Value" "2.5K"
+		(property "Value" "2.4K"
 			(at 53.34 132.0799 0)
 			(effects
 				(font
@@ -10806,6 +10806,15 @@
 			)
 		)
 		(property "Description" "Resistor"
+			(at 50.8 130.81 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "LCSC" "     C22940"
 			(at 50.8 130.81 0)
 			(effects
 				(font
@@ -10989,7 +10998,7 @@
 				(justify right)
 			)
 		)
-		(property "Footprint" "Capacitor_SMD:C_0201_0603Metric"
+		(property "Footprint" "Capacitor_SMD:C_0402_1005Metric"
 			(at 268.2748 78.74 0)
 			(effects
 				(font
@@ -11008,6 +11017,15 @@
 			)
 		)
 		(property "Description" "Unpolarized capacitor"
+			(at 269.24 74.93 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "LCSC" "     C1525"
 			(at 269.24 74.93 0)
 			(effects
 				(font
@@ -11083,6 +11101,15 @@
 				(hide yes)
 			)
 		)
+		(property "LCSC" "     C1525"
+			(at 26.67 77.47 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
 		(pin "2"
 			(uuid "f845c3cc-a3dc-4272-b35e-0a821062337a")
 		)
@@ -11124,7 +11151,7 @@
 				)
 			)
 		)
-		(property "Footprint" "Button_Switch_SMD:SW_SPST_Omron_B3FS-100xP"
+		(property "Footprint" "Button_Switch_THT:SW_TH_Tactile_Omron_B3F-100x"
 			(at 88.9 67.31 0)
 			(effects
 				(font
@@ -11350,6 +11377,15 @@
 				(hide yes)
 			)
 		)
+		(property "LCSC" "     C2761795"
+			(at 34.29 36.83 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
 		(pin "2"
 			(uuid "4c22415e-dd66-48b4-a24a-84e9b02fb730")
 		)
@@ -11398,7 +11434,7 @@
 				(justify right)
 			)
 		)
-		(property "Footprint" "Capacitor_SMD:C_0201_0603Metric"
+		(property "Footprint" "Capacitor_SMD:C_0402_1005Metric"
 			(at 238.4552 78.74 0)
 			(effects
 				(font
@@ -11417,6 +11453,15 @@
 			)
 		)
 		(property "Description" "Unpolarized capacitor"
+			(at 237.49 74.93 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "LCSC" "     C1525"
 			(at 237.49 74.93 0)
 			(effects
 				(font
@@ -11602,7 +11647,7 @@
 				(justify left)
 			)
 		)
-		(property "Footprint" "Resistor_SMD:R_0402_1005Metric"
+		(property "Footprint" "Resistor_SMD:R_0805_2012Metric"
 			(at 17.272 31.75 90)
 			(effects
 				(font
@@ -11621,6 +11666,15 @@
 			)
 		)
 		(property "Description" "Resistor"
+			(at 19.05 31.75 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "LCSC" "C17710"
 			(at 19.05 31.75 0)
 			(effects
 				(font
@@ -11738,7 +11792,7 @@
 				(justify right)
 			)
 		)
-		(property "Footprint" "Capacitor_SMD:C_0201_0603Metric"
+		(property "Footprint" "Capacitor_SMD:C_0402_1005Metric"
 			(at 256.8448 78.74 0)
 			(effects
 				(font
@@ -11757,6 +11811,15 @@
 			)
 		)
 		(property "Description" "Unpolarized capacitor"
+			(at 257.81 74.93 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "LCSC" "C15525"
 			(at 257.81 74.93 0)
 			(effects
 				(font
@@ -11907,6 +11970,15 @@
 				(hide yes)
 			)
 		)
+		(property "LCSC" "     C1525"
+			(at 223.52 144.78 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
 		(pin "2"
 			(uuid "fc816e83-358e-4302-8d92-7a33bc703527")
 		)
@@ -11949,7 +12021,7 @@
 				(justify left)
 			)
 		)
-		(property "Footprint" "Capacitor_SMD:C_0201_0603Metric"
+		(property "Footprint" "Capacitor_SMD:C_0402_1005Metric"
 			(at 91.7448 127 0)
 			(effects
 				(font
@@ -11968,6 +12040,15 @@
 			)
 		)
 		(property "Description" "Unpolarized capacitor"
+			(at 92.71 130.81 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "LCSC" "C15525"
 			(at 92.71 130.81 0)
 			(effects
 				(font
@@ -12157,7 +12238,7 @@
 				(justify right)
 			)
 		)
-		(property "Footprint" "Capacitor_SMD:C_0201_0603Metric"
+		(property "Footprint" "Capacitor_SMD:C_0402_1005Metric"
 			(at 36.5252 184.15 0)
 			(effects
 				(font
@@ -12176,6 +12257,15 @@
 			)
 		)
 		(property "Description" "Unpolarized capacitor"
+			(at 35.56 180.34 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "LCSC" "     C1525"
 			(at 35.56 180.34 0)
 			(effects
 				(font
@@ -12244,6 +12334,15 @@
 			)
 		)
 		(property "Description" "USB 2.0-only 16P Type-C Receptacle connector"
+			(at 144.78 120.65 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "LCSC" "     C9900016516"
 			(at 144.78 120.65 0)
 			(effects
 				(font
@@ -12340,7 +12439,7 @@
 				(justify left)
 			)
 		)
-		(property "Footprint" "Capacitor_SMD:C_1206_3216Metric"
+		(property "Footprint" "Capacitor_SMD:C_0805_2012Metric"
 			(at 210.5152 30.48 0)
 			(effects
 				(font
@@ -12359,6 +12458,15 @@
 			)
 		)
 		(property "Description" "Unpolarized capacitor"
+			(at 209.55 26.67 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "LCSC" "     C45783"
 			(at 209.55 26.67 0)
 			(effects
 				(font
@@ -12539,7 +12647,7 @@
 				)
 			)
 		)
-		(property "Footprint" "Button_Switch_SMD:SW_SPST_Omron_B3FS-100xP"
+		(property "Footprint" "Button_Switch_THT:SW_TH_Tactile_Omron_B3F-100x"
 			(at 26.67 67.31 0)
 			(effects
 				(font
@@ -12869,7 +12977,7 @@
 				(justify left)
 			)
 		)
-		(property "Footprint" "Resistor_SMD:R_0201_0603Metric"
+		(property "Footprint" "Resistor_SMD:R_0805_2012Metric"
 			(at 21.082 170.18 90)
 			(effects
 				(font
@@ -12888,6 +12996,15 @@
 			)
 		)
 		(property "Description" "Resistor"
+			(at 22.86 170.18 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "LCSC" "     C17514"
 			(at 22.86 170.18 0)
 			(effects
 				(font
@@ -12965,6 +13082,15 @@
 				(hide yes)
 			)
 		)
+		(property "LCSC" "     C2761795"
+			(at 91.44 36.83 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
 		(pin "2"
 			(uuid "7975a1cf-d692-4f36-8f53-7568f7ee09cd")
 		)
@@ -13012,7 +13138,7 @@
 				)
 			)
 		)
-		(property "Footprint" "Button_Switch_SMD:SW_SPST_Omron_B3FS-100xP"
+		(property "Footprint" "Button_Switch_THT:SW_TH_Tactile_Omron_B3F-100x"
 			(at 121.92 66.04 0)
 			(effects
 				(font
@@ -13108,6 +13234,15 @@
 				(hide yes)
 			)
 		)
+		(property "LCSC" "     C13281"
+			(at 218.44 44.45 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
 		(pin "1"
 			(uuid "de1bf102-8f3e-415e-abf1-e046f10503c6")
 		)
@@ -13175,6 +13310,15 @@
 				(hide yes)
 			)
 		)
+		(property "LCSC" "     C23186"
+			(at 170.18 110.49 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
 		(pin "1"
 			(uuid "054e91d2-8ccf-4ad4-a90a-459ac5a2fdb4")
 		)
@@ -13235,6 +13379,15 @@
 		)
 		(property "Description" "Unpolarized capacitor"
 			(at 88.9 77.47 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "LCSC" "     C1525"
+			(at 88.9 77.47 90)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -13350,7 +13503,7 @@
 				(justify left)
 			)
 		)
-		(property "Footprint" "Resistor_SMD:R_0603_1608Metric"
+		(property "Footprint" "Capacitor_SMD:C_0201_0603Metric"
 			(at 215.138 44.45 90)
 			(effects
 				(font
@@ -13369,6 +13522,15 @@
 			)
 		)
 		(property "Description" "Resistor"
+			(at 213.36 44.45 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "LCSC" "C25803"
 			(at 213.36 44.45 0)
 			(effects
 				(font
@@ -13437,6 +13599,15 @@
 		)
 		(property "Description" "Unpolarized capacitor"
 			(at 222.25 97.79 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "LCSC" "     C1525"
+			(at 222.25 97.79 90)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -13583,6 +13754,15 @@
 				(hide yes)
 			)
 		)
+		(property "LCSC" "     C2827693"
+			(at 177.8 129.54 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
 		(pin "5"
 			(uuid "bc6920dd-4fde-410b-a52d-44dc208f6016")
 		)
@@ -13638,7 +13818,7 @@
 				(justify left)
 			)
 		)
-		(property "Footprint" "Capacitor_SMD:C_1206_3216Metric"
+		(property "Footprint" "Capacitor_SMD:C_0805_2012Metric"
 			(at 221.9452 30.48 0)
 			(effects
 				(font
@@ -13657,6 +13837,15 @@
 			)
 		)
 		(property "Description" "Unpolarized capacitor"
+			(at 220.98 26.67 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "LCSC" "     C45783"
 			(at 220.98 26.67 0)
 			(effects
 				(font
@@ -13725,6 +13914,15 @@
 		)
 		(property "Description" "Unpolarized capacitor"
 			(at 57.15 77.47 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "LCSC" "     C1525"
+			(at 57.15 77.47 90)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -13931,6 +14129,15 @@
 				(hide yes)
 			)
 		)
+		(property "LCSC" "     C2761795"
+			(at 127 36.83 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
 		(pin "2"
 			(uuid "054d2bff-2770-40e7-9d09-28c07b7cbf1b")
 		)
@@ -13997,6 +14204,15 @@
 		)
 		(property "Description" "Resistor"
 			(at 170.18 113.03 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "LCSC" "     C23186"
+			(at 170.18 113.03 90)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -14279,6 +14495,15 @@
 				(hide yes)
 			)
 		)
+		(property "LCSC" "     C2849428"
+			(at 194.31 19.05 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
 		(pin "1"
 			(uuid "8a4166a6-82c7-4b30-b3eb-c843cd2ad304")
 		)
@@ -14436,6 +14661,15 @@
 		)
 		(property "Description" "Unpolarized capacitor"
 			(at 259.08 133.35 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "LCSC" "     C1525"
+			(at 259.08 133.35 90)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -14721,6 +14955,15 @@
 				(hide yes)
 			)
 		)
+		(property "LCSC" "     C1525"
+			(at 121.92 77.47 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
 		(pin "2"
 			(uuid "5652e60f-1c40-40aa-beb4-1e40f92fb3a9")
 		)
@@ -14782,6 +15025,15 @@
 			)
 		)
 		(property "Description" "RGB LED with integrated controller"
+			(at 109.22 36.83 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "LCSC" "     C2761795"
 			(at 109.22 36.83 0)
 			(effects
 				(font
@@ -14857,6 +15109,15 @@
 			)
 		)
 		(property "Description" "RGB LED with integrated controller"
+			(at 144.78 36.83 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "LCSC" "     C2761795"
 			(at 144.78 36.83 0)
 			(effects
 				(font
@@ -15016,6 +15277,15 @@
 			)
 		)
 		(property "Description" "RGB LED with integrated controller"
+			(at 53.34 36.83 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "LCSC" "     C2761795"
 			(at 53.34 36.83 0)
 			(effects
 				(font
@@ -15278,7 +15548,7 @@
 				)
 			)
 		)
-		(property "Footprint" "Button_Switch_SMD:SW_SPST_Omron_B3FS-100xP"
+		(property "Footprint" "Button_Switch_THT:SW_TH_Tactile_Omron_B3F-100x"
 			(at 57.15 67.31 0)
 			(effects
 				(font
@@ -15454,6 +15724,15 @@
 				(hide yes)
 			)
 		)
+		(property "LCSC" "     C2761795"
+			(at 72.39 36.83 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
 		(pin "2"
 			(uuid "8a7aff2b-87ff-4ca4-9259-4eb391f7a9a4")
 		)
@@ -15569,7 +15848,7 @@
 				(justify left)
 			)
 		)
-		(property "Footprint" "Capacitor_SMD:C_0201_0603Metric"
+		(property "Footprint" "Capacitor_SMD:C_0402_1005Metric"
 			(at 180.0352 27.94 0)
 			(effects
 				(font
@@ -15588,6 +15867,15 @@
 			)
 		)
 		(property "Description" "Unpolarized capacitor"
+			(at 179.07 24.13 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "LCSC" "C15525"
 			(at 179.07 24.13 0)
 			(effects
 				(font
@@ -15638,7 +15926,7 @@
 				(justify right)
 			)
 		)
-		(property "Footprint" "Capacitor_SMD:C_0201_0603Metric"
+		(property "Footprint" "Capacitor_SMD:C_0402_1005Metric"
 			(at 225.7552 78.74 0)
 			(effects
 				(font
@@ -15657,6 +15945,15 @@
 			)
 		)
 		(property "Description" "Unpolarized capacitor"
+			(at 224.79 74.93 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "LCSC" "C15525"
 			(at 224.79 74.93 0)
 			(effects
 				(font
@@ -15736,6 +16033,15 @@
 				(hide yes)
 			)
 		)
+		(property "LCSC" "     C2977777"
+			(at 215.9 116.84 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
 		(pin "1"
 			(uuid "f4bf9138-7b5c-4d48-83c0-15f6c0efe6b6")
 		)
@@ -15805,7 +16111,7 @@
 				(justify right)
 			)
 		)
-		(property "Footprint" "Capacitor_SMD:C_0201_0603Metric"
+		(property "Footprint" "Capacitor_SMD:C_0402_1005Metric"
 			(at 40.3352 134.62 0)
 			(effects
 				(font
@@ -15824,6 +16130,15 @@
 			)
 		)
 		(property "Description" "Unpolarized capacitor"
+			(at 39.37 130.81 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "LCSC" "C15525"
 			(at 39.37 130.81 0)
 			(effects
 				(font
@@ -15875,7 +16190,7 @@
 				(justify left)
 			)
 		)
-		(property "Footprint" "Resistor_SMD:R_0201_0603Metric"
+		(property "Footprint" "Resistor_SMD:R_0805_2012Metric"
 			(at 24.638 180.34 90)
 			(effects
 				(font
@@ -15894,6 +16209,15 @@
 			)
 		)
 		(property "Description" "Resistor"
+			(at 22.86 180.34 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "LCSC" "     C17514"
 			(at 22.86 180.34 0)
 			(effects
 				(font
@@ -16010,7 +16334,7 @@
 				(justify left)
 			)
 		)
-		(property "Footprint" "Capacitor_SMD:C_1206_3216Metric"
+		(property "Footprint" "Capacitor_SMD:C_0805_2012Metric"
 			(at 232.1052 30.48 0)
 			(effects
 				(font
@@ -16029,6 +16353,15 @@
 			)
 		)
 		(property "Description" "Unpolarized capacitor"
+			(at 231.14 26.67 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "LCSC" "     C45783"
 			(at 231.14 26.67 0)
 			(effects
 				(font
