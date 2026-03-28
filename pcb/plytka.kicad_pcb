@@ -5858,7 +5858,7 @@
 		(descr "SMD Solder 3-pad Jumper, 1x1.5mm Pads, 0.3mm gap, pads 1-2 bridged with 2 copper strip")
 		(tags "net tie solder jumper bridged")
 		(property "Reference" "JP1"
-			(at 0 2.1 90)
+			(at 0.6 2 90)
 			(layer "F.SilkS")
 			(uuid "dee7ca4d-c81d-475d-b893-80331fc9bfbb")
 			(effects
@@ -8218,7 +8218,7 @@
 		(descr "UDFN-4_1x1mm_P0.65mm, http://ww1.microchip.com/downloads/en/DeviceDoc/MIC550x-300mA-Single-Output-LDO-in-Small-Packages-DS20006006A.pdf")
 		(tags "UDFN-4_1x1mm_P0.65mm")
 		(property "Reference" "LDO1"
-			(at 0.4 -7.1 90)
+			(at -1.1 1.8 90)
 			(layer "F.SilkS")
 			(uuid "d785ed5e-ea2c-4d33-a2c6-f4ace3fa2baa")
 			(effects
@@ -9854,7 +9854,7 @@
 		(descr "SSOP, 10 Pin (http://download.py32.org/%E6%95%B0%E6%8D%AE%E6%89%8B%E5%86%8C/zh-CN/PY32F002A%20%E7%B3%BB%E5%88%97%E6%95%B0%E6%8D%AE%E6%89%8B%E5%86%8C_Rev1.0.pdf#page=44), generated with kicad-footprint-generator ipc_gullwing_generator.py")
 		(tags "SSOP SO ESSOP-10")
 		(property "Reference" "U4"
-			(at -0.0875 -5.5 90)
+			(at -0.0875 3.5 90)
 			(layer "F.SilkS")
 			(uuid "3fafdaa8-f800-4caf-aebe-3e515255021f")
 			(effects
