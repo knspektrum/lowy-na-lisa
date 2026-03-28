@@ -4832,7 +4832,7 @@
 		)
 		(uuid "88126c92-5037-4215-ab91-b609c23cd9be")
 	)
-	(text "250mA charge current (0.5C)"
+	(text "417mA charge current (0.83C)"
 		(exclude_from_sim no)
 		(at 46.99 127 90)
 		(effects
@@ -5890,16 +5890,6 @@
 	)
 	(wire
 		(pts
-			(xy 218.44 49.53) (xy 218.44 48.26)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "3540b740-ca34-4e62-bfca-6b1837dd7df9")
-	)
-	(wire
-		(pts
 			(xy 99.06 36.83) (xy 101.6 36.83)
 		)
 		(stroke
@@ -5957,6 +5947,16 @@
 			(type default)
 		)
 		(uuid "38b4fc04-f6a0-4000-b417-1bd0542a497b")
+	)
+	(wire
+		(pts
+			(xy 222.25 36.83) (xy 222.25 35.56)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "38e9c912-cf8f-47d7-8095-692f57032f25")
 	)
 	(wire
 		(pts
@@ -6107,6 +6107,16 @@
 			(type default)
 		)
 		(uuid "4583389c-308a-4c50-9735-720a1e0a4954")
+	)
+	(wire
+		(pts
+			(xy 215.9 38.1) (xy 215.9 54.61)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "459743e7-6d38-4831-bbec-ddad96c0f641")
 	)
 	(wire
 		(pts
@@ -6290,16 +6300,6 @@
 	)
 	(wire
 		(pts
-			(xy 205.74 35.56) (xy 218.44 35.56)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "5aceca60-3c7a-42f1-8b79-08a4779c29ed")
-	)
-	(wire
-		(pts
 			(xy 85.09 168.91) (xy 86.36 168.91)
 		)
 		(stroke
@@ -6467,6 +6467,16 @@
 			(type default)
 		)
 		(uuid "6676b956-4607-47ff-b918-99a981527136")
+	)
+	(wire
+		(pts
+			(xy 215.9 54.61) (xy 222.25 54.61)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "66901974-d2aa-452a-a04d-876fb114f5c4")
 	)
 	(wire
 		(pts
@@ -6980,6 +6990,16 @@
 	)
 	(wire
 		(pts
+			(xy 222.25 54.61) (xy 222.25 53.34)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "a2df632b-a04a-4dc4-8960-f4cbfb879c42")
+	)
+	(wire
+		(pts
 			(xy 67.31 138.43) (xy 67.31 140.97)
 		)
 		(stroke
@@ -6987,6 +7007,16 @@
 			(type default)
 		)
 		(uuid "a3513dc7-1513-487d-b285-d0b2d018f446")
+	)
+	(wire
+		(pts
+			(xy 222.25 44.45) (xy 222.25 45.72)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "a3e74b5a-7c7b-45d2-96bb-1c0f847d6d6e")
 	)
 	(wire
 		(pts
@@ -7057,16 +7087,6 @@
 			(type default)
 		)
 		(uuid "aa281f87-b9c0-4b87-bcc9-ee28bc6f3dfa")
-	)
-	(wire
-		(pts
-			(xy 218.44 35.56) (xy 218.44 40.64)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "aafa7c4e-5c98-4df9-a208-b84b5df6aea2")
 	)
 	(wire
 		(pts
@@ -7257,16 +7277,6 @@
 			(type default)
 		)
 		(uuid "c33c9095-b15a-43ec-8d10-dcf3fa1857f3")
-	)
-	(wire
-		(pts
-			(xy 215.9 38.1) (xy 215.9 49.53)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "c3dceb54-6ce7-4049-948c-48ee443c4328")
 	)
 	(wire
 		(pts
@@ -7600,6 +7610,16 @@
 	)
 	(wire
 		(pts
+			(xy 205.74 35.56) (xy 222.25 35.56)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "eb2ce2fc-1c26-4173-a8f5-4a8e2636e6d1")
+	)
+	(wire
+		(pts
 			(xy 233.68 144.78) (xy 227.33 144.78)
 		)
 		(stroke
@@ -7627,16 +7647,6 @@
 			(type default)
 		)
 		(uuid "ece87758-cf8b-41f8-812c-108e1a281ef5")
-	)
-	(wire
-		(pts
-			(xy 215.9 49.53) (xy 218.44 49.53)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "eda42185-d01f-49a8-ad0e-cb786e35c7fc")
 	)
 	(wire
 		(pts
@@ -10423,7 +10433,7 @@
 				(justify right)
 			)
 		)
-		(property "Value" "2.5K"
+		(property "Value" "2.4k"
 			(at 53.34 132.0799 0)
 			(effects
 				(font
@@ -10432,7 +10442,7 @@
 				(justify right)
 			)
 		)
-		(property "Footprint" "Resistor_SMD:R_0201_0603Metric"
+		(property "Footprint" "Resistor_SMD:R_0603_1608Metric"
 			(at 52.578 130.81 90)
 			(effects
 				(font
@@ -10451,6 +10461,15 @@
 			)
 		)
 		(property "Description" "Resistor"
+			(at 50.8 130.81 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "LCSC" "C22940"
 			(at 50.8 130.81 0)
 			(effects
 				(font
@@ -10595,6 +10614,15 @@
 				(hide yes)
 			)
 		)
+		(property "LCSC" "C307331"
+			(at 234.95 74.93 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
 		(pin "1"
 			(uuid "e92fb62c-ae06-4a17-bb6e-093652448dca")
 		)
@@ -10662,6 +10690,15 @@
 				(hide yes)
 			)
 		)
+		(property "LCSC" "C307331"
+			(at 26.67 77.47 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
 		(pin "2"
 			(uuid "f845c3cc-a3dc-4272-b35e-0a821062337a")
 		)
@@ -10722,6 +10759,15 @@
 			)
 		)
 		(property "Description" "Omron B3FS 6x6mm single pole normally-open tactile switch"
+			(at 88.9 72.39 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "LCSC" ""
 			(at 88.9 72.39 0)
 			(effects
 				(font
@@ -10929,6 +10975,15 @@
 				(hide yes)
 			)
 		)
+		(property "LCSC" "C2761795"
+			(at 34.29 36.83 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
 		(pin "2"
 			(uuid "4c22415e-dd66-48b4-a24a-84e9b02fb730")
 		)
@@ -10996,6 +11051,15 @@
 			)
 		)
 		(property "Description" "Unpolarized capacitor"
+			(at 203.2 74.93 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "LCSC" "C307331"
 			(at 203.2 74.93 0)
 			(effects
 				(font
@@ -11138,6 +11202,15 @@
 				(hide yes)
 			)
 		)
+		(property "LCSC" "C7420331"
+			(at 33.02 109.22 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
 		(pin "1"
 			(uuid "7aa14c95-22d8-4656-ae1f-4f5724deff88")
 		)
@@ -11200,6 +11273,15 @@
 			)
 		)
 		(property "Description" "Resistor"
+			(at 19.05 31.75 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "LCSC" "C25117"
 			(at 19.05 31.75 0)
 			(effects
 				(font
@@ -11344,6 +11426,15 @@
 				(hide yes)
 			)
 		)
+		(property "LCSC" "C19702"
+			(at 223.52 74.93 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
 		(pin "1"
 			(uuid "1e37900d-f82d-4b8d-8b5e-6700f41b94fb")
 		)
@@ -11405,6 +11496,15 @@
 			)
 		)
 		(property "Description" "Generic connector, single row, 01x04, script generated"
+			(at 151.13 77.47 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "LCSC" ""
 			(at 151.13 77.47 0)
 			(effects
 				(font
@@ -11486,6 +11586,15 @@
 				(hide yes)
 			)
 		)
+		(property "LCSC" "C307331"
+			(at 223.52 144.78 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
 		(pin "2"
 			(uuid "fc816e83-358e-4302-8d92-7a33bc703527")
 		)
@@ -11547,6 +11656,15 @@
 			)
 		)
 		(property "Description" "Unpolarized capacitor"
+			(at 92.71 130.81 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "LCSC" "C19702"
 			(at 92.71 130.81 0)
 			(effects
 				(font
@@ -11689,6 +11807,15 @@
 				(hide yes)
 			)
 		)
+		(property "LCSC" "C307331"
+			(at 35.56 180.34 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
 		(pin "1"
 			(uuid "3f27c4f5-a2f9-4a30-b0e3-5fb2c2408366")
 		)
@@ -11749,6 +11876,15 @@
 			)
 		)
 		(property "Description" "USB 2.0-only 16P Type-C Receptacle connector"
+			(at 144.78 120.65 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "LCSC" ""
 			(at 144.78 120.65 0)
 			(effects
 				(font
@@ -11864,6 +12000,15 @@
 			)
 		)
 		(property "Description" "Unpolarized capacitor"
+			(at 209.55 26.67 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "LCSC" "C59461"
 			(at 209.55 26.67 0)
 			(effects
 				(font
@@ -12071,6 +12216,15 @@
 				(hide yes)
 			)
 		)
+		(property "LCSC" ""
+			(at 26.67 72.39 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
 		(pin "2"
 			(uuid "06e5a272-734c-475d-a449-afd9b50072f7")
 		)
@@ -12132,6 +12286,15 @@
 			)
 		)
 		(property "Description" ""
+			(at 105.41 176.53 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "LCSC" ""
 			(at 105.41 176.53 0)
 			(effects
 				(font
@@ -12374,7 +12537,7 @@
 				(justify left)
 			)
 		)
-		(property "Footprint" "Resistor_SMD:R_0201_0603Metric"
+		(property "Footprint" "Resistor_SMD:R_0402_1005Metric"
 			(at 21.082 170.18 90)
 			(effects
 				(font
@@ -12393,6 +12556,15 @@
 			)
 		)
 		(property "Description" "Resistor"
+			(at 22.86 170.18 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "LCSC" "C26083"
 			(at 22.86 170.18 0)
 			(effects
 				(font
@@ -12462,6 +12634,15 @@
 			)
 		)
 		(property "Description" "RGB LED with integrated controller"
+			(at 91.44 36.83 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "LCSC" "C2761795"
 			(at 91.44 36.83 0)
 			(effects
 				(font
@@ -12544,6 +12725,15 @@
 				(hide yes)
 			)
 		)
+		(property "LCSC" ""
+			(at 121.92 71.12 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
 		(pin "2"
 			(uuid "a8f8793a-43f6-41b3-b46a-8d552dead2f7")
 		)
@@ -12561,7 +12751,7 @@
 	)
 	(symbol
 		(lib_id "Device:R")
-		(at 218.44 44.45 0)
+		(at 222.25 40.64 0)
 		(unit 1)
 		(exclude_from_sim no)
 		(in_bom yes)
@@ -12569,7 +12759,7 @@
 		(dnp no)
 		(uuid "6caa8832-1008-4d11-8c25-6d0f65f92cdd")
 		(property "Reference" "R6"
-			(at 220.98 43.1799 0)
+			(at 224.79 39.3699 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -12577,8 +12767,8 @@
 				(justify left)
 			)
 		)
-		(property "Value" "732k"
-			(at 220.98 45.7199 0)
+		(property "Value" "510k"
+			(at 224.79 41.9099 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -12587,7 +12777,7 @@
 			)
 		)
 		(property "Footprint" "Resistor_SMD:R_0603_1608Metric"
-			(at 216.662 44.45 90)
+			(at 220.472 40.64 90)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -12596,7 +12786,7 @@
 			)
 		)
 		(property "Datasheet" "~"
-			(at 218.44 44.45 0)
+			(at 222.25 40.64 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -12605,7 +12795,16 @@
 			)
 		)
 		(property "Description" "Resistor"
-			(at 218.44 44.45 0)
+			(at 222.25 40.64 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "LCSC" "C23192"
+			(at 222.25 40.64 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -12645,7 +12844,7 @@
 				)
 			)
 		)
-		(property "Value" "5.1 k"
+		(property "Value" "5.1k"
 			(at 170.434 106.426 90)
 			(effects
 				(font
@@ -12673,6 +12872,15 @@
 		)
 		(property "Description" "Resistor"
 			(at 170.18 110.49 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "LCSC" "C23186"
+			(at 170.18 110.49 90)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -12740,6 +12948,15 @@
 		)
 		(property "Description" "Unpolarized capacitor"
 			(at 88.9 77.47 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "LCSC" "C307331"
+			(at 88.9 77.47 90)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -12882,6 +13099,15 @@
 				(hide yes)
 			)
 		)
+		(property "LCSC" "C23192"
+			(at 213.36 44.45 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
 		(pin "1"
 			(uuid "c2169a90-6956-40cc-85da-337295b0a0d2")
 		)
@@ -12942,6 +13168,15 @@
 		)
 		(property "Description" "Unpolarized capacitor"
 			(at 222.25 97.79 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "LCSC" "C307331"
+			(at 222.25 97.79 90)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -13088,6 +13323,15 @@
 				(hide yes)
 			)
 		)
+		(property "LCSC" "C2827693"
+			(at 177.8 129.54 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
 		(pin "5"
 			(uuid "bc6920dd-4fde-410b-a52d-44dc208f6016")
 		)
@@ -13170,6 +13414,15 @@
 				(hide yes)
 			)
 		)
+		(property "LCSC" "C59461"
+			(at 220.98 26.67 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
 		(pin "2"
 			(uuid "3aac7a09-87ef-4688-8a30-551071cc12af")
 		)
@@ -13230,6 +13483,15 @@
 		)
 		(property "Description" "Unpolarized capacitor"
 			(at 57.15 77.47 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "LCSC" "C307331"
+			(at 57.15 77.47 90)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -13436,6 +13698,15 @@
 				(hide yes)
 			)
 		)
+		(property "LCSC" "C2761795"
+			(at 127 36.83 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
 		(pin "2"
 			(uuid "054d2bff-2770-40e7-9d09-28c07b7cbf1b")
 		)
@@ -13509,6 +13780,15 @@
 				(hide yes)
 			)
 		)
+		(property "LCSC" "C23186"
+			(at 170.18 113.03 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
 		(pin "1"
 			(uuid "8bb85eaf-4706-47cb-a42f-466a69534ea2")
 		)
@@ -13574,6 +13854,15 @@
 			)
 		)
 		(property "Description" "30V Vds, 5.7A Id, N-Channel MOSFET, SOT-23"
+			(at 262.89 127 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "LCSC" "C1525"
 			(at 262.89 127 0)
 			(effects
 				(font
@@ -13784,6 +14073,15 @@
 				(hide yes)
 			)
 		)
+		(property "LCSC" "C2849428"
+			(at 194.31 19.05 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
 		(pin "1"
 			(uuid "8a4166a6-82c7-4b30-b3eb-c843cd2ad304")
 		)
@@ -13881,6 +14179,15 @@
 				(hide yes)
 			)
 		)
+		(property "LCSC" ""
+			(at 102.87 132.08 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
 		(pin "1"
 			(uuid "955b0f5d-52a4-4d48-a558-5b8be57e18d7")
 		)
@@ -13948,6 +14255,15 @@
 				(hide yes)
 			)
 		)
+		(property "LCSC" "C307331"
+			(at 259.08 133.35 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
 		(pin "2"
 			(uuid "47dbc3b1-3296-45b5-9d4b-23572792ae8e")
 		)
@@ -14007,6 +14323,15 @@
 			)
 		)
 		(property "Description" "Jumper, 3-pole, pins 1+2 closed/bridged"
+			(at 177.8 44.45 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "LCSC" ""
 			(at 177.8 44.45 0)
 			(effects
 				(font
@@ -14156,6 +14481,15 @@
 				(hide yes)
 			)
 		)
+		(property "LCSC" "C1525"
+			(at 265.43 113.03 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
 		(pin "3"
 			(uuid "8c214a87-a14b-4fb2-bffc-36099bd7fc65")
 		)
@@ -14226,6 +14560,15 @@
 				(hide yes)
 			)
 		)
+		(property "LCSC" "C307331"
+			(at 121.92 77.47 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
 		(pin "2"
 			(uuid "5652e60f-1c40-40aa-beb4-1e40f92fb3a9")
 		)
@@ -14287,6 +14630,15 @@
 			)
 		)
 		(property "Description" "RGB LED with integrated controller"
+			(at 109.22 36.83 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "LCSC" "C2761795"
 			(at 109.22 36.83 0)
 			(effects
 				(font
@@ -14370,6 +14722,15 @@
 				(hide yes)
 			)
 		)
+		(property "LCSC" "C2761795"
+			(at 144.78 36.83 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
 		(pin "2"
 			(uuid "5ce2d987-a3f7-43ef-82d3-19deb07909e5")
 		)
@@ -14437,6 +14798,15 @@
 			)
 		)
 		(property "Description" "8A Boost Converter, 0.5-5.5 V input, 2.2-5.5V output, Texas RWU0007A VQFN-7"
+			(at 194.31 35.56 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "LCSC" "C915088"
 			(at 194.31 35.56 0)
 			(effects
 				(font
@@ -14521,6 +14891,15 @@
 			)
 		)
 		(property "Description" "RGB LED with integrated controller"
+			(at 53.34 36.83 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "LCSC" "C2761795"
 			(at 53.34 36.83 0)
 			(effects
 				(font
@@ -14733,6 +15112,15 @@
 				(hide yes)
 			)
 		)
+		(property "LCSC" "C5357206"
+			(at 212.09 71.12 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
 		(pin "3"
 			(uuid "90ea9cae-003f-4322-acbf-85cac919c3dd")
 		)
@@ -14802,6 +15190,15 @@
 			)
 		)
 		(property "Description" "Omron B3FS 6x6mm single pole normally-open tactile switch"
+			(at 57.15 72.39 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "LCSC" ""
 			(at 57.15 72.39 0)
 			(effects
 				(font
@@ -14881,6 +15278,15 @@
 				(hide yes)
 			)
 		)
+		(property "LCSC" "C32574"
+			(at 67.31 118.11 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
 		(pin "1"
 			(uuid "aa9a9d0c-694d-4cb3-b515-7f6b3fe737fe")
 		)
@@ -14951,6 +15357,15 @@
 			)
 		)
 		(property "Description" "RGB LED with integrated controller"
+			(at 72.39 36.83 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "LCSC" "C2761795"
 			(at 72.39 36.83 0)
 			(effects
 				(font
@@ -15101,6 +15516,15 @@
 				(hide yes)
 			)
 		)
+		(property "LCSC" "C19702"
+			(at 179.07 24.13 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
 		(pin "2"
 			(uuid "083c211b-fe06-4ba4-ac1f-29783f29ceb4")
 		)
@@ -15162,6 +15586,15 @@
 			)
 		)
 		(property "Description" "Unpolarized capacitor"
+			(at 190.5 74.93 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "LCSC" "C19702"
 			(at 190.5 74.93 0)
 			(effects
 				(font
@@ -15233,6 +15666,15 @@
 			)
 		)
 		(property "Description" "USB serial converter, UART, SSOP-10"
+			(at 215.9 116.84 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "LCSC" "C968586"
 			(at 215.9 116.84 0)
 			(effects
 				(font
@@ -15337,6 +15779,15 @@
 				(hide yes)
 			)
 		)
+		(property "LCSC" "C19702"
+			(at 39.37 130.81 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
 		(pin "1"
 			(uuid "e9ac6f2e-a4bd-4881-b4e7-bb863cfc38b9")
 		)
@@ -15380,7 +15831,7 @@
 				(justify left)
 			)
 		)
-		(property "Footprint" "Resistor_SMD:R_0201_0603Metric"
+		(property "Footprint" "Resistor_SMD:R_0402_1005Metric"
 			(at 24.638 180.34 90)
 			(effects
 				(font
@@ -15407,6 +15858,15 @@
 				(hide yes)
 			)
 		)
+		(property "LCSC" "C26083"
+			(at 22.86 180.34 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
 		(pin "2"
 			(uuid "8c2b018b-1613-44a5-998a-25fe6a4fc20b")
 		)
@@ -15417,6 +15877,84 @@
 			(project "plytka"
 				(path "/a5474e04-ba65-41a7-9e5c-ab57fc53d54d"
 					(reference "R10")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "Device:R")
+		(at 222.25 49.53 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid "f96ecf6c-c4be-4731-8123-53d3f08707f8")
+		(property "Reference" "R4"
+			(at 224.79 48.2599 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Value" "220k"
+			(at 224.79 50.7999 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Footprint" "Resistor_SMD:R_0603_1608Metric"
+			(at 220.472 49.53 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" "~"
+			(at 222.25 49.53 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" "Resistor"
+			(at 222.25 49.53 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "LCSC" "C22961"
+			(at 222.25 49.53 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "1"
+			(uuid "88aa499f-a6e6-44c7-bad1-c284f1491e72")
+		)
+		(pin "2"
+			(uuid "c52441ff-f654-4f88-a98b-715a38cd16da")
+		)
+		(instances
+			(project "plytka"
+				(path "/a5474e04-ba65-41a7-9e5c-ab57fc53d54d"
+					(reference "R4")
 					(unit 1)
 				)
 			)
@@ -15534,6 +16072,15 @@
 			)
 		)
 		(property "Description" "Unpolarized capacitor"
+			(at 231.14 26.67 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "LCSC" "C59461"
 			(at 231.14 26.67 0)
 			(effects
 				(font
