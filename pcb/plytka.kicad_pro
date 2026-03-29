@@ -37,9 +37,9 @@
         "other_text_thickness": 0.15,
         "other_text_upright": false,
         "pads": {
-          "drill": 1.0,
-          "height": 1.7,
-          "width": 1.7
+          "drill": 1.152,
+          "height": 1.152,
+          "width": 1.152
         },
         "silk_line_width": 0.1,
         "silk_text_italic": false,
@@ -59,14 +59,6 @@
         }
       ],
       "drc_exclusions": [
-        [
-          "silk_edge_clearance|138420000|129500000|4f601ff3-7f2e-4c8c-bb47-2847ba96e8d8|9b2497ac-5f9b-4df2-ada1-9736084f579c",
-          ""
-        ],
-        [
-          "silk_edge_clearance|147580000|129500000|4f601ff3-7f2e-4c8c-bb47-2847ba96e8d8|36396cde-bfd4-4115-b42b-98c2e76d5ccc",
-          ""
-        ],
         [
           "silk_overlap|132320000|118760000|07405877-ed6f-48b2-b9aa-1d9c2b6ad9ba|9947c168-5564-41e3-b9a2-f1978f96f940",
           ""
@@ -261,7 +253,12 @@
     "equivalence_files": []
   },
   "erc": {
-    "erc_exclusions": [],
+    "erc_exclusions": [
+      [
+        "four_way_junction|673100|1384300|8c32ac51-ffac-408a-aa74-392262865292|f9401a1c-c58e-489b-9513-65eb9ff60426|/a5474e04-ba65-41a7-9e5c-ab57fc53d54d||",
+        ""
+      ]
+    ],
     "meta": {
       "version": 0
     },
@@ -447,9 +444,9 @@
       "duplicate_sheet_names": "error",
       "endpoint_off_grid": "warning",
       "extra_units": "error",
-      "footprint_filter": "ignore",
+      "footprint_filter": "warning",
       "footprint_link_issues": "warning",
-      "four_way_junction": "ignore",
+      "four_way_junction": "warning",
       "global_label_dangling": "warning",
       "hier_label_mismatch": "error",
       "label_dangling": "error",
@@ -466,14 +463,14 @@
       "no_connect_dangling": "warning",
       "pin_not_connected": "error",
       "pin_not_driven": "error",
-      "pin_to_pin": "warning",
+      "pin_to_pin": "error",
       "power_pin_not_driven": "error",
       "same_local_global_label": "warning",
       "similar_label_and_power": "warning",
       "similar_labels": "warning",
       "similar_power": "warning",
       "simulation_model_issue": "ignore",
-      "single_global_label": "ignore",
+      "single_global_label": "warning",
       "unannotated": "error",
       "unconnected_wire_endpoint": "warning",
       "undefined_netclass": "error",
