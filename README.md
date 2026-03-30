@@ -28,11 +28,11 @@ Gra terenowa dla dzieci oparta na LoRa - polega na znalezieniu ukrytych nadajnik
 
 Projekt PCB znajduje się w katalogu `pcb/` i jest przygotowany pod produkcję w JLCPCB (z PCBA assembly).
 
+[Model 3D](pcb/lowy-na-lisa.stl)
+
 Plot  |  Schemat
 :-------------------------:|:-------------------------:
-![Plot PCB](pcb/images/pcb.svg)  |  ![Schemat PCB](pcb/images/schematic.svg)
-![3D Model PCB](pcb/lowy-na-lisa.stl)
-
+![Plot](pcb/images/pcb.svg)  |  ![Schemat](pcb/images/schematic.svg)
 
 
 ## Historia projektu
