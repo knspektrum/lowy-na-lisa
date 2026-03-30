@@ -2,16 +2,9 @@
 
 Gra terenowa dla dzieci oparta na LoRa - polega na znalezieniu ukrytych nadajnikiów ("lisów") wykorzystując siłę sygnału radiowego
 
-## Zdjęcia
-
-### Schemat PCB
-![Schemat PCB](pcb/images/schematic.svg)
-
-### Plot PCB
-![Plot PCB](pcb/images/pcb.svg)
-
-### 3D render PCB
 ![3D render PCB](pcb/images/3d.jpg)
+![Plot PCB](pcb/images/pcb.svg)
+![Schemat PCB](pcb/images/schematic.svg)
 
 ## O projekcie
 
