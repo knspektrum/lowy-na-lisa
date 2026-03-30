@@ -31,6 +31,7 @@ Projekt PCB znajduje się w katalogu `pcb/` i jest przygotowany pod produkcję w
 Plot  |  Schemat
 :-------------------------:|:-------------------------:
 ![Plot PCB](pcb/images/pcb.svg)  |  ![Schemat PCB](pcb/images/schematic.svg)
+![3D Model PCB](pcb/lowy-na-lisa.stl)
 
 
 
