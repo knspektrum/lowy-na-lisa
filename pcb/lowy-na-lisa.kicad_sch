@@ -2661,7 +2661,903 @@
 			)
 			(embedded_fonts no)
 		)
-		(symbol "New_Library:HTCC-AM01"
+		(symbol "Power_Protection:USBLC6-2P6"
+			(pin_names
+				(hide yes)
+			)
+			(exclude_from_sim no)
+			(in_bom yes)
+			(on_board yes)
+			(property "Reference" "U"
+				(at 0.635 5.715 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(justify left)
+				)
+			)
+			(property "Value" "USBLC6-2P6"
+				(at 0.635 3.81 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(justify left)
+				)
+			)
+			(property "Footprint" "Package_TO_SOT_SMD:SOT-666"
+				(at 1.016 -6.731 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+						(italic yes)
+					)
+					(justify left)
+					(hide yes)
+				)
+			)
+			(property "Datasheet" "https://www.st.com/resource/en/datasheet/usblc6-2.pdf"
+				(at 1.016 -8.636 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(justify left)
+					(hide yes)
+				)
+			)
+			(property "Description" "Very low capacitance ESD protection diode, 2 data-line, SOT-666"
+				(at 0 0 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(hide yes)
+				)
+			)
+			(property "ki_keywords" "usb ethernet video"
+				(at 0 0 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(hide yes)
+				)
+			)
+			(property "ki_fp_filters" "SOT?666*"
+				(at 0 0 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(hide yes)
+				)
+			)
+			(symbol "USBLC6-2P6_0_0"
+				(circle
+					(center -1.524 0)
+					(radius 0.0001)
+					(stroke
+						(width 0.508)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(circle
+					(center -0.508 2.032)
+					(radius 0.0001)
+					(stroke
+						(width 0.508)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(circle
+					(center -0.508 -4.572)
+					(radius 0.0001)
+					(stroke
+						(width 0.508)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(circle
+					(center 0.508 2.032)
+					(radius 0.0001)
+					(stroke
+						(width 0.508)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(circle
+					(center 0.508 -4.572)
+					(radius 0.0001)
+					(stroke
+						(width 0.508)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(circle
+					(center 1.524 -2.54)
+					(radius 0.0001)
+					(stroke
+						(width 0.508)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+			)
+			(symbol "USBLC6-2P6_0_1"
+				(polyline
+					(pts
+						(xy -2.54 0) (xy 2.54 0)
+					)
+					(stroke
+						(width 0)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(polyline
+					(pts
+						(xy -2.54 -2.54) (xy 2.54 -2.54)
+					)
+					(stroke
+						(width 0)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(polyline
+					(pts
+						(xy -2.032 0.508) (xy -1.016 0.508) (xy -1.524 1.524) (xy -2.032 0.508)
+					)
+					(stroke
+						(width 0)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(polyline
+					(pts
+						(xy -2.032 -3.048) (xy -1.016 -3.048)
+					)
+					(stroke
+						(width 0)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(polyline
+					(pts
+						(xy -1.016 1.524) (xy -2.032 1.524)
+					)
+					(stroke
+						(width 0)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(polyline
+					(pts
+						(xy -1.016 -4.064) (xy -2.032 -4.064) (xy -1.524 -3.048) (xy -1.016 -4.064)
+					)
+					(stroke
+						(width 0)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(polyline
+					(pts
+						(xy -0.508 -1.143) (xy -0.508 -0.762) (xy 0.508 -0.762)
+					)
+					(stroke
+						(width 0)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(polyline
+					(pts
+						(xy 0 2.54) (xy -0.508 2.032) (xy 0.508 2.032) (xy 0 1.524) (xy 0 -4.064) (xy -0.508 -4.572) (xy 0.508 -4.572)
+						(xy 0 -5.08)
+					)
+					(stroke
+						(width 0)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(polyline
+					(pts
+						(xy 0.508 -1.778) (xy -0.508 -1.778) (xy 0 -0.762) (xy 0.508 -1.778)
+					)
+					(stroke
+						(width 0)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(polyline
+					(pts
+						(xy 1.016 1.524) (xy 2.032 1.524)
+					)
+					(stroke
+						(width 0)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(polyline
+					(pts
+						(xy 1.016 -3.048) (xy 2.032 -3.048)
+					)
+					(stroke
+						(width 0)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(polyline
+					(pts
+						(xy 2.032 0.508) (xy 1.016 0.508) (xy 1.524 1.524) (xy 2.032 0.508)
+					)
+					(stroke
+						(width 0)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(polyline
+					(pts
+						(xy 2.032 -4.064) (xy 1.016 -4.064) (xy 1.524 -3.048) (xy 2.032 -4.064)
+					)
+					(stroke
+						(width 0)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+			)
+			(symbol "USBLC6-2P6_1_1"
+				(rectangle
+					(start -2.54 2.794)
+					(end 2.54 -5.334)
+					(stroke
+						(width 0.254)
+						(type default)
+					)
+					(fill
+						(type background)
+					)
+				)
+				(polyline
+					(pts
+						(xy -0.508 2.032) (xy -1.524 2.032) (xy -1.524 -4.572) (xy -0.508 -4.572)
+					)
+					(stroke
+						(width 0)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(polyline
+					(pts
+						(xy 0.508 -4.572) (xy 1.524 -4.572) (xy 1.524 2.032) (xy 0.508 2.032)
+					)
+					(stroke
+						(width 0)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(pin passive line
+					(at -5.08 0 0)
+					(length 2.54)
+					(name "I/O1"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "1"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+				(pin passive line
+					(at -5.08 -2.54 0)
+					(length 2.54)
+					(name "I/O2"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "3"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+				(pin passive line
+					(at 0 5.08 270)
+					(length 2.54)
+					(name "VBUS"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "5"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+				(pin passive line
+					(at 0 -7.62 90)
+					(length 2.54)
+					(name "GND"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "2"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+				(pin passive line
+					(at 5.08 0 180)
+					(length 2.54)
+					(name "I/O1"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "6"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+				(pin passive line
+					(at 5.08 -2.54 180)
+					(length 2.54)
+					(name "I/O2"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "4"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+			)
+			(embedded_fonts no)
+		)
+		(symbol "Switch:SW_Push"
+			(pin_numbers
+				(hide yes)
+			)
+			(pin_names
+				(offset 1.016)
+				(hide yes)
+			)
+			(exclude_from_sim no)
+			(in_bom yes)
+			(on_board yes)
+			(property "Reference" "SW"
+				(at 1.27 2.54 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(justify left)
+				)
+			)
+			(property "Value" "SW_Push"
+				(at 0 -1.524 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(property "Footprint" ""
+				(at 0 5.08 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(hide yes)
+				)
+			)
+			(property "Datasheet" "~"
+				(at 0 5.08 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(hide yes)
+				)
+			)
+			(property "Description" "Push button switch, generic, two pins"
+				(at 0 0 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(hide yes)
+				)
+			)
+			(property "ki_keywords" "switch normally-open pushbutton push-button"
+				(at 0 0 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(hide yes)
+				)
+			)
+			(symbol "SW_Push_0_1"
+				(circle
+					(center -2.032 0)
+					(radius 0.508)
+					(stroke
+						(width 0)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(polyline
+					(pts
+						(xy 0 1.27) (xy 0 3.048)
+					)
+					(stroke
+						(width 0)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(circle
+					(center 2.032 0)
+					(radius 0.508)
+					(stroke
+						(width 0)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(polyline
+					(pts
+						(xy 2.54 1.27) (xy -2.54 1.27)
+					)
+					(stroke
+						(width 0)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(pin passive line
+					(at -5.08 0 0)
+					(length 2.54)
+					(name "1"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "1"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+				(pin passive line
+					(at 5.08 0 180)
+					(length 2.54)
+					(name "2"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "2"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+			)
+			(embedded_fonts no)
+		)
+		(symbol "Transistor_FET:AO3400A"
+			(pin_names
+				(offset 0)
+				(hide yes)
+			)
+			(exclude_from_sim no)
+			(in_bom yes)
+			(on_board yes)
+			(property "Reference" "Q"
+				(at 5.08 1.905 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(justify left)
+				)
+			)
+			(property "Value" "AO3400A"
+				(at 5.08 0 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(justify left)
+				)
+			)
+			(property "Footprint" "Package_TO_SOT_SMD:SOT-23"
+				(at 5.08 -1.905 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+						(italic yes)
+					)
+					(justify left)
+					(hide yes)
+				)
+			)
+			(property "Datasheet" "http://www.aosmd.com/pdfs/datasheet/AO3400A.pdf"
+				(at 5.08 -3.81 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(justify left)
+					(hide yes)
+				)
+			)
+			(property "Description" "30V Vds, 5.7A Id, N-Channel MOSFET, SOT-23"
+				(at 0 0 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(hide yes)
+				)
+			)
+			(property "ki_keywords" "N-Channel MOSFET"
+				(at 0 0 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(hide yes)
+				)
+			)
+			(property "ki_fp_filters" "SOT?23*"
+				(at 0 0 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(hide yes)
+				)
+			)
+			(symbol "AO3400A_0_1"
+				(polyline
+					(pts
+						(xy 0.254 1.905) (xy 0.254 -1.905)
+					)
+					(stroke
+						(width 0.254)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(polyline
+					(pts
+						(xy 0.254 0) (xy -2.54 0)
+					)
+					(stroke
+						(width 0)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(polyline
+					(pts
+						(xy 0.762 2.286) (xy 0.762 1.27)
+					)
+					(stroke
+						(width 0.254)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(polyline
+					(pts
+						(xy 0.762 0.508) (xy 0.762 -0.508)
+					)
+					(stroke
+						(width 0.254)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(polyline
+					(pts
+						(xy 0.762 -1.27) (xy 0.762 -2.286)
+					)
+					(stroke
+						(width 0.254)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(polyline
+					(pts
+						(xy 0.762 -1.778) (xy 3.302 -1.778) (xy 3.302 1.778) (xy 0.762 1.778)
+					)
+					(stroke
+						(width 0)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(polyline
+					(pts
+						(xy 1.016 0) (xy 2.032 0.381) (xy 2.032 -0.381) (xy 1.016 0)
+					)
+					(stroke
+						(width 0)
+						(type default)
+					)
+					(fill
+						(type outline)
+					)
+				)
+				(circle
+					(center 1.651 0)
+					(radius 2.794)
+					(stroke
+						(width 0.254)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(polyline
+					(pts
+						(xy 2.54 2.54) (xy 2.54 1.778)
+					)
+					(stroke
+						(width 0)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(circle
+					(center 2.54 1.778)
+					(radius 0.254)
+					(stroke
+						(width 0)
+						(type default)
+					)
+					(fill
+						(type outline)
+					)
+				)
+				(circle
+					(center 2.54 -1.778)
+					(radius 0.254)
+					(stroke
+						(width 0)
+						(type default)
+					)
+					(fill
+						(type outline)
+					)
+				)
+				(polyline
+					(pts
+						(xy 2.54 -2.54) (xy 2.54 0) (xy 0.762 0)
+					)
+					(stroke
+						(width 0)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(polyline
+					(pts
+						(xy 2.921 0.381) (xy 3.683 0.381)
+					)
+					(stroke
+						(width 0)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(polyline
+					(pts
+						(xy 3.302 0.381) (xy 2.921 -0.254) (xy 3.683 -0.254) (xy 3.302 0.381)
+					)
+					(stroke
+						(width 0)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+			)
+			(symbol "AO3400A_1_1"
+				(pin input line
+					(at -5.08 0 0)
+					(length 2.54)
+					(name "G"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "1"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+				(pin passive line
+					(at 2.54 5.08 270)
+					(length 2.54)
+					(name "D"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "3"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+				(pin passive line
+					(at 2.54 -5.08 90)
+					(length 2.54)
+					(name "S"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "2"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+			)
+			(embedded_fonts no)
+		)
+		(symbol "library:HTCC-AM01"
 			(exclude_from_sim no)
 			(in_bom yes)
 			(on_board yes)
@@ -3121,911 +4017,6 @@
 						)
 					)
 					(number "12"
-						(effects
-							(font
-								(size 1.27 1.27)
-							)
-						)
-					)
-				)
-			)
-			(embedded_fonts no)
-		)
-		(symbol "Power_Protection:USBLC6-2P6"
-			(pin_names
-				(hide yes)
-			)
-			(exclude_from_sim no)
-			(in_bom yes)
-			(on_board yes)
-			(property "Reference" "U"
-				(at 0.635 5.715 0)
-				(effects
-					(font
-						(size 1.27 1.27)
-					)
-					(justify left)
-				)
-			)
-			(property "Value" "USBLC6-2P6"
-				(at 0.635 3.81 0)
-				(effects
-					(font
-						(size 1.27 1.27)
-					)
-					(justify left)
-				)
-			)
-			(property "Footprint" "Package_TO_SOT_SMD:SOT-666"
-				(at 1.016 -6.731 0)
-				(effects
-					(font
-						(size 1.27 1.27)
-						(italic yes)
-					)
-					(justify left)
-					(hide yes)
-				)
-			)
-			(property "Datasheet" "https://www.st.com/resource/en/datasheet/usblc6-2.pdf"
-				(at 1.016 -8.636 0)
-				(effects
-					(font
-						(size 1.27 1.27)
-					)
-					(justify left)
-					(hide yes)
-				)
-			)
-			(property "Description" "Very low capacitance ESD protection diode, 2 data-line, SOT-666"
-				(at 0 0 0)
-				(effects
-					(font
-						(size 1.27 1.27)
-					)
-					(hide yes)
-				)
-			)
-			(property "ki_keywords" "usb ethernet video"
-				(at 0 0 0)
-				(effects
-					(font
-						(size 1.27 1.27)
-					)
-					(hide yes)
-				)
-			)
-			(property "ki_fp_filters" "SOT?666*"
-				(at 0 0 0)
-				(effects
-					(font
-						(size 1.27 1.27)
-					)
-					(hide yes)
-				)
-			)
-			(symbol "USBLC6-2P6_0_0"
-				(circle
-					(center -1.524 0)
-					(radius 0.0001)
-					(stroke
-						(width 0.508)
-						(type default)
-					)
-					(fill
-						(type none)
-					)
-				)
-				(circle
-					(center -0.508 2.032)
-					(radius 0.0001)
-					(stroke
-						(width 0.508)
-						(type default)
-					)
-					(fill
-						(type none)
-					)
-				)
-				(circle
-					(center -0.508 -4.572)
-					(radius 0.0001)
-					(stroke
-						(width 0.508)
-						(type default)
-					)
-					(fill
-						(type none)
-					)
-				)
-				(circle
-					(center 0.508 2.032)
-					(radius 0.0001)
-					(stroke
-						(width 0.508)
-						(type default)
-					)
-					(fill
-						(type none)
-					)
-				)
-				(circle
-					(center 0.508 -4.572)
-					(radius 0.0001)
-					(stroke
-						(width 0.508)
-						(type default)
-					)
-					(fill
-						(type none)
-					)
-				)
-				(circle
-					(center 1.524 -2.54)
-					(radius 0.0001)
-					(stroke
-						(width 0.508)
-						(type default)
-					)
-					(fill
-						(type none)
-					)
-				)
-			)
-			(symbol "USBLC6-2P6_0_1"
-				(polyline
-					(pts
-						(xy -2.54 0) (xy 2.54 0)
-					)
-					(stroke
-						(width 0)
-						(type default)
-					)
-					(fill
-						(type none)
-					)
-				)
-				(polyline
-					(pts
-						(xy -2.54 -2.54) (xy 2.54 -2.54)
-					)
-					(stroke
-						(width 0)
-						(type default)
-					)
-					(fill
-						(type none)
-					)
-				)
-				(polyline
-					(pts
-						(xy -2.032 0.508) (xy -1.016 0.508) (xy -1.524 1.524) (xy -2.032 0.508)
-					)
-					(stroke
-						(width 0)
-						(type default)
-					)
-					(fill
-						(type none)
-					)
-				)
-				(polyline
-					(pts
-						(xy -2.032 -3.048) (xy -1.016 -3.048)
-					)
-					(stroke
-						(width 0)
-						(type default)
-					)
-					(fill
-						(type none)
-					)
-				)
-				(polyline
-					(pts
-						(xy -1.016 1.524) (xy -2.032 1.524)
-					)
-					(stroke
-						(width 0)
-						(type default)
-					)
-					(fill
-						(type none)
-					)
-				)
-				(polyline
-					(pts
-						(xy -1.016 -4.064) (xy -2.032 -4.064) (xy -1.524 -3.048) (xy -1.016 -4.064)
-					)
-					(stroke
-						(width 0)
-						(type default)
-					)
-					(fill
-						(type none)
-					)
-				)
-				(polyline
-					(pts
-						(xy -0.508 -1.143) (xy -0.508 -0.762) (xy 0.508 -0.762)
-					)
-					(stroke
-						(width 0)
-						(type default)
-					)
-					(fill
-						(type none)
-					)
-				)
-				(polyline
-					(pts
-						(xy 0 2.54) (xy -0.508 2.032) (xy 0.508 2.032) (xy 0 1.524) (xy 0 -4.064) (xy -0.508 -4.572) (xy 0.508 -4.572)
-						(xy 0 -5.08)
-					)
-					(stroke
-						(width 0)
-						(type default)
-					)
-					(fill
-						(type none)
-					)
-				)
-				(polyline
-					(pts
-						(xy 0.508 -1.778) (xy -0.508 -1.778) (xy 0 -0.762) (xy 0.508 -1.778)
-					)
-					(stroke
-						(width 0)
-						(type default)
-					)
-					(fill
-						(type none)
-					)
-				)
-				(polyline
-					(pts
-						(xy 1.016 1.524) (xy 2.032 1.524)
-					)
-					(stroke
-						(width 0)
-						(type default)
-					)
-					(fill
-						(type none)
-					)
-				)
-				(polyline
-					(pts
-						(xy 1.016 -3.048) (xy 2.032 -3.048)
-					)
-					(stroke
-						(width 0)
-						(type default)
-					)
-					(fill
-						(type none)
-					)
-				)
-				(polyline
-					(pts
-						(xy 2.032 0.508) (xy 1.016 0.508) (xy 1.524 1.524) (xy 2.032 0.508)
-					)
-					(stroke
-						(width 0)
-						(type default)
-					)
-					(fill
-						(type none)
-					)
-				)
-				(polyline
-					(pts
-						(xy 2.032 -4.064) (xy 1.016 -4.064) (xy 1.524 -3.048) (xy 2.032 -4.064)
-					)
-					(stroke
-						(width 0)
-						(type default)
-					)
-					(fill
-						(type none)
-					)
-				)
-			)
-			(symbol "USBLC6-2P6_1_1"
-				(rectangle
-					(start -2.54 2.794)
-					(end 2.54 -5.334)
-					(stroke
-						(width 0.254)
-						(type default)
-					)
-					(fill
-						(type background)
-					)
-				)
-				(polyline
-					(pts
-						(xy -0.508 2.032) (xy -1.524 2.032) (xy -1.524 -4.572) (xy -0.508 -4.572)
-					)
-					(stroke
-						(width 0)
-						(type default)
-					)
-					(fill
-						(type none)
-					)
-				)
-				(polyline
-					(pts
-						(xy 0.508 -4.572) (xy 1.524 -4.572) (xy 1.524 2.032) (xy 0.508 2.032)
-					)
-					(stroke
-						(width 0)
-						(type default)
-					)
-					(fill
-						(type none)
-					)
-				)
-				(pin passive line
-					(at -5.08 0 0)
-					(length 2.54)
-					(name "I/O1"
-						(effects
-							(font
-								(size 1.27 1.27)
-							)
-						)
-					)
-					(number "1"
-						(effects
-							(font
-								(size 1.27 1.27)
-							)
-						)
-					)
-				)
-				(pin passive line
-					(at -5.08 -2.54 0)
-					(length 2.54)
-					(name "I/O2"
-						(effects
-							(font
-								(size 1.27 1.27)
-							)
-						)
-					)
-					(number "3"
-						(effects
-							(font
-								(size 1.27 1.27)
-							)
-						)
-					)
-				)
-				(pin passive line
-					(at 0 5.08 270)
-					(length 2.54)
-					(name "VBUS"
-						(effects
-							(font
-								(size 1.27 1.27)
-							)
-						)
-					)
-					(number "5"
-						(effects
-							(font
-								(size 1.27 1.27)
-							)
-						)
-					)
-				)
-				(pin passive line
-					(at 0 -7.62 90)
-					(length 2.54)
-					(name "GND"
-						(effects
-							(font
-								(size 1.27 1.27)
-							)
-						)
-					)
-					(number "2"
-						(effects
-							(font
-								(size 1.27 1.27)
-							)
-						)
-					)
-				)
-				(pin passive line
-					(at 5.08 0 180)
-					(length 2.54)
-					(name "I/O1"
-						(effects
-							(font
-								(size 1.27 1.27)
-							)
-						)
-					)
-					(number "6"
-						(effects
-							(font
-								(size 1.27 1.27)
-							)
-						)
-					)
-				)
-				(pin passive line
-					(at 5.08 -2.54 180)
-					(length 2.54)
-					(name "I/O2"
-						(effects
-							(font
-								(size 1.27 1.27)
-							)
-						)
-					)
-					(number "4"
-						(effects
-							(font
-								(size 1.27 1.27)
-							)
-						)
-					)
-				)
-			)
-			(embedded_fonts no)
-		)
-		(symbol "Switch:SW_Omron_B3FS"
-			(pin_numbers
-				(hide yes)
-			)
-			(pin_names
-				(offset 1.016)
-				(hide yes)
-			)
-			(exclude_from_sim no)
-			(in_bom yes)
-			(on_board yes)
-			(property "Reference" "SW"
-				(at 1.27 2.54 0)
-				(effects
-					(font
-						(size 1.27 1.27)
-					)
-					(justify left)
-				)
-			)
-			(property "Value" "SW_Omron_B3FS"
-				(at 0 -1.524 0)
-				(effects
-					(font
-						(size 1.27 1.27)
-					)
-				)
-			)
-			(property "Footprint" ""
-				(at 0 5.08 0)
-				(effects
-					(font
-						(size 1.27 1.27)
-					)
-					(hide yes)
-				)
-			)
-			(property "Datasheet" "https://omronfs.omron.com/en_US/ecb/products/pdf/en-b3fs.pdf"
-				(at 0 5.08 0)
-				(effects
-					(font
-						(size 1.27 1.27)
-					)
-					(hide yes)
-				)
-			)
-			(property "Description" "Omron B3FS 6x6mm single pole normally-open tactile switch"
-				(at 0 0 0)
-				(effects
-					(font
-						(size 1.27 1.27)
-					)
-					(hide yes)
-				)
-			)
-			(property "ki_keywords" "switch normally-open pushbutton push-button"
-				(at 0 0 0)
-				(effects
-					(font
-						(size 1.27 1.27)
-					)
-					(hide yes)
-				)
-			)
-			(property "ki_fp_filters" "SW*Omron*B3FS*"
-				(at 0 0 0)
-				(effects
-					(font
-						(size 1.27 1.27)
-					)
-					(hide yes)
-				)
-			)
-			(symbol "SW_Omron_B3FS_0_1"
-				(circle
-					(center -2.032 0)
-					(radius 0.508)
-					(stroke
-						(width 0)
-						(type default)
-					)
-					(fill
-						(type none)
-					)
-				)
-				(polyline
-					(pts
-						(xy 0 1.27) (xy 0 3.048)
-					)
-					(stroke
-						(width 0)
-						(type default)
-					)
-					(fill
-						(type none)
-					)
-				)
-				(circle
-					(center 2.032 0)
-					(radius 0.508)
-					(stroke
-						(width 0)
-						(type default)
-					)
-					(fill
-						(type none)
-					)
-				)
-				(polyline
-					(pts
-						(xy 2.54 1.27) (xy -2.54 1.27)
-					)
-					(stroke
-						(width 0)
-						(type default)
-					)
-					(fill
-						(type none)
-					)
-				)
-				(pin passive line
-					(at -5.08 0 0)
-					(length 2.54)
-					(name "1"
-						(effects
-							(font
-								(size 1.27 1.27)
-							)
-						)
-					)
-					(number "1"
-						(effects
-							(font
-								(size 1.27 1.27)
-							)
-						)
-					)
-				)
-				(pin passive line
-					(at 5.08 0 180)
-					(length 2.54)
-					(name "2"
-						(effects
-							(font
-								(size 1.27 1.27)
-							)
-						)
-					)
-					(number "2"
-						(effects
-							(font
-								(size 1.27 1.27)
-							)
-						)
-					)
-				)
-			)
-			(embedded_fonts no)
-		)
-		(symbol "Transistor_FET:AO3400A"
-			(pin_names
-				(offset 0)
-				(hide yes)
-			)
-			(exclude_from_sim no)
-			(in_bom yes)
-			(on_board yes)
-			(property "Reference" "Q"
-				(at 5.08 1.905 0)
-				(effects
-					(font
-						(size 1.27 1.27)
-					)
-					(justify left)
-				)
-			)
-			(property "Value" "AO3400A"
-				(at 5.08 0 0)
-				(effects
-					(font
-						(size 1.27 1.27)
-					)
-					(justify left)
-				)
-			)
-			(property "Footprint" "Package_TO_SOT_SMD:SOT-23"
-				(at 5.08 -1.905 0)
-				(effects
-					(font
-						(size 1.27 1.27)
-						(italic yes)
-					)
-					(justify left)
-					(hide yes)
-				)
-			)
-			(property "Datasheet" "http://www.aosmd.com/pdfs/datasheet/AO3400A.pdf"
-				(at 5.08 -3.81 0)
-				(effects
-					(font
-						(size 1.27 1.27)
-					)
-					(justify left)
-					(hide yes)
-				)
-			)
-			(property "Description" "30V Vds, 5.7A Id, N-Channel MOSFET, SOT-23"
-				(at 0 0 0)
-				(effects
-					(font
-						(size 1.27 1.27)
-					)
-					(hide yes)
-				)
-			)
-			(property "ki_keywords" "N-Channel MOSFET"
-				(at 0 0 0)
-				(effects
-					(font
-						(size 1.27 1.27)
-					)
-					(hide yes)
-				)
-			)
-			(property "ki_fp_filters" "SOT?23*"
-				(at 0 0 0)
-				(effects
-					(font
-						(size 1.27 1.27)
-					)
-					(hide yes)
-				)
-			)
-			(symbol "AO3400A_0_1"
-				(polyline
-					(pts
-						(xy 0.254 1.905) (xy 0.254 -1.905)
-					)
-					(stroke
-						(width 0.254)
-						(type default)
-					)
-					(fill
-						(type none)
-					)
-				)
-				(polyline
-					(pts
-						(xy 0.254 0) (xy -2.54 0)
-					)
-					(stroke
-						(width 0)
-						(type default)
-					)
-					(fill
-						(type none)
-					)
-				)
-				(polyline
-					(pts
-						(xy 0.762 2.286) (xy 0.762 1.27)
-					)
-					(stroke
-						(width 0.254)
-						(type default)
-					)
-					(fill
-						(type none)
-					)
-				)
-				(polyline
-					(pts
-						(xy 0.762 0.508) (xy 0.762 -0.508)
-					)
-					(stroke
-						(width 0.254)
-						(type default)
-					)
-					(fill
-						(type none)
-					)
-				)
-				(polyline
-					(pts
-						(xy 0.762 -1.27) (xy 0.762 -2.286)
-					)
-					(stroke
-						(width 0.254)
-						(type default)
-					)
-					(fill
-						(type none)
-					)
-				)
-				(polyline
-					(pts
-						(xy 0.762 -1.778) (xy 3.302 -1.778) (xy 3.302 1.778) (xy 0.762 1.778)
-					)
-					(stroke
-						(width 0)
-						(type default)
-					)
-					(fill
-						(type none)
-					)
-				)
-				(polyline
-					(pts
-						(xy 1.016 0) (xy 2.032 0.381) (xy 2.032 -0.381) (xy 1.016 0)
-					)
-					(stroke
-						(width 0)
-						(type default)
-					)
-					(fill
-						(type outline)
-					)
-				)
-				(circle
-					(center 1.651 0)
-					(radius 2.794)
-					(stroke
-						(width 0.254)
-						(type default)
-					)
-					(fill
-						(type none)
-					)
-				)
-				(polyline
-					(pts
-						(xy 2.54 2.54) (xy 2.54 1.778)
-					)
-					(stroke
-						(width 0)
-						(type default)
-					)
-					(fill
-						(type none)
-					)
-				)
-				(circle
-					(center 2.54 1.778)
-					(radius 0.254)
-					(stroke
-						(width 0)
-						(type default)
-					)
-					(fill
-						(type outline)
-					)
-				)
-				(circle
-					(center 2.54 -1.778)
-					(radius 0.254)
-					(stroke
-						(width 0)
-						(type default)
-					)
-					(fill
-						(type outline)
-					)
-				)
-				(polyline
-					(pts
-						(xy 2.54 -2.54) (xy 2.54 0) (xy 0.762 0)
-					)
-					(stroke
-						(width 0)
-						(type default)
-					)
-					(fill
-						(type none)
-					)
-				)
-				(polyline
-					(pts
-						(xy 2.921 0.381) (xy 3.683 0.381)
-					)
-					(stroke
-						(width 0)
-						(type default)
-					)
-					(fill
-						(type none)
-					)
-				)
-				(polyline
-					(pts
-						(xy 3.302 0.381) (xy 2.921 -0.254) (xy 3.683 -0.254) (xy 3.302 0.381)
-					)
-					(stroke
-						(width 0)
-						(type default)
-					)
-					(fill
-						(type none)
-					)
-				)
-			)
-			(symbol "AO3400A_1_1"
-				(pin input line
-					(at -5.08 0 0)
-					(length 2.54)
-					(name "G"
-						(effects
-							(font
-								(size 1.27 1.27)
-							)
-						)
-					)
-					(number "1"
-						(effects
-							(font
-								(size 1.27 1.27)
-							)
-						)
-					)
-				)
-				(pin passive line
-					(at 2.54 5.08 270)
-					(length 2.54)
-					(name "D"
-						(effects
-							(font
-								(size 1.27 1.27)
-							)
-						)
-					)
-					(number "3"
-						(effects
-							(font
-								(size 1.27 1.27)
-							)
-						)
-					)
-				)
-				(pin passive line
-					(at 2.54 -5.08 90)
-					(length 2.54)
-					(name "S"
-						(effects
-							(font
-								(size 1.27 1.27)
-							)
-						)
-					)
-					(number "2"
 						(effects
 							(font
 								(size 1.27 1.27)
@@ -4889,6 +4880,12 @@
 		(uuid "0363fae2-5e4d-4a32-876c-4c76dc54762e")
 	)
 	(junction
+		(at 161.29 119.38)
+		(diameter 0)
+		(color 0 0 0 0)
+		(uuid "05f3a8a4-2ed7-415c-8565-dae7fe439344")
+	)
+	(junction
 		(at 223.52 68.58)
 		(diameter 0)
 		(color 0 0 0 0)
@@ -4973,6 +4970,12 @@
 		(uuid "4ddea198-9e7b-4977-a013-d888c7e751f2")
 	)
 	(junction
+		(at 165.1 119.38)
+		(diameter 0)
+		(color 0 0 0 0)
+		(uuid "50a1e620-138d-4cfc-ab9f-ddb3dfd4d1fa")
+	)
+	(junction
 		(at 140.97 144.78)
 		(diameter 0)
 		(color 0 0 0 0)
@@ -4997,12 +5000,6 @@
 		(uuid "54d6efb8-96e2-4aae-ad41-3064a0d06e13")
 	)
 	(junction
-		(at 161.29 124.46)
-		(diameter 0)
-		(color 0 0 0 0)
-		(uuid "57fd0429-5e4e-4bfa-9204-176bfd0955db")
-	)
-	(junction
 		(at 91.44 25.4)
 		(diameter 0)
 		(color 0 0 0 0)
@@ -5019,6 +5016,12 @@
 		(diameter 0)
 		(color 0 0 0 0)
 		(uuid "5de4f2e2-be80-4e12-9fe9-728253a2e4f7")
+	)
+	(junction
+		(at 161.29 124.46)
+		(diameter 0)
+		(color 0 0 0 0)
+		(uuid "6246d0f9-72e8-4888-9b2b-6e02a5221be0")
 	)
 	(junction
 		(at 72.39 45.72)
@@ -5123,6 +5126,12 @@
 		(uuid "ac102f4a-0196-4f88-8302-24cb15dbd8ef")
 	)
 	(junction
+		(at 166.37 124.46)
+		(diameter 0)
+		(color 0 0 0 0)
+		(uuid "b1151cbb-a0e8-43f0-8f7a-134827b48644")
+	)
+	(junction
 		(at 212.09 80.01)
 		(diameter 0)
 		(color 0 0 0 0)
@@ -5187,12 +5196,6 @@
 		(diameter 0)
 		(color 0 0 0 0)
 		(uuid "d30a631c-72be-4744-a88e-05082c51b806")
-	)
-	(junction
-		(at 161.29 119.38)
-		(diameter 0)
-		(color 0 0 0 0)
-		(uuid "d8d93167-5df7-48e9-8d2b-e0bb5705ce52")
 	)
 	(junction
 		(at 220.98 31.75)
@@ -5297,6 +5300,16 @@
 	(no_connect
 		(at 124.46 181.61)
 		(uuid "f7d3c689-7e63-4675-9f04-aea83ff97f5a")
+	)
+	(wire
+		(pts
+			(xy 165.1 132.08) (xy 172.72 132.08)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "00297c55-1846-468b-b665-68d85a162156")
 	)
 	(wire
 		(pts
@@ -5627,16 +5640,6 @@
 			(type default)
 		)
 		(uuid "1dd155b2-ae77-450d-b1c6-b4f4a6124838")
-	)
-	(wire
-		(pts
-			(xy 171.45 129.54) (xy 172.72 129.54)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "1e150a03-09e7-421f-8542-bf0e100e5d4f")
 	)
 	(wire
 		(pts
@@ -6140,16 +6143,6 @@
 	)
 	(wire
 		(pts
-			(xy 170.18 119.38) (xy 161.29 119.38)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "4b3ef713-2f92-497b-a455-129ee664c593")
-	)
-	(wire
-		(pts
 			(xy 223.52 68.58) (xy 223.52 71.12)
 		)
 		(stroke
@@ -6207,6 +6200,16 @@
 			(type default)
 		)
 		(uuid "53547594-2b75-42b7-b8c7-0e906878eed7")
+	)
+	(wire
+		(pts
+			(xy 161.29 124.46) (xy 166.37 124.46)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "54200adc-138e-42cf-95f0-882760c7c711")
 	)
 	(wire
 		(pts
@@ -6310,6 +6313,16 @@
 	)
 	(wire
 		(pts
+			(xy 166.37 129.54) (xy 172.72 129.54)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "5c816f24-a8db-4fa5-a4ff-8b670d3da9fb")
+	)
+	(wire
+		(pts
 			(xy 217.17 144.78) (xy 219.71 144.78)
 		)
 		(stroke
@@ -6357,16 +6370,6 @@
 			(type default)
 		)
 		(uuid "5f80a3ac-ddc8-4a7e-a6b4-318b67218400")
-	)
-	(wire
-		(pts
-			(xy 161.29 118.11) (xy 161.29 119.38)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "5f8cf9dc-2e96-4531-baa8-151cc3ff04fe")
 	)
 	(wire
 		(pts
@@ -6420,13 +6423,23 @@
 	)
 	(wire
 		(pts
-			(xy 161.29 119.38) (xy 161.29 120.65)
+			(xy 161.29 118.11) (xy 161.29 119.38)
 		)
 		(stroke
 			(width 0)
 			(type default)
 		)
 		(uuid "647be275-27e0-450f-9d9f-b77f3ec7eb05")
+	)
+	(wire
+		(pts
+			(xy 165.1 119.38) (xy 167.64 119.38)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "64d4652b-42dd-4569-a088-9e12666b70e9")
 	)
 	(wire
 		(pts
@@ -6497,6 +6510,16 @@
 			(type default)
 		)
 		(uuid "6d89943f-538c-456a-9e10-cbd9c618997e")
+	)
+	(wire
+		(pts
+			(xy 165.1 132.08) (xy 165.1 119.38)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "6de4241c-4e8c-44c8-bf00-3627c7595cac")
 	)
 	(wire
 		(pts
@@ -6590,6 +6613,16 @@
 	)
 	(wire
 		(pts
+			(xy 161.29 119.38) (xy 161.29 120.65)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "78a4f06f-28df-44d4-bf1c-59c7064fa819")
+	)
+	(wire
+		(pts
 			(xy 205.74 35.56) (xy 204.47 35.56)
 		)
 		(stroke
@@ -6637,6 +6670,16 @@
 			(type default)
 		)
 		(uuid "7a4a24c4-0d20-4473-9b14-a8f90c2f9705")
+	)
+	(wire
+		(pts
+			(xy 166.37 124.46) (xy 167.64 124.46)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "7d9f7847-635e-43bb-b738-eef0e4c87eb5")
 	)
 	(wire
 		(pts
@@ -6870,16 +6913,6 @@
 	)
 	(wire
 		(pts
-			(xy 170.18 132.08) (xy 170.18 119.38)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "96761fcf-1397-46aa-8c42-5884626b9de0")
-	)
-	(wire
-		(pts
 			(xy 161.29 123.19) (xy 161.29 124.46)
 		)
 		(stroke
@@ -7027,6 +7060,16 @@
 			(type default)
 		)
 		(uuid "a6a82dda-af0c-4211-931c-bc59fc50776f")
+	)
+	(wire
+		(pts
+			(xy 166.37 129.54) (xy 166.37 124.46)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "a6c6f4fc-1953-4c04-9b79-bfc50f299c95")
 	)
 	(wire
 		(pts
@@ -7287,6 +7330,16 @@
 			(type default)
 		)
 		(uuid "c541f3f5-2eb9-4b69-85de-7149d2416db2")
+	)
+	(wire
+		(pts
+			(xy 161.29 124.46) (xy 161.29 125.73)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "c6c3b45f-d8ef-47aa-b412-82b10d1d3173")
 	)
 	(wire
 		(pts
@@ -7560,16 +7613,6 @@
 	)
 	(wire
 		(pts
-			(xy 170.18 132.08) (xy 172.72 132.08)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "e9b6886a-c9e3-4068-ada6-b90590b69795")
-	)
-	(wire
-		(pts
 			(xy 92.71 138.43) (xy 102.87 138.43)
 		)
 		(stroke
@@ -7640,16 +7683,6 @@
 	)
 	(wire
 		(pts
-			(xy 161.29 124.46) (xy 161.29 125.73)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "efe4ed9c-ecf8-4f04-908e-6c76c659d4fb")
-	)
-	(wire
-		(pts
 			(xy 127 25.4) (xy 127 29.21)
 		)
 		(stroke
@@ -7660,13 +7693,13 @@
 	)
 	(wire
 		(pts
-			(xy 171.45 124.46) (xy 161.29 124.46)
+			(xy 161.29 119.38) (xy 165.1 119.38)
 		)
 		(stroke
 			(width 0)
 			(type default)
 		)
-		(uuid "f084468e-2e60-459a-9562-8e75f673c417")
+		(uuid "f0e06cb9-58eb-4014-ba90-28cf88dcf567")
 	)
 	(wire
 		(pts
@@ -7807,16 +7840,6 @@
 			(type default)
 		)
 		(uuid "ffc16ff3-800a-41a8-835c-117e0261c236")
-	)
-	(wire
-		(pts
-			(xy 171.45 129.54) (xy 171.45 124.46)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "fff8c4c7-ce1f-4265-85bb-d7bd4fbf3a04")
 	)
 	(global_label "D-"
 		(shape input)
@@ -7963,6 +7986,28 @@
 		(uuid "0c3ad049-8c04-4150-99e6-fe7a31a2e972")
 		(property "Intersheetrefs" "${INTERSHEET_REFS}"
 			(at 166.5733 105.41 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+				(hide yes)
+			)
+		)
+	)
+	(global_label "C_D-"
+		(shape input)
+		(at 167.64 119.38 0)
+		(fields_autoplaced yes)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left)
+		)
+		(uuid "0cb5857a-fdb4-439c-8840-194d6759aa5f")
+		(property "Intersheetrefs" "${INTERSHEET_REFS}"
+			(at 175.7052 119.38 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -8450,6 +8495,28 @@
 					(size 1.27 1.27)
 				)
 				(justify right)
+				(hide yes)
+			)
+		)
+	)
+	(global_label "C_D+"
+		(shape input)
+		(at 167.64 124.46 0)
+		(fields_autoplaced yes)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left)
+		)
+		(uuid "6eaca5ce-8e26-4ecc-bacf-2eb5bd26fd89")
+		(property "Intersheetrefs" "${INTERSHEET_REFS}"
+			(at 175.7052 124.46 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
 				(hide yes)
 			)
 		)
@@ -8965,7 +9032,7 @@
 			(uuid "ba912c3d-c4d8-46c2-babf-9f80943aada0")
 		)
 		(instances
-			(project "plytka"
+			(project "lowy-na-lisa"
 				(path "/a5474e04-ba65-41a7-9e5c-ab57fc53d54d"
 					(reference "R1")
 					(unit 1)
@@ -9031,7 +9098,7 @@
 			(uuid "e5f7252e-dcba-410b-a8e1-8a61805f629c")
 		)
 		(instances
-			(project "plytka"
+			(project "lowy-na-lisa"
 				(path "/a5474e04-ba65-41a7-9e5c-ab57fc53d54d"
 					(reference "#PWR018")
 					(unit 1)
@@ -9110,7 +9177,7 @@
 			(uuid "4dfb27a8-3796-4337-9af6-2081453b9de3")
 		)
 		(instances
-			(project "plytka"
+			(project "lowy-na-lisa"
 				(path "/a5474e04-ba65-41a7-9e5c-ab57fc53d54d"
 					(reference "C10")
 					(unit 1)
@@ -9186,7 +9253,7 @@
 			(uuid "7ad556fd-642b-4009-a08c-6e691fa6918a")
 		)
 		(instances
-			(project "plytka"
+			(project "lowy-na-lisa"
 				(path "/a5474e04-ba65-41a7-9e5c-ab57fc53d54d"
 					(reference "C1")
 					(unit 1)
@@ -9195,7 +9262,7 @@
 		)
 	)
 	(symbol
-		(lib_id "Switch:SW_Omron_B3FS")
+		(lib_id "Switch:SW_Push")
 		(at 88.9 72.39 0)
 		(unit 1)
 		(exclude_from_sim no)
@@ -9229,7 +9296,7 @@
 				(hide yes)
 			)
 		)
-		(property "Datasheet" "https://omronfs.omron.com/en_US/ecb/products/pdf/en-b3fs.pdf"
+		(property "Datasheet" "https://www.lcsc.com/datasheet/C393942.pdf"
 			(at 88.9 67.31 0)
 			(effects
 				(font
@@ -9238,7 +9305,7 @@
 				(hide yes)
 			)
 		)
-		(property "Description" "Omron B3FS 6x6mm single pole normally-open tactile switch"
+		(property "Description" "Tactile Switch SPST 3.5mm 4.55mm x 1.8mm Surface Mount, Right Angle"
 			(at 88.9 72.39 0)
 			(effects
 				(font
@@ -9263,7 +9330,7 @@
 			(uuid "b43a97d3-060d-4611-a300-99bdacc62f76")
 		)
 		(instances
-			(project "plytka"
+			(project "lowy-na-lisa"
 				(path "/a5474e04-ba65-41a7-9e5c-ab57fc53d54d"
 					(reference "SW2")
 					(unit 1)
@@ -9328,7 +9395,7 @@
 			(uuid "1a765f9b-a709-4902-9ce4-d45ac9b3b0f1")
 		)
 		(instances
-			(project "plytka"
+			(project "lowy-na-lisa"
 				(path "/a5474e04-ba65-41a7-9e5c-ab57fc53d54d"
 					(reference "#PWR017")
 					(unit 1)
@@ -9393,7 +9460,7 @@
 			(uuid "10893f56-f4e7-499b-81fd-463c7a50d853")
 		)
 		(instances
-			(project "plytka"
+			(project "lowy-na-lisa"
 				(path "/a5474e04-ba65-41a7-9e5c-ab57fc53d54d"
 					(reference "#PWR019")
 					(unit 1)
@@ -9477,7 +9544,7 @@
 			(uuid "5dbb68bd-5fa9-4a65-880e-6832c78ad475")
 		)
 		(instances
-			(project "plytka"
+			(project "lowy-na-lisa"
 				(path "/a5474e04-ba65-41a7-9e5c-ab57fc53d54d"
 					(reference "D1")
 					(unit 1)
@@ -9555,7 +9622,7 @@
 			(uuid "c858596a-d0ca-4a4a-8c3c-aae33736f2b3")
 		)
 		(instances
-			(project "plytka"
+			(project "lowy-na-lisa"
 				(path "/a5474e04-ba65-41a7-9e5c-ab57fc53d54d"
 					(reference "C8")
 					(unit 1)
@@ -9620,7 +9687,7 @@
 			(uuid "6180e9e6-ac83-4782-8dd9-7a2de76c6d54")
 		)
 		(instances
-			(project "plytka"
+			(project "lowy-na-lisa"
 				(path "/a5474e04-ba65-41a7-9e5c-ab57fc53d54d"
 					(reference "#PWR015")
 					(unit 1)
@@ -9698,7 +9765,7 @@
 			(uuid "3f2ba7cb-73aa-49e5-bdd4-5033ff9bac9d")
 		)
 		(instances
-			(project "plytka"
+			(project "lowy-na-lisa"
 				(path "/a5474e04-ba65-41a7-9e5c-ab57fc53d54d"
 					(reference "D8")
 					(unit 1)
@@ -9777,7 +9844,7 @@
 			(uuid "1dbeddf6-6738-47f5-8938-dcc6b13ff47d")
 		)
 		(instances
-			(project "plytka"
+			(project "lowy-na-lisa"
 				(path "/a5474e04-ba65-41a7-9e5c-ab57fc53d54d"
 					(reference "R5")
 					(unit 1)
@@ -9843,7 +9910,7 @@
 			(uuid "225f2076-0dda-470b-bdc2-29736202ecd4")
 		)
 		(instances
-			(project "plytka"
+			(project "lowy-na-lisa"
 				(path "/a5474e04-ba65-41a7-9e5c-ab57fc53d54d"
 					(reference "#PWR06")
 					(unit 1)
@@ -9922,7 +9989,7 @@
 			(uuid "78094a3d-87d3-4809-a75d-1b54be0549df")
 		)
 		(instances
-			(project "plytka"
+			(project "lowy-na-lisa"
 				(path "/a5474e04-ba65-41a7-9e5c-ab57fc53d54d"
 					(reference "C9")
 					(unit 1)
@@ -10006,7 +10073,7 @@
 			(uuid "ea8b1076-b960-4b4a-a4fe-847aefd254f7")
 		)
 		(instances
-			(project "plytka"
+			(project "lowy-na-lisa"
 				(path "/a5474e04-ba65-41a7-9e5c-ab57fc53d54d"
 					(reference "J1")
 					(unit 1)
@@ -10082,7 +10149,7 @@
 			(uuid "050e7081-8c43-4f89-acd4-33af0d056e4e")
 		)
 		(instances
-			(project "plytka"
+			(project "lowy-na-lisa"
 				(path "/a5474e04-ba65-41a7-9e5c-ab57fc53d54d"
 					(reference "C18")
 					(unit 1)
@@ -10160,7 +10227,7 @@
 			(uuid "9ac49776-3e42-489f-b57c-04f3f4598ac5")
 		)
 		(instances
-			(project "plytka"
+			(project "lowy-na-lisa"
 				(path "/a5474e04-ba65-41a7-9e5c-ab57fc53d54d"
 					(reference "C6")
 					(unit 1)
@@ -10225,7 +10292,7 @@
 			(uuid "691239d6-e58e-465a-937d-f79dfc114413")
 		)
 		(instances
-			(project "plytka"
+			(project "lowy-na-lisa"
 				(path "/a5474e04-ba65-41a7-9e5c-ab57fc53d54d"
 					(reference "#PWR012")
 					(unit 1)
@@ -10303,7 +10370,7 @@
 			(uuid "16eac650-3e78-462e-863c-2c8305655a06")
 		)
 		(instances
-			(project "plytka"
+			(project "lowy-na-lisa"
 				(path "/a5474e04-ba65-41a7-9e5c-ab57fc53d54d"
 					(reference "C11")
 					(unit 1)
@@ -10425,7 +10492,7 @@
 			(uuid "77eb8236-f4a6-432e-9d35-d948973e2471")
 		)
 		(instances
-			(project "plytka"
+			(project "lowy-na-lisa"
 				(path "/a5474e04-ba65-41a7-9e5c-ab57fc53d54d"
 					(reference "J3")
 					(unit 1)
@@ -10504,7 +10571,7 @@
 			(uuid "2ee1801c-c86d-41ce-94ef-1ccfa813648b")
 		)
 		(instances
-			(project "plytka"
+			(project "lowy-na-lisa"
 				(path "/a5474e04-ba65-41a7-9e5c-ab57fc53d54d"
 					(reference "C13")
 					(unit 1)
@@ -10569,7 +10636,7 @@
 			(uuid "75e1de7a-8a06-4e3f-b269-293974f03fbe")
 		)
 		(instances
-			(project "plytka"
+			(project "lowy-na-lisa"
 				(path "/a5474e04-ba65-41a7-9e5c-ab57fc53d54d"
 					(reference "#PWR011")
 					(unit 1)
@@ -10635,7 +10702,7 @@
 			(uuid "bacd17d2-7754-4902-9553-063a0ad98009")
 		)
 		(instances
-			(project "plytka"
+			(project "lowy-na-lisa"
 				(path "/a5474e04-ba65-41a7-9e5c-ab57fc53d54d"
 					(reference "#PWR07")
 					(unit 1)
@@ -10644,7 +10711,7 @@
 		)
 	)
 	(symbol
-		(lib_id "Switch:SW_Omron_B3FS")
+		(lib_id "Switch:SW_Push")
 		(at 26.67 72.39 0)
 		(unit 1)
 		(exclude_from_sim no)
@@ -10678,7 +10745,7 @@
 				(hide yes)
 			)
 		)
-		(property "Datasheet" "https://omronfs.omron.com/en_US/ecb/products/pdf/en-b3fs.pdf"
+		(property "Datasheet" "https://www.lcsc.com/datasheet/C393942.pdf"
 			(at 26.67 67.31 0)
 			(effects
 				(font
@@ -10687,7 +10754,7 @@
 				(hide yes)
 			)
 		)
-		(property "Description" "Omron B3FS 6x6mm single pole normally-open tactile switch"
+		(property "Description" "Tactile Switch SPST 3.5mm 4.55mm x 1.8mm Surface Mount, Right Angle"
 			(at 26.67 72.39 0)
 			(effects
 				(font
@@ -10712,7 +10779,7 @@
 			(uuid "4160310c-9331-470b-a89a-246fcb884213")
 		)
 		(instances
-			(project "plytka"
+			(project "lowy-na-lisa"
 				(path "/a5474e04-ba65-41a7-9e5c-ab57fc53d54d"
 					(reference "SW4")
 					(unit 1)
@@ -10721,7 +10788,7 @@
 		)
 	)
 	(symbol
-		(lib_id "New_Library:HTCC-AM01")
+		(lib_id "library:HTCC-AM01")
 		(at 105.41 176.53 0)
 		(unit 1)
 		(exclude_from_sim no)
@@ -10850,7 +10917,7 @@
 			(uuid "a050fe14-a558-4767-952e-037a146af22a")
 		)
 		(instances
-			(project "plytka"
+			(project "lowy-na-lisa"
 				(path "/a5474e04-ba65-41a7-9e5c-ab57fc53d54d"
 					(reference "HTCC-AM1")
 					(unit 1)
@@ -10915,7 +10982,7 @@
 			(uuid "f8f16f85-3748-4e21-89e1-7665776c49c3")
 		)
 		(instances
-			(project "plytka"
+			(project "lowy-na-lisa"
 				(path "/a5474e04-ba65-41a7-9e5c-ab57fc53d54d"
 					(reference "#PWR01")
 					(unit 1)
@@ -10981,7 +11048,7 @@
 			(uuid "1580a2c3-883d-4705-9ab3-8565a5b6c1fe")
 		)
 		(instances
-			(project "plytka"
+			(project "lowy-na-lisa"
 				(path "/a5474e04-ba65-41a7-9e5c-ab57fc53d54d"
 					(reference "#PWR04")
 					(unit 1)
@@ -11060,7 +11127,7 @@
 			(uuid "9c960fe8-5983-482e-9020-22437fc9dc5a")
 		)
 		(instances
-			(project "plytka"
+			(project "lowy-na-lisa"
 				(path "/a5474e04-ba65-41a7-9e5c-ab57fc53d54d"
 					(reference "R9")
 					(unit 1)
@@ -11144,7 +11211,7 @@
 			(uuid "6229da50-8b01-4be1-9580-de18a060c42a")
 		)
 		(instances
-			(project "plytka"
+			(project "lowy-na-lisa"
 				(path "/a5474e04-ba65-41a7-9e5c-ab57fc53d54d"
 					(reference "D4")
 					(unit 1)
@@ -11153,7 +11220,7 @@
 		)
 	)
 	(symbol
-		(lib_id "Switch:SW_Omron_B3FS")
+		(lib_id "Switch:SW_Push")
 		(at 121.92 71.12 0)
 		(unit 1)
 		(exclude_from_sim no)
@@ -11187,7 +11254,7 @@
 				(hide yes)
 			)
 		)
-		(property "Datasheet" "https://omronfs.omron.com/en_US/ecb/products/pdf/en-b3fs.pdf"
+		(property "Datasheet" "https://www.lcsc.com/datasheet/C393942.pdf"
 			(at 121.92 66.04 0)
 			(effects
 				(font
@@ -11196,7 +11263,7 @@
 				(hide yes)
 			)
 		)
-		(property "Description" "Omron B3FS 6x6mm single pole normally-open tactile switch"
+		(property "Description" "Tactile Switch SPST 3.5mm 4.55mm x 1.8mm Surface Mount, Right Angle"
 			(at 121.92 71.12 0)
 			(effects
 				(font
@@ -11221,7 +11288,7 @@
 			(uuid "8a9ff240-7282-42e4-b6f5-8efef82a72a7")
 		)
 		(instances
-			(project "plytka"
+			(project "lowy-na-lisa"
 				(path "/a5474e04-ba65-41a7-9e5c-ab57fc53d54d"
 					(reference "SW3")
 					(unit 1)
@@ -11299,7 +11366,7 @@
 			(uuid "5d8db864-2ae5-4a48-8e75-c19bdadbcb2b")
 		)
 		(instances
-			(project "plytka"
+			(project "lowy-na-lisa"
 				(path "/a5474e04-ba65-41a7-9e5c-ab57fc53d54d"
 					(reference "R6")
 					(unit 1)
@@ -11375,7 +11442,7 @@
 			(uuid "3bc52a25-e7a9-4277-ad2f-5f3ab951c8de")
 		)
 		(instances
-			(project "plytka"
+			(project "lowy-na-lisa"
 				(path "/a5474e04-ba65-41a7-9e5c-ab57fc53d54d"
 					(reference "R2")
 					(unit 1)
@@ -11451,7 +11518,7 @@
 			(uuid "1e7274ea-c8e9-4e35-9f6a-a19b19b293c6")
 		)
 		(instances
-			(project "plytka"
+			(project "lowy-na-lisa"
 				(path "/a5474e04-ba65-41a7-9e5c-ab57fc53d54d"
 					(reference "C3")
 					(unit 1)
@@ -11516,7 +11583,7 @@
 			(uuid "108bcaea-b685-4e4c-b138-15e5a554cb34")
 		)
 		(instances
-			(project "plytka"
+			(project "lowy-na-lisa"
 				(path "/a5474e04-ba65-41a7-9e5c-ab57fc53d54d"
 					(reference "#FLG02")
 					(unit 1)
@@ -11595,7 +11662,7 @@
 			(uuid "8ed4d62d-4ec2-4cc3-a69e-13e62b467087")
 		)
 		(instances
-			(project "plytka"
+			(project "lowy-na-lisa"
 				(path "/a5474e04-ba65-41a7-9e5c-ab57fc53d54d"
 					(reference "R7")
 					(unit 1)
@@ -11671,7 +11738,7 @@
 			(uuid "fef5efea-b9ce-46fd-bd73-c5a029e6ee99")
 		)
 		(instances
-			(project "plytka"
+			(project "lowy-na-lisa"
 				(path "/a5474e04-ba65-41a7-9e5c-ab57fc53d54d"
 					(reference "C17")
 					(unit 1)
@@ -11737,7 +11804,7 @@
 			(uuid "a158bb5f-4152-40c2-9d0c-36c150f29d93")
 		)
 		(instances
-			(project "plytka"
+			(project "lowy-na-lisa"
 				(path "/a5474e04-ba65-41a7-9e5c-ab57fc53d54d"
 					(reference "#PWR08")
 					(unit 1)
@@ -11831,7 +11898,7 @@
 			(uuid "fc9eb30f-73b9-4071-adf9-4f656b3bd650")
 		)
 		(instances
-			(project "plytka"
+			(project "lowy-na-lisa"
 				(path "/a5474e04-ba65-41a7-9e5c-ab57fc53d54d"
 					(reference "U3")
 					(unit 1)
@@ -11910,7 +11977,7 @@
 			(uuid "8ea937a5-e453-46af-b006-b25db40eaffb")
 		)
 		(instances
-			(project "plytka"
+			(project "lowy-na-lisa"
 				(path "/a5474e04-ba65-41a7-9e5c-ab57fc53d54d"
 					(reference "C14")
 					(unit 1)
@@ -11986,7 +12053,7 @@
 			(uuid "804be913-2ce9-4ae5-bd1b-c482114fad00")
 		)
 		(instances
-			(project "plytka"
+			(project "lowy-na-lisa"
 				(path "/a5474e04-ba65-41a7-9e5c-ab57fc53d54d"
 					(reference "C2")
 					(unit 1)
@@ -12051,7 +12118,7 @@
 			(uuid "1d9cb529-b860-457e-8dac-ac6b7c8e08ef")
 		)
 		(instances
-			(project "plytka"
+			(project "lowy-na-lisa"
 				(path "/a5474e04-ba65-41a7-9e5c-ab57fc53d54d"
 					(reference "#FLG0101")
 					(unit 1)
@@ -12116,7 +12183,7 @@
 			(uuid "4ed8c363-65d7-42db-b87e-31674dd5c31b")
 		)
 		(instances
-			(project "plytka"
+			(project "lowy-na-lisa"
 				(path "/a5474e04-ba65-41a7-9e5c-ab57fc53d54d"
 					(reference "#PWR03")
 					(unit 1)
@@ -12200,7 +12267,7 @@
 			(uuid "228fff52-3f8f-49b8-a527-9cf99dbee231")
 		)
 		(instances
-			(project "plytka"
+			(project "lowy-na-lisa"
 				(path "/a5474e04-ba65-41a7-9e5c-ab57fc53d54d"
 					(reference "D6")
 					(unit 1)
@@ -12218,7 +12285,7 @@
 		(dnp no)
 		(uuid "93ff876b-3422-48d3-8648-1856db59bd2a")
 		(property "Reference" "R3"
-			(at 170.434 117.348 90)
+			(at 165.862 114.554 90)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -12276,7 +12343,7 @@
 			(uuid "8c25ff72-b4e0-42d0-a5be-1b12bc7bd585")
 		)
 		(instances
-			(project "plytka"
+			(project "lowy-na-lisa"
 				(path "/a5474e04-ba65-41a7-9e5c-ab57fc53d54d"
 					(reference "R3")
 					(unit 1)
@@ -12361,7 +12428,7 @@
 			(uuid "c921bf86-fecf-400a-bf93-01deddb35d7b")
 		)
 		(instances
-			(project "plytka"
+			(project "lowy-na-lisa"
 				(path "/a5474e04-ba65-41a7-9e5c-ab57fc53d54d"
 					(reference "Q2")
 					(unit 1)
@@ -12427,7 +12494,7 @@
 			(uuid "dee1edc4-f657-41f6-8e95-5dfac4e4a55e")
 		)
 		(instances
-			(project "plytka"
+			(project "lowy-na-lisa"
 				(path "/a5474e04-ba65-41a7-9e5c-ab57fc53d54d"
 					(reference "#PWR05")
 					(unit 1)
@@ -12493,7 +12560,7 @@
 			(uuid "b147bb20-4e2d-4d76-b16f-e1d8d0edad74")
 		)
 		(instances
-			(project "plytka"
+			(project "lowy-na-lisa"
 				(path "/a5474e04-ba65-41a7-9e5c-ab57fc53d54d"
 					(reference "#PWR013")
 					(unit 1)
@@ -12569,7 +12636,7 @@
 			(uuid "1944e1ab-8b6a-4b53-b210-60b43908055c")
 		)
 		(instances
-			(project "plytka"
+			(project "lowy-na-lisa"
 				(path "/a5474e04-ba65-41a7-9e5c-ab57fc53d54d"
 					(reference "L1")
 					(unit 1)
@@ -12675,7 +12742,7 @@
 			(uuid "4697f5e8-48bc-4685-8dd2-c2798da3da1b")
 		)
 		(instances
-			(project "plytka"
+			(project "lowy-na-lisa"
 				(path "/a5474e04-ba65-41a7-9e5c-ab57fc53d54d"
 					(reference "BT1")
 					(unit 1)
@@ -12751,7 +12818,7 @@
 			(uuid "8f43acd9-dba1-4915-be92-f44ad85cbc96")
 		)
 		(instances
-			(project "plytka"
+			(project "lowy-na-lisa"
 				(path "/a5474e04-ba65-41a7-9e5c-ab57fc53d54d"
 					(reference "C16")
 					(unit 1)
@@ -12830,7 +12897,7 @@
 			(uuid "72d86c1b-854f-44ab-9200-587ec7a73449")
 		)
 		(instances
-			(project "plytka"
+			(project "lowy-na-lisa"
 				(path "/a5474e04-ba65-41a7-9e5c-ab57fc53d54d"
 					(reference "JP1")
 					(unit 1)
@@ -12895,7 +12962,7 @@
 			(uuid "8987ae46-4a81-41f0-b3eb-e7297330ebb7")
 		)
 		(instances
-			(project "plytka"
+			(project "lowy-na-lisa"
 				(path "/a5474e04-ba65-41a7-9e5c-ab57fc53d54d"
 					(reference "#PWR010")
 					(unit 1)
@@ -12980,7 +13047,7 @@
 			(uuid "8e26aa4b-b007-4d53-ba09-a5c8c4aa640c")
 		)
 		(instances
-			(project "plytka"
+			(project "lowy-na-lisa"
 				(path "/a5474e04-ba65-41a7-9e5c-ab57fc53d54d"
 					(reference "Q1")
 					(unit 1)
@@ -13056,7 +13123,7 @@
 			(uuid "8557e0f0-fab2-4a7f-b0c7-30c4c596d069")
 		)
 		(instances
-			(project "plytka"
+			(project "lowy-na-lisa"
 				(path "/a5474e04-ba65-41a7-9e5c-ab57fc53d54d"
 					(reference "C4")
 					(unit 1)
@@ -13140,7 +13207,7 @@
 			(uuid "a2aa3321-45d8-4f27-9840-6db691172585")
 		)
 		(instances
-			(project "plytka"
+			(project "lowy-na-lisa"
 				(path "/a5474e04-ba65-41a7-9e5c-ab57fc53d54d"
 					(reference "D5")
 					(unit 1)
@@ -13224,7 +13291,7 @@
 			(uuid "20712a29-6ae1-418e-b612-bd835bf844bc")
 		)
 		(instances
-			(project "plytka"
+			(project "lowy-na-lisa"
 				(path "/a5474e04-ba65-41a7-9e5c-ab57fc53d54d"
 					(reference "D7")
 					(unit 1)
@@ -13317,7 +13384,7 @@
 			(uuid "41748557-e73e-40d9-a9c2-da26665744fd")
 		)
 		(instances
-			(project "plytka"
+			(project "lowy-na-lisa"
 				(path "/a5474e04-ba65-41a7-9e5c-ab57fc53d54d"
 					(reference "U1")
 					(unit 1)
@@ -13401,7 +13468,7 @@
 			(uuid "9b73d3a4-8801-402a-b727-1138ff62586a")
 		)
 		(instances
-			(project "plytka"
+			(project "lowy-na-lisa"
 				(path "/a5474e04-ba65-41a7-9e5c-ab57fc53d54d"
 					(reference "D2")
 					(unit 1)
@@ -13467,7 +13534,7 @@
 			(uuid "298e4820-830e-46a7-bd92-c5f043bbd1ec")
 		)
 		(instances
-			(project "plytka"
+			(project "lowy-na-lisa"
 				(path "/a5474e04-ba65-41a7-9e5c-ab57fc53d54d"
 					(reference "#PWR021")
 					(unit 1)
@@ -13532,7 +13599,7 @@
 			(uuid "cad4ce4a-ce37-4c1f-867a-8e14b1a3b489")
 		)
 		(instances
-			(project "plytka"
+			(project "lowy-na-lisa"
 				(path "/a5474e04-ba65-41a7-9e5c-ab57fc53d54d"
 					(reference "#PWR020")
 					(unit 1)
@@ -13617,7 +13684,7 @@
 			(uuid "71e7b68c-3503-4a9c-a676-634a00d5899d")
 		)
 		(instances
-			(project "plytka"
+			(project "lowy-na-lisa"
 				(path "/a5474e04-ba65-41a7-9e5c-ab57fc53d54d"
 					(reference "LDO1")
 					(unit 1)
@@ -13626,7 +13693,7 @@
 		)
 	)
 	(symbol
-		(lib_id "Switch:SW_Omron_B3FS")
+		(lib_id "Switch:SW_Push")
 		(at 57.15 72.39 0)
 		(unit 1)
 		(exclude_from_sim no)
@@ -13660,7 +13727,7 @@
 				(hide yes)
 			)
 		)
-		(property "Datasheet" "https://omronfs.omron.com/en_US/ecb/products/pdf/en-b3fs.pdf"
+		(property "Datasheet" "https://www.lcsc.com/datasheet/C393942.pdf"
 			(at 57.15 67.31 0)
 			(effects
 				(font
@@ -13669,7 +13736,7 @@
 				(hide yes)
 			)
 		)
-		(property "Description" "Omron B3FS 6x6mm single pole normally-open tactile switch"
+		(property "Description" "Tactile Switch SPST 3.5mm 4.55mm x 1.8mm Surface Mount, Right Angle"
 			(at 57.15 72.39 0)
 			(effects
 				(font
@@ -13694,7 +13761,7 @@
 			(uuid "2cec03b1-fa27-476c-badd-667dcf48cfe6")
 		)
 		(instances
-			(project "plytka"
+			(project "lowy-na-lisa"
 				(path "/a5474e04-ba65-41a7-9e5c-ab57fc53d54d"
 					(reference "SW1")
 					(unit 1)
@@ -13783,7 +13850,7 @@
 			(uuid "6648ccf7-ea24-449a-a903-96198ee3bac8")
 		)
 		(instances
-			(project "plytka"
+			(project "lowy-na-lisa"
 				(path "/a5474e04-ba65-41a7-9e5c-ab57fc53d54d"
 					(reference "U2")
 					(unit 1)
@@ -13867,7 +13934,7 @@
 			(uuid "72c0296e-def7-495a-8b46-dc983ee2b432")
 		)
 		(instances
-			(project "plytka"
+			(project "lowy-na-lisa"
 				(path "/a5474e04-ba65-41a7-9e5c-ab57fc53d54d"
 					(reference "D3")
 					(unit 1)
@@ -13933,7 +14000,7 @@
 			(uuid "6e92593c-c89c-4765-b51f-a867f483d74b")
 		)
 		(instances
-			(project "plytka"
+			(project "lowy-na-lisa"
 				(path "/a5474e04-ba65-41a7-9e5c-ab57fc53d54d"
 					(reference "#PWR014")
 					(unit 1)
@@ -14012,7 +14079,7 @@
 			(uuid "cc58d8a3-2970-4230-9203-8e09bf47bde6")
 		)
 		(instances
-			(project "plytka"
+			(project "lowy-na-lisa"
 				(path "/a5474e04-ba65-41a7-9e5c-ab57fc53d54d"
 					(reference "C12")
 					(unit 1)
@@ -14090,7 +14157,7 @@
 			(uuid "3733333d-d977-4931-bfd1-6e5d84121fd5")
 		)
 		(instances
-			(project "plytka"
+			(project "lowy-na-lisa"
 				(path "/a5474e04-ba65-41a7-9e5c-ab57fc53d54d"
 					(reference "C7")
 					(unit 1)
@@ -14197,7 +14264,7 @@
 			(uuid "222d0f06-d1eb-403d-8318-62b0257485c4")
 		)
 		(instances
-			(project "plytka"
+			(project "lowy-na-lisa"
 				(path "/a5474e04-ba65-41a7-9e5c-ab57fc53d54d"
 					(reference "U4")
 					(unit 1)
@@ -14275,7 +14342,7 @@
 			(uuid "322d50de-7275-43f4-860f-4a4903c931fb")
 		)
 		(instances
-			(project "plytka"
+			(project "lowy-na-lisa"
 				(path "/a5474e04-ba65-41a7-9e5c-ab57fc53d54d"
 					(reference "C5")
 					(unit 1)
@@ -14354,7 +14421,7 @@
 			(uuid "88dbefc2-27e1-46d8-bb15-962b60838338")
 		)
 		(instances
-			(project "plytka"
+			(project "lowy-na-lisa"
 				(path "/a5474e04-ba65-41a7-9e5c-ab57fc53d54d"
 					(reference "R10")
 					(unit 1)
@@ -14432,7 +14499,7 @@
 			(uuid "c52441ff-f654-4f88-a98b-715a38cd16da")
 		)
 		(instances
-			(project "plytka"
+			(project "lowy-na-lisa"
 				(path "/a5474e04-ba65-41a7-9e5c-ab57fc53d54d"
 					(reference "R4")
 					(unit 1)
@@ -14497,7 +14564,7 @@
 			(uuid "8929946b-2fd3-4c18-bfec-028097644a82")
 		)
 		(instances
-			(project "plytka"
+			(project "lowy-na-lisa"
 				(path "/a5474e04-ba65-41a7-9e5c-ab57fc53d54d"
 					(reference "#FLG01")
 					(unit 1)
@@ -14576,7 +14643,7 @@
 			(uuid "a71dd385-4f88-41ec-88ba-934246101e09")
 		)
 		(instances
-			(project "plytka"
+			(project "lowy-na-lisa"
 				(path "/a5474e04-ba65-41a7-9e5c-ab57fc53d54d"
 					(reference "C15")
 					(unit 1)
@@ -14641,7 +14708,7 @@
 			(uuid "2a703eef-7ef6-41f9-a7f3-e3dcfc750bcd")
 		)
 		(instances
-			(project "plytka"
+			(project "lowy-na-lisa"
 				(path "/a5474e04-ba65-41a7-9e5c-ab57fc53d54d"
 					(reference "#PWR016")
 					(unit 1)
