@@ -623,7 +623,7 @@
       "plot": "",
       "pos_files": "",
       "specctra_dsn": "",
-      "step": "",
+      "step": "lowy-na-lisa.step",
       "svg": "",
       "vrml": ""
     },
