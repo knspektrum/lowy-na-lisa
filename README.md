@@ -3,7 +3,6 @@
 Gra terenowa dla dzieci oparta na LoRa - polega na znalezieniu ukrytych nadajnikiów ("lisów") wykorzystując siłę sygnału radiowego
 
 ![3D render PCB](pcb/images/3d.png)
-![Schemat PCB](pcb/images/schematic.svg)
 
 ## O projekcie
 
@@ -29,7 +28,11 @@ Gra terenowa dla dzieci oparta na LoRa - polega na znalezieniu ukrytych nadajnik
 
 Projekt PCB znajduje się w katalogu `pcb/` i jest przygotowany pod produkcję w JLCPCB (z PCBA assembly).
 
-![Plot PCB](pcb/images/pcb.svg)
+Plot  |  Schemat
+:-------------------------:|:-------------------------:
+![Plot PCB](pcb/images/pcb.svg)  |  ![Schemat PCB](pcb/images/schematic.svg)
+
+
 
 ## Historia projektu
 
