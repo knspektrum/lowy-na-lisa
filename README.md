@@ -5,13 +5,13 @@ Gra terenowa dla dzieci oparta na LoRa - polega na znalezieniu ukrytych nadajnik
 ## Zdjęcia
 
 ### Schemat PCB
-![Schemat PCB](pcb/images/lowy-na-lisa.svg)
+![Schemat PCB](pcb/images/schematic.svg)
 
 ### Plot PCB
-![Plot PCB](pcb/images/lowy-na-lisa-F_Cu.svg)
+![Plot PCB](pcb/images/pcb.svg)
 
 ### 3D render PCB
-![3D render PCB](pcb/images/lowy-na-lisa-3d.jpg)
+![3D render PCB](pcb/images/3d.jpg)
 
 ## O projekcie
 
