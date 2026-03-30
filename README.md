@@ -68,13 +68,13 @@ Projekt PCB znajduje się w katalogu `pcb/` i jest przygotowany pod produkcję w
 
 ## Autorzy
 
-- Adrian - Animacje i interfejs ekranu
-- Hubert - Antena
+- Hubert Mucha - Antena
 - Antoni Sacewicz - Antena
-- Judyta - Antena
+- Judyta Ferenc - Antena
 - Antoni Antosik - obudowa 3D
-- Katarzyna - Lider, Projekt PCB
-- Maximilian Gaedig - Lider, Projekt PCB, Software
+- Adrian Bruch - Animacje i interfejs ekranu
+- Katarzyna Rybarkiewicz - Lider, Projekt PCB
+- Maximilian Gaedig - Aktualny Lider, Projekt PCB, Software
 
 ## Licencja
 
