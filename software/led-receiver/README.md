@@ -34,20 +34,21 @@ Każda dioda: pin → rezystor → anoda, katoda → GND. Antena do RFIO modułu
 ## Obsługa
 
 - Po starcie odbiornik słucha nadajnika 1 (863.0 MHz)
-- Krótkie naciśnięcie przycisku: następny nadajnik (po 7 wraca do 1, z diodami binarnymi po 8); przez 0.5 s diody pokazują nowe id
-- Cyfra w monitorze portu szeregowego (115200 baud) robi to samo: 1-7, z diodami binarnymi 1-8
+- Krótkie naciśnięcie przycisku: następny nadajnik (po ostatnim kanale wraca do 1); przez 0.5 s diody pokazują nowe id
+- Cyfra w monitorze portu szeregowego (115200 baud) robi to samo
 - Liczba zapalonych diod (od LED1) = siła sygnału: (110 + RSSI) / 15
 - Brak pakietu od wybranego nadajnika przez 1 s: diody gasną (nadajnik wysyła co 100 ms)
 - Aktualizacja przez Bluetooth: diody zapalają się kolejno w miarę wgrywania
 
 Kanały i ustawianie nadajników: [software/fox-transmitter](../fox-transmitter/README.md).
 
-### Tryb diod
+### Ustawienia
 
-Id nadajnika można pokazywać na dwa sposoby. Tryb przełącza się tylko przyciskiem **Tryb diod** na [stronie floty](../ota/README.md) (z potwierdzeniem), więc nie da się go zmienić przypadkiem na samym odbiorniku. Odbiornik pamięta go po wyłączeniu.
+Ustawia się je tylko w **Ustawieniach** odbiornika na [stronie floty](../ota/README.md), więc nie da się ich zmienić przypadkiem na samym odbiorniku. Odbiornik pamięta je po wyłączeniu.
 
-- **Zwykły** (domyślny): id 1-7, zapala się tyle diod od LED7 w dół, ile wynosi id
-- **Binarny**: id 1-8 zapisane dwójkowo, ● = świeci
+- **Liczba kanałów:** przez ile numerów nadajników przechodzi przycisk, domyślnie 7 (1-7)
+- **Diody zwykłe** (domyślnie): zapala się tyle diod od LED7 w dół, ile wynosi id, więc najwyżej 7 kanałów
+- **Diody binarne:** id zapisane dwójkowo, do 8 kanałów, ● = świeci
 
 Id  |  LED4 (8)  |  LED5 (4)  |  LED6 (2)  |  LED7 (1)
 :-------------------------:|:-------------------------:|:-------------------------:|:-------------------------:|:-------------------------:
@@ -60,7 +61,7 @@ Id  |  LED4 (8)  |  LED5 (4)  |  LED6 (2)  |  LED7 (1)
 7  |  ○  |  ●  |  ●  |  ●
 8  |  ●  |  ○  |  ○  |  ○
 
-Przełączenie na zwykły tryb przy id 8 wraca do id 1.
+Jeśli wybrane id nie mieści się w nowych ustawieniach (mniej kanałów, id 8 przy zwykłych diodach), odbiornik wraca do id 1.
 
 ## Programowanie
 

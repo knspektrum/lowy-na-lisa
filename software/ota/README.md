@@ -3,7 +3,8 @@
 Odbiorniki ESP32 i nadajniki można aktualizować i sprawdzać bez kabla, ze strony `software/web-flasher` otwartej w Chrome/Chromium (komputer albo Android). Strona pokazuje całą flotę: które urządzenia są włączone, na jakim kanale (id) i z jakim programem.
 
 ## Jak to działa
-- Każde urządzenie przez cały czas pracy nadaje przez Bluetooth LE (raz na sekundę) swoją nazwę `lisek-R-xxxx` (odbiornik) albo `lisek-T-xxxx` (nadajnik), id, stan i wersję programu
+- Każde urządzenie nadaje przez Bluetooth LE (raz na sekundę) swoją nazwę `lisek-R-xxxx` (odbiornik) albo `lisek-T-xxxx` (nadajnik; `xxxx` to końcówka adresu MAC płytki), id, stan i wersję programu
+- Lisy milkną domyślnie 10 minut po włączeniu, żeby nie dało się ich namierzyć telefonem; odbiorniki nadają cały czas
 - Wersja to skrót commita (`5a431fb`), z `+` gdy program zbudowano z niezacommitowanych zmian
 - Bluetooth dokłada ok. 1-3 mA do kilkudziesięciu mA, które i tak pobiera ESP32; wyłączone urządzenie nic nie pobiera
 - Urządzenie przyjmuje tylko program podpisany kluczem projektu (ECDSA P-256) i zbudowany dla jego typu; inne pliki odrzuca przed zapisem
@@ -31,10 +32,12 @@ software/ota/usb-flash.sh transmitter /dev/ttyUSB2
    ```
    i wejdź na http://localhost:8765. Programy wczytują się same; stronę można też otworzyć skądkolwiek i wczytać pliki `.lsk` ręcznie
 3. **Dodaj urządzenie** dodaje jedno urządzenie przez okno wyboru Chrome (okno pokazuje wszystkie włączone w pobliżu)
-4. **Aktualizuj** przy urządzeniu albo **Aktualizuj wszystkie włączone**
+4. **Aktualizuj** (strzałka) przy urządzeniu albo **Aktualizuj włączone**
 5. Nie zamykaj strony, dopóki stan nie pokaże „Zaktualizowano”: bez potwierdzenia urządzenie wróci do poprzedniej wersji
 
-Przy odbiornikach przycisk **Tryb diod** przełącza pokazywanie id między zwykłym (1-7) a binarnym (1-8), patrz [software/led-receiver](../led-receiver/README.md#tryb-diod).
+**Ustawienia** przy urządzeniu: odbiornik ma liczbę kanałów i sposób pokazywania id ([software/led-receiver](../led-receiver/README.md#ustawienia)), lis czas, po którym milknie jego Bluetooth ([software/fox-transmitter](../fox-transmitter/README.md#bluetooth)).
+
+Kafelki z liczbami u góry strony filtrują listę (włączone, wyłączone, do aktualizacji, lisy, odbiorniki), a pole wyszukiwania szuka po nazwie, kanale i wersji.
 
 ## Przeglądarki
 

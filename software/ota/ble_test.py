@@ -83,7 +83,7 @@ async def main():
             # firmware before the fast path only takes writes with response
             fast = "write-without-response" in d.c.services.get_characteristic(DATA).properties
             for o in range(0, len(blob), chunk):
-                while o - HDR - acked > WINDOW or not d.notes.empty():
+                while (fast and o - HDR - acked > WINDOW) or not d.notes.empty():
                     n = await asyncio.wait_for(d.notes.get(), 20)
                     if n.startswith("error:"):
                         raise RuntimeError(n)

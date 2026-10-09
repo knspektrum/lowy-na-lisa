@@ -4,20 +4,23 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#000000">
-<title>Łowy na Lisa - flota</title>
+<title>Łowy na Lisa</title>
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath d='M1 8h4l1.5-5 3 10 1.5-5h4' fill='none' stroke='%23ef4444' stroke-width='2'/%3E%3C/svg%3E">
 <style>
-  /* KN Spektrum house style (management-dash): red primary, zinc neutrals, 0.5rem radius */
+  /* KN Spektrum house style (management-dash): red primary, zinc neutrals, 0.5rem radius; Inter */
+  @font-face { font-family: "Inter"; src: url("inter-var.woff2") format("woff2"); font-weight: 100 900; font-display: swap; }
   :root {
-    --background: #f9f9f9; --foreground: #111; --card: #fff; --primary: #ef4444; --primary-hover: #dc2626; --primary-fg: #fff;
+    --background: #f4f4f5; --foreground: #111; --card: #fff; --primary: #ef4444; --primary-hover: #dc2626; --primary-fg: #fff;
     --muted: #f4f4f5; --muted-fg: #71717a; --border: #e4e4e7; --radius: 0.5rem;
-    --ok-bg: #dcfce7; --ok-fg: #166534; --bad-bg: #fee2e2; --bad-fg: #991b1b; --warn-bg: #fef3c7; --warn-fg: #92400e;
+    --ok: #16a34a; --ok-bg: #dcfce7; --ok-fg: #166534; --bad: #dc2626; --bad-bg: #fee2e2; --bad-fg: #991b1b;
+    --warn: #d97706; --warn-bg: #fef3c7; --warn-fg: #92400e; --info: #2563eb;
     color-scheme: light;
   }
   @media (prefers-color-scheme: dark) {
     :root:not([data-theme="light"]) {
-      --background: #111; --foreground: #fafafa; --card: #18181b; --muted: #27272a; --muted-fg: #a1a1aa; --border: #313136;
-      --ok-bg: #14532d; --ok-fg: #bbf7d0; --bad-bg: #7f1d1d; --bad-fg: #fecaca; --warn-bg: #78350f; --warn-fg: #fde68a;
+      --background: #0b0b0c; --foreground: #fafafa; --card: #18181b; --muted: #27272a; --muted-fg: #a1a1aa; --border: #2e2e33;
+      --ok: #4ade80; --ok-bg: #14532d; --ok-fg: #bbf7d0; --bad: #f87171; --bad-bg: #7f1d1d; --bad-fg: #fecaca;
+      --warn: #fbbf24; --warn-bg: #78350f; --warn-fg: #fde68a; --info: #60a5fa;
       color-scheme: dark;
     }
   }
@@ -25,61 +28,95 @@
   [hidden] { display: none !important; }
   html { -webkit-text-size-adjust: 100%; }
   body { background: var(--background); color: var(--foreground); margin: 0;
-    font: 15px/1.5 ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji"; }
-  header { background: #000; padding: 12px 16px; padding-top: max(12px, env(safe-area-inset-top)); }
-  header img { height: 30px; width: auto; display: block; }
-  main { max-width: 1100px; margin: 0 auto; padding: 20px 16px 96px; }
-  h1 { font-size: 24px; line-height: 1.2; font-weight: 700; margin: 0; }
-  h2 { font-size: 17px; margin: 0 0 4px; }
-  .sub { color: var(--muted-fg); margin: 4px 0 20px; }
+    font: 15px/1.5 "Inter", ui-sans-serif, system-ui, sans-serif; font-feature-settings: "cv11", "ss01";
+    -webkit-font-smoothing: antialiased; }
+  svg.i { width: 18px; height: 18px; flex: none; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+  header { background: #000; color: #fff; padding: 10px 16px; padding-top: max(10px, env(safe-area-inset-top)); }
+  .top { max-width: 1200px; margin: 0 auto; display: flex; align-items: center; gap: 12px; }
+  header img { height: 28px; width: auto; display: block; }
+  .gh { margin-left: auto; display: inline-flex; align-items: center; gap: 6px; color: #d4d4d8; text-decoration: none;
+    font-size: 14px; font-weight: 500; padding: 8px 10px; border-radius: var(--radius); min-height: 40px; }
+  .gh:hover { color: #fff; background: #27272a; }
+  .gh .sep { color: #52525b; }
+  main { max-width: 1200px; margin: 0 auto; padding: 20px 16px 96px; }
+  .title { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; margin-bottom: 16px; }
+  .title .icon { width: 40px; height: 40px; border-radius: var(--radius); background: var(--primary); color: #fff;
+    display: grid; place-items: center; flex: none; }
+  .title .icon svg { width: 22px; height: 22px; }
+  h1 { font-size: 22px; line-height: 1.2; font-weight: 700; margin: 0; letter-spacing: -0.01em; }
+  h2 { font-size: 17px; margin: 0 0 4px; font-weight: 600; }
+  .sub { color: var(--muted-fg); font-size: 14px; margin: 2px 0 0; }
+  .title > div:nth-child(2) { flex: 1; min-width: 0; }
+  .title .actions { margin-left: auto; display: flex; gap: 8px; flex-wrap: wrap; }
   .muted { color: var(--muted-fg); }
   .small-text { font-size: 13px; }
-  .mono { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 13px; }
+  .mono { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 12.5px; }
   code { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 13px; word-break: break-all; }
   .card { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); padding: 16px;
     box-shadow: 0 1px 2px rgba(0,0,0,.05); margin-bottom: 16px; }
   .alert { border-color: var(--primary); }
-  details.card > summary { cursor: pointer; font-weight: 500; min-height: 24px; }
+  details.card > summary { cursor: pointer; font-weight: 500; }
   details.card[open] > summary { margin-bottom: 8px; }
 
-  .stats { display: grid; gap: 12px; grid-template-columns: repeat(4, 1fr); margin-bottom: 16px; }
-  .stats .card { margin: 0; padding: 12px 14px; }
-  .stat-label { font-size: 13px; color: var(--muted-fg); }
-  .stat-value { font-size: 24px; font-weight: 700; line-height: 1.3; }
-  .stat-sub { font-size: 13px; color: var(--muted-fg); }
+  /* status strip: counts that double as filters */
+  .strip { display: grid; grid-template-columns: repeat(6, 1fr); gap: 0; padding: 4px; margin-bottom: 16px; }
+  .stat { font: inherit; text-align: left; background: none; border: 0; border-radius: calc(var(--radius) - 2px);
+    padding: 8px 12px; cursor: pointer; color: var(--foreground); display: block; min-height: 0; }
+  .stat:hover { background: var(--muted); }
+  .stat[aria-pressed="true"] { background: var(--muted); box-shadow: inset 0 0 0 1.5px var(--foreground); }
+  .stat b { display: block; font-size: 22px; font-weight: 700; line-height: 1.25; font-variant-numeric: tabular-nums; }
+  .stat span { font-size: 13px; }
+  .stat.ok span { color: var(--ok); } .stat.bad span { color: var(--bad); } .stat.warn span { color: var(--warn); }
 
-  button { font: inherit; font-size: 14px; font-weight: 500; min-height: 36px; padding: 6px 14px;
-    border-radius: calc(var(--radius) - 2px); border: 1px solid var(--border); background: var(--card); color: var(--foreground);
+  .tools { display: flex; gap: 8px; margin-bottom: 16px; }
+  .search { flex: 1; position: relative; }
+  .search input { width: 100%; font: inherit; min-height: 40px; padding: 8px 12px 8px 38px; border-radius: var(--radius);
+    border: 1px solid var(--border); background: var(--card); color: var(--foreground); }
+  .search svg { position: absolute; left: 12px; top: 50%; transform: translateY(-50%); color: var(--muted-fg); }
+
+  button { font: inherit; font-size: 14px; font-weight: 500; min-height: 40px; padding: 6px 14px;
+    border-radius: var(--radius); border: 1px solid var(--border); background: var(--card); color: var(--foreground);
     cursor: pointer; display: inline-flex; align-items: center; justify-content: center; gap: 6px; }
   button:hover:not(:disabled) { background: var(--muted); }
-  button:focus-visible, select:focus-visible, input:focus-visible, summary:focus-visible { outline: 2px solid var(--primary); outline-offset: 2px; }
+  :focus-visible { outline: 2px solid var(--primary); outline-offset: 2px; }
   button.primary { background: var(--primary); border-color: var(--primary); color: var(--primary-fg); }
   button.primary:hover:not(:disabled) { background: var(--primary-hover); }
-  button.ghost { border-color: transparent; background: transparent; color: var(--muted-fg); }
-  button:disabled { opacity: .5; cursor: default; }
-  .bar { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; margin-bottom: 16px; }
-  .bar .spacer { flex: 1; }
+  button.icon-btn { width: 40px; padding: 0; border-color: transparent; background: transparent; color: var(--muted-fg); }
+  button.icon-btn:hover:not(:disabled) { color: var(--foreground); }
+  button:disabled { opacity: .4; cursor: default; }
 
-  .badge { display: inline-flex; align-items: center; border-radius: 999px; padding: 1px 9px; font-size: 12px; font-weight: 600;
-    border: 1px solid var(--border); color: var(--muted-fg); white-space: nowrap; }
-  .badge.ok { background: var(--ok-bg); color: var(--ok-fg); border-color: transparent; }
-  .badge.bad { background: var(--bad-bg); color: var(--bad-fg); border-color: transparent; white-space: normal; }
-  .badge.warn { background: var(--warn-bg); color: var(--warn-fg); border-color: transparent; }
-  .dot { display: inline-block; width: 8px; height: 8px; border-radius: 50%; background: var(--muted-fg); flex: none; }
-  .dot.on { background: #22c55e; box-shadow: 0 0 0 3px rgba(34, 197, 94, .25); }
-
-  /* device list: a table on wide screens, cards on phones */
-  .list { padding: 0; overflow: hidden; }
-  table { border-collapse: collapse; width: 100%; }
-  th, td { text-align: left; padding: 10px 12px; border-bottom: 1px solid var(--border); vertical-align: middle; }
-  tbody tr:last-child td { border-bottom: 0; }
-  th { font-weight: 500; font-size: 13px; color: var(--muted-fg); background: var(--muted); }
-  .name { display: flex; align-items: center; gap: 10px; }
-  .cell { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; }
-  td.actions { text-align: right; white-space: nowrap; }
-  td.actions .cell { justify-content: flex-end; flex-wrap: nowrap; }
-  progress { width: 100px; height: 8px; accent-color: var(--primary); }
-  .empty { padding: 28px 16px; text-align: center; }
+  /* device cards */
+  .grid { display: grid; gap: 12px; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); margin-bottom: 16px; }
+  .dev { margin: 0; padding: 14px 16px; display: flex; flex-direction: column; gap: 6px; border-left: 4px solid var(--border); }
+  .dev.tx { border-left-color: var(--primary); }
+  .dev.rx { border-left-color: var(--info); }
+  .role { display: inline-flex; align-items: center; gap: 4px; font-size: 12px; font-weight: 600; text-transform: uppercase;
+    letter-spacing: .04em; }
+  .role svg { width: 14px; height: 14px; }
+  .tx .role { color: var(--primary); } .rx .role { color: var(--info); }
+  .dev.off { background: color-mix(in srgb, var(--card) 70%, var(--background)); }
+  .dev-head { display: flex; align-items: flex-start; gap: 8px; }
+  .dev-head .who { flex: 1; min-width: 0; }
+  .dev-name { font-weight: 600; font-size: 16px; line-height: 1.3; }
+  .dev-sub { color: var(--muted-fg); font-size: 13px; }
+  .dev-head .btns { display: flex; margin: -8px -10px 0 0; }
+  .seen { display: flex; align-items: center; gap: 6px; font-size: 13px; color: var(--muted-fg); }
+  .seen.on { color: var(--ok); }
+  .seen svg { width: 16px; height: 16px; }
+  .dev-foot { display: flex; align-items: center; gap: 10px; margin-top: 4px; }
+  .facts { flex: 1; display: flex; flex-wrap: wrap; gap: 4px 14px; font-size: 13px; }
+  .facts b { font-weight: 600; }
+  .pill { border-radius: calc(var(--radius) - 2px); padding: 5px 12px; font-size: 13px; font-weight: 600; white-space: nowrap;
+    background: var(--muted); color: var(--muted-fg); }
+  .pill.ok { background: var(--ok-bg); color: var(--ok-fg); }
+  .pill.bad { background: var(--bad-bg); color: var(--bad-fg); white-space: normal; }
+  .pill.warn { background: var(--warn-bg); color: var(--warn-fg); }
+  .tag { display: inline-flex; border-radius: 999px; padding: 0 8px; font-size: 12px; font-weight: 600;
+    background: var(--warn-bg); color: var(--warn-fg); }
+  .tag.ok { background: var(--ok-bg); color: var(--ok-fg); }
+  .bar-progress { height: 6px; border-radius: 3px; background: var(--muted); overflow: hidden; }
+  .bar-progress > div { height: 100%; background: var(--primary); transition: width .3s; }
+  .empty { padding: 32px 16px; text-align: center; }
 
   dialog { border: 1px solid var(--border); border-radius: var(--radius); background: var(--card); color: var(--foreground);
     padding: 20px; width: min(440px, calc(100vw - 32px)); max-height: calc(100dvh - 32px); overflow: auto;
@@ -87,10 +124,10 @@
   dialog::backdrop { background: rgba(0,0,0,.45); }
   .field { margin: 16px 0; }
   .field > label, .field > .label { display: block; font-weight: 500; margin-bottom: 6px; }
-  select { font: inherit; min-height: 44px; width: 100%; padding: 6px 10px; border-radius: calc(var(--radius) - 2px);
+  select { font: inherit; min-height: 44px; width: 100%; padding: 6px 10px; border-radius: var(--radius);
     border: 1px solid var(--border); background: var(--card); color: var(--foreground); }
   .choice { display: flex; gap: 10px; align-items: flex-start; padding: 10px 12px; border: 1px solid var(--border);
-    border-radius: calc(var(--radius) - 2px); margin-bottom: 8px; cursor: pointer; }
+    border-radius: var(--radius); margin-bottom: 8px; cursor: pointer; }
   .choice:has(input:checked) { border-color: var(--primary); box-shadow: 0 0 0 1px var(--primary); }
   .choice input { margin-top: 4px; accent-color: var(--primary); width: 18px; height: 18px; flex: none; }
   .dialog-actions { display: flex; gap: 8px; justify-content: flex-end; margin-top: 20px; }
@@ -102,35 +139,53 @@
 
   @media (max-width: 760px) {
     main { padding-top: 16px; }
-    h1 { font-size: 21px; }
-    .stats { grid-template-columns: repeat(2, 1fr); gap: 8px; }
-    .stat-value { font-size: 21px; }
-    button { min-height: 44px; }   /* touch targets */
-    .bar button { flex: 1 1 auto; }
-    .bar .spacer { display: none; }
+    .title .actions { width: 100%; margin-left: 0; }
+    .title .actions button { flex: 1; }
+    .strip { grid-template-columns: repeat(3, 1fr); }
+    .stat { padding: 8px; }
+    .stat b { font-size: 19px; }
+    button { min-height: 44px; }
+    button.icon-btn { width: 44px; }
+    .grid { grid-template-columns: 1fr; }
+    .tools { flex-wrap: wrap; }
+    .search { flex-basis: 100%; }
+    .tools > button { flex: 1; }
     .dialog-actions button { flex: 1; }
-    thead { display: none; }
-    table, tbody, tr, td { display: block; width: 100%; }
-    tbody tr { padding: 12px 14px; border-bottom: 1px solid var(--border); }
-    tbody tr:last-child { border-bottom: 0; }
-    td { border: 0; padding: 3px 0; display: flex; justify-content: space-between; align-items: center; gap: 12px; }
-    td::before { content: attr(data-l); color: var(--muted-fg); font-size: 13px; flex: none; }
-    td.first { padding-bottom: 8px; }
-    td.first::before, td.actions::before { content: none; }
-    td.actions { padding-top: 10px; }
-    td.actions .cell { width: 100%; }
-    td.actions button { flex: 1; }
-    td.actions button.ghost { flex: 0 0 auto; }
-    td .cell { justify-content: flex-end; text-align: right; }
+    .gh span { display: none; }
+    .gh { gap: 10px; }
   }
-  @media (prefers-reduced-motion: reduce) { #toast { transition: none; } }
+  @media (prefers-reduced-motion: reduce) { #toast, .bar-progress > div { transition: none; } }
 </style>
 </head>
 <body>
-<header><img src="spektrum-logo.png" alt="KN Spektrum" width="144" height="30"></header>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="i-radar" viewBox="0 0 24 24"><path d="M19.07 4.93A10 10 0 0 0 6.99 3.34"/><path d="M4 6h.01"/><path d="M2.29 9.62A10 10 0 1 0 21.31 8.35"/><path d="M16.24 7.76A6 6 0 1 0 8.23 16.67"/><path d="M12 18h.01"/><path d="M17.99 11.66A6 6 0 0 1 15.77 16.67"/><circle cx="12" cy="12" r="2"/><path d="m13.41 10.59 5.66-5.66"/></symbol>
+  <symbol id="i-search" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></symbol>
+  <symbol id="i-gear" viewBox="0 0 24 24"><path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/><circle cx="12" cy="12" r="3"/></symbol>
+  <symbol id="i-upload" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="m17 8-5-5-5 5"/><path d="M12 3v12"/></symbol>
+  <symbol id="i-x" viewBox="0 0 24 24"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></symbol>
+  <symbol id="i-link" viewBox="0 0 24 24"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></symbol>
+  <symbol id="i-wifi" viewBox="0 0 24 24"><path d="M12 20h.01"/><path d="M2 8.82a15 15 0 0 1 20 0"/><path d="M5 12.86a10 10 0 0 1 14 0"/><path d="M8.5 16.43a5 5 0 0 1 7 0"/></symbol>
+  <symbol id="i-clock" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></symbol>
+  <symbol id="i-github" viewBox="0 0 24 24"><path d="M15 22v-4a4.8 4.8 0 0 0-1-3.5c3 0 6-2 6-5.5.08-1.25-.27-2.48-1-3.5.28-1.15.28-2.35 0-3.5 0 0-1 0-3 1.5-2.64-.5-5.36-.5-8 0C6 2 5 2 5 2c-.3 1.15-.3 2.35 0 3.5A5.403 5.403 0 0 0 4 9c0 3.5 3 5.5 6 5.5-.39.49-.68 1.05-.85 1.65-.17.6-.22 1.23-.15 1.85v4"/><path d="M9 18c-4.51 2-5-2-7-2"/></symbol>
+  <symbol id="i-tower" viewBox="0 0 24 24"><path d="M4.9 16.1C1 12.2 1 5.8 4.9 1.9"/><path d="M7.8 4.7a6.14 6.14 0 0 0-.8 7.5"/><circle cx="12" cy="9" r="2"/><path d="M16.2 4.8c2 2 2.26 5.11.8 7.47"/><path d="M19.1 1.9a9.96 9.96 0 0 1 0 14.1"/><path d="M9.5 18h5"/><path d="m8 22 4-11 4 11"/></symbol>
+  <symbol id="i-handheld" viewBox="0 0 24 24"><rect x="6" y="6" width="12" height="16" rx="2"/><path d="M15 6V2"/><path d="M9 11h6"/><path d="M9 15h.01M12 15h.01M15 15h.01M9 18h.01M12 18h.01M15 18h.01"/></symbol>
+  <symbol id="i-oss" viewBox="0 0 24 24"><path d="M9.2 20.6A9 9 0 1 1 14.8 20.6L13.1 15.8A4 4 0 1 0 10.9 15.8Z"/></symbol>
+  <symbol id="i-plus" viewBox="0 0 24 24"><path d="M5 12h14"/><path d="M12 5v14"/></symbol>
+</svg>
+<header><div class="top"><img src="spektrum-logo.png" alt="KN Spektrum" width="134" height="28">
+  <a class="gh" href="https://github.com/knspektrum/lowy-na-lisa" target="_blank" rel="noopener"
+    title="Open source (GPLv3): kod na GitHubie" aria-label="Open source, GPLv3, kod na GitHubie">
+    <svg class="i"><use href="#i-oss"/></svg><span>Open source</span><span class="sep">·</span><svg class="i"><use href="#i-github"/></svg><span>GitHub</span></a></div></header>
 <main>
-<h1>Łowy na Lisa - flota</h1>
-<p class="sub">Które lisy i odbiorniki są włączone, na jakim kanale i z jakim programem</p>
+<div class="title">
+  <div class="icon"><svg class="i"><use href="#i-radar"/></svg></div>
+  <div><h1>Łowy na Lisa</h1><p class="sub">Które lisy i odbiorniki są włączone, na jakim kanale i z jakim programem</p></div>
+  <div class="actions">
+    <button id="scan" hidden><svg class="i"><use href="#i-radar"/></svg>Skanuj okolicę</button>
+    <button class="primary" id="add"><svg class="i"><use href="#i-plus"/></svg>Dodaj urządzenie</button>
+  </div>
+</div>
 
 <div class="card alert" id="unsupported" hidden>
   <h2>Ta przeglądarka nie obsługuje Bluetooth</h2>
@@ -139,46 +194,46 @@
   <code>localhost</code>.
 </div>
 
-<div class="stats">
-  <div class="card"><div class="stat-label">Włączone</div><div class="stat-value" id="stOn">0</div><div class="stat-sub" id="stOnSub">z 0 znanych</div></div>
-  <div class="card"><div class="stat-label">Lisy (nadajniki)</div><div class="stat-value" id="stTx">0/0</div><div class="stat-sub">włączone / znane</div></div>
-  <div class="card"><div class="stat-label">Odbiorniki</div><div class="stat-value" id="stRx">0/0</div><div class="stat-sub">włączone / znane</div></div>
-  <div class="card"><div class="stat-label">Najnowszy program</div><div class="stat-value" id="stCur">-</div><div class="stat-sub mono" id="images">nie wczytano</div></div>
+<div class="card strip" role="group" aria-label="Filtr">
+  <button class="stat" data-f="all" aria-pressed="true"><b id="nAll">0</b><span>Wszystkie</span></button>
+  <button class="stat ok" data-f="on" aria-pressed="false"><b id="nOn">0</b><span>Włączone</span></button>
+  <button class="stat" data-f="off" aria-pressed="false"><b id="nOff">0</b><span>Wyłączone</span></button>
+  <button class="stat warn" data-f="outdated" aria-pressed="false"><b id="nOld">0</b><span>Do aktualizacji</span></button>
+  <button class="stat" data-f="transmitter" aria-pressed="false"><b id="nTx">0</b><span>Nadajniki</span></button>
+  <button class="stat" data-f="receiver" aria-pressed="false"><b id="nRx">0</b><span>Odbiorniki</span></button>
 </div>
 
-<div class="bar">
-  <button class="primary" id="add">Dodaj urządzenie</button>
-  <button id="scan" hidden>Skanuj okolicę</button>
-  <span class="spacer"></span>
-  <button id="flashAll" disabled>Wszystkie aktualne</button>
+<div class="tools">
+  <label class="search"><svg class="i"><use href="#i-search"/></svg>
+    <input id="q" type="search" placeholder="Szukaj: nazwa, kanał, wersja" aria-label="Szukaj urządzenia" autocomplete="off"></label>
+  <button id="flashAll" disabled><svg class="i"><use href="#i-upload"/></svg><span>Wszystkie aktualne</span></button>
 </div>
 
-<div class="card list">
-<table>
-  <thead><tr><th>Urządzenie</th><th>Kanał</th><th>Program</th><th>Stan</th><th>Sygnał</th><th aria-label="Akcje"></th></tr></thead>
-  <tbody id="rows"></tbody>
-</table>
-<div class="empty muted" id="empty">
+<div class="grid" id="rows"></div>
+<div class="card empty muted" id="empty">
   Brak urządzeń. Włącz lisa albo odbiornik w pobliżu i kliknij <b>Dodaj urządzenie</b>.
 </div>
-</div>
+<div class="card empty muted" id="noMatch" hidden>Żadne urządzenie nie pasuje do filtra.</div>
 
 <details class="card small-text" id="help">
   <summary>Jak to działa i co obsługuje przeglądarka</summary>
-  <p>Każde urządzenie przez cały czas pracy nadaje przez Bluetooth swoją wersję, kanał i stan. Lista pamięta wszystkie
-  urządzenia, które ta przeglądarka widziała, więc wyłączone zostają na niej z czasem ostatniego sygnału.</p>
+  <p>Każde urządzenie nadaje przez Bluetooth swoją wersję, kanał i stan; lisy milkną po ustawionym czasie od włączenia,
+  żeby nie dało się ich namierzyć telefonem. Lista pamięta wszystkie urządzenia, które ta przeglądarka widziała.</p>
   <p>Urządzenia dodaje się po jednym; strona co 30 s sprawdza, czy są włączone. Po włączeniu
   <code>chrome://flags/#enable-experimental-web-platform-features</code> widzi je na bieżąco i pamięta między wizytami
   (Windows, macOS, Android), a na macOS i Androidzie „Skanuj okolicę” dodaje wszystkie naraz.</p>
   <p>Aktualizacja: urządzenie przyjmuje tylko podpisany program dla swojego typu. Po restarcie nowy program musi się zgłosić
   i potwierdzić, że radio działa; inaczej po 5 minutach (albo po awarii) wraca poprzednia wersja. Nie zamykaj strony, dopóki
   stan nie pokaże „Zaktualizowano”.</p>
-  <div class="bar" style="margin: 8px 0 0">
+  <p>Program: <span class="mono" id="images">nie wczytano</span></p>
+  <div style="display:flex; flex-wrap:wrap; gap:8px; align-items:center">
     <button id="loadFiles">Wczytaj program z pliku (.lsk)</button>
     <input type="file" id="files" accept=".lsk" multiple hidden>
     <label class="muted"><input type="checkbox" id="force"> Aktualizuj także urządzenia z tą samą wersją</label>
   </div>
 </details>
+<p class="muted small-text" style="text-align:center">KN Spektrum ·
+  <a href="https://github.com/knspektrum/lowy-na-lisa" target="_blank" rel="noopener" style="color:inherit">open source (GPLv3), kod i dokumentacja na GitHubie</a></p>
 </main>
 
 <dialog id="settings" aria-labelledby="setTitle">
@@ -298,7 +353,7 @@ function parseImage(buf) {
 function addImage(buf) {
   const img = parseImage(buf);
   images[img.role] = img;
-  $("images").innerHTML = Object.values(images).map(i => `${i.role === "receiver" ? "odb." : "lis"} ${esc(i.version)}`).join(" · ");
+  $("images").innerHTML = Object.values(images).map(i => `${i.role === "receiver" ? "odbiornik" : "lis"} ${esc(i.version)}`).join(", ");
   renderAll();
 }
 $("loadFiles").onclick = () => $("files").click();
@@ -380,7 +435,6 @@ $("add").onclick = async () => {
 // --- list ---
 function isOn(d) { return !!(d.live && d.lastSeen && Date.now() - d.lastSeen < (d.polled ? POLLED_ONLINE_MS : ONLINE_MS)); }
 function canTalk(d) { return !!(d.dev && permitted.has(d.dev.id)); }
-function badge(cls, text) { return `<span class="badge ${cls}">${esc(text)}</span>`; }
 function ago(t) {
   if (!t) return "nigdy";
   const s = Math.round((Date.now() - t) / 1000);
@@ -393,45 +447,90 @@ function signal(rssi) {
   if (rssi == null) return "";
   return rssi > -65 ? "mocny" : rssi > -80 ? "średni" : "słaby";
 }
+const icon = (id, label) => `<svg class="i" ${label ? `role="img" aria-label="${label}"` : 'aria-hidden="true"'}><use href="#i-${id}"/></svg>`;
+function title(d) {
+  if (d.role === "transmitter") return d.id ? `Nadajnik ${d.id}` : "Nadajnik";
+  if (d.role === "receiver") return d.id ? `Odbiornik na kanale ${d.id}` : "Odbiornik";
+  return "Urządzenie";
+}
+function roleTag(d) {
+  if (d.role === "transmitter") return `<span class="role">${icon("tower")}Nadajnik (lis)</span>`;
+  if (d.role === "receiver") return `<span class="role">${icon("handheld")}Odbiornik</span>`;
+  return "";
+}
+function outdatedOf(d) {
+  const img = images[d.role];
+  return !!(img && d.version && img.version !== d.version);
+}
 function render(d) {
   if (!d.row) {
-    d.row = document.createElement("tr");
+    d.row = document.createElement("article");
     $("rows").appendChild(d.row);
   }
   const on = isOn(d);
   const img = images[d.role];
-  const outdated = img && d.version && img.version !== d.version;
-  let state;
-  if (d.msg) state = badge(d.cls || "", d.msg);
-  else if (!on) state = badge("", d.role === "transmitter" && d.hide ? "Ukryty albo wyłączony" : "Wyłączone");
-  else if (d.healthy === false) state = badge("warn", "Radio nie odpowiada");
-  else state = badge(d.state === "ok" ? "ok" : "warn", STATE_LABELS[d.state] || d.state || "?");
-  const channel = d.id ? `<span><b>${d.id}</b>${d.role === "receiver" && d.channels ? `<span class="muted">/${maxChannels(d)}</span>` : ""}</span>` : "";
-  const mode = d.role === "receiver" && d.binary != null ? badge("", d.binary ? "binarnie" : "zwykle")
-    : d.role === "transmitter" && d.hide != null ? badge("", d.hide ? `ukrywa się po ${d.hide} min` : "zawsze widoczny") : "";
-  const actions = [];
-  if (!canTalk(d) && on) actions.push(`<button data-a="allow">Połącz</button>`);
-  actions.push(`<button data-a="settings" ${on && canTalk(d) && !d.busy ? "" : "disabled"}>Ustawienia</button>`);
-  actions.push(`<button data-a="flash" ${img && on && canTalk(d) && !d.busy && (outdated || $("force").checked) ? "" : "disabled"}>Aktualizuj</button>`);
-  actions.push(`<button class="ghost" data-a="forget" ${d.busy ? "disabled" : ""} aria-label="Usuń ${esc(d.name)} z listy">Usuń</button>`);
+  const outdated = outdatedOf(d);
+  let pill;
+  if (d.msg) pill = `<span class="pill ${d.cls || ""}">${esc(d.msg)}</span>`;
+  else if (!on) pill = `<span class="pill">${d.role === "transmitter" && d.hide ? "Ukryty / wył." : "Wyłączony"}</span>`;
+  else if (d.healthy === false) pill = `<span class="pill warn">Radio nie odpowiada</span>`;
+  else pill = `<span class="pill ${d.state === "ok" ? "ok" : "warn"}">${esc(STATE_LABELS[d.state] || d.state || "?")}</span>`;
+  const facts = [];
+  if (d.role === "receiver" && d.channels) facts.push(`<span>Kanały <b>1-${maxChannels(d)}</b></span>`, `<span>Diody <b>${d.binary ? "binarnie" : "zwykle"}</b></span>`);
+  if (d.role === "transmitter" && d.hide != null) facts.push(`<span>Bluetooth <b>${d.hide ? `${d.hide} min` : "zawsze"}</b></span>`);
+  facts.push(`<span>Program <b class="mono">${esc(d.version || "?")}</b> ${outdated ? `<span class="tag">→ ${esc(img.version)}</span>` : img && d.version ? '<span class="tag ok">aktualny</span>' : ""}</span>`);
+  const talk = canTalk(d);
+  const btn = (a, ic, label, enabled) =>
+    `<button class="icon-btn" data-a="${a}" title="${label}" aria-label="${label}" ${enabled ? "" : "disabled"}>${icon(ic)}</button>`;
+  const btns = [];
+  if (!talk && on) btns.push(btn("allow", "link", "Połącz", true));
+  btns.push(btn("settings", "gear", "Ustawienia", on && talk && !d.busy));
+  btns.push(btn("flash", "upload", "Aktualizuj", img && on && talk && !d.busy && (outdated || $("force").checked)));
+  btns.push(btn("forget", "x", "Usuń z listy", !d.busy));
+  d.row.className = "card dev" + (d.role === "transmitter" ? " tx" : d.role === "receiver" ? " rx" : "") + (on ? "" : " off");
   d.row.innerHTML = `
-    <td class="first"><div class="name"><span class="dot ${on ? "on" : ""}" role="img" aria-label="${on ? "włączone" : "wyłączone"}"></span>
-      <div><b>${ROLE_NAMES[d.role] || "Urządzenie"}</b><div class="mono muted">${esc(d.name)}</div></div></div></td>
-    <td data-l="Kanał"><span class="cell">${channel || '<span class="muted">-</span>'} ${mode}</span></td>
-    <td data-l="Program"><span class="cell"><span class="mono">${esc(d.version || "?")}</span>${outdated ? badge("warn", "→ " + img.version) : img && d.version ? badge("ok", "aktualny") : ""}</span></td>
-    <td data-l="Stan"><span class="cell">${state}${d.progress != null ? `<progress max="1" value="${d.progress}" aria-label="postęp"></progress>` : ""}</span></td>
-    <td data-l="Sygnał"><span class="cell">${on ? esc(signal(d.rssi) || "teraz") : `<span class="muted">${ago(d.lastSeen)}</span>`}</span></td>
-    <td class="actions"><span class="cell">${actions.join("")}</span></td>`;
+    <div class="dev-head">
+      <div class="who">${roleTag(d)}<div class="dev-name">${esc(title(d))}</div><div class="dev-sub mono">${esc(d.name)}</div></div>
+      <div class="btns">${btns.join("")}</div>
+    </div>
+    <div class="seen ${on ? "on" : ""}">${icon(on ? "wifi" : "clock")}${on ? `teraz${d.rssi != null ? `, sygnał ${signal(d.rssi)}` : ""}` : `ostatnio ${ago(d.lastSeen)}`}</div>
+    ${d.progress != null ? `<div class="bar-progress" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="${Math.round(d.progress * 100)}"><div style="width:${(d.progress * 100).toFixed(1)}%"></div></div>` : ""}
+    <div class="dev-foot"><div class="facts">${facts.join("")}</div>${pill}</div>`;
   d.row.querySelectorAll("button").forEach(b => b.onclick = () => action(d, b.dataset.a));
 }
+let filter = "all";
+function matches(d) {
+  const q = $("q").value.trim().toLowerCase();
+  if (q && ![title(d), d.name, d.version, d.id && `kanał ${d.id}`].join(" ").toLowerCase().includes(q)) return false;
+  switch (filter) {
+    case "on": return isOn(d);
+    case "off": return !isOn(d);
+    case "outdated": return outdatedOf(d);
+    case "transmitter": case "receiver": return d.role === filter;
+    default: return true;
+  }
+}
 function renderAll() {
-  // on first, then lisy before odbiorniki, then by name
+  // on first, then lisy before odbiorniki, then by channel and name
   const sorted = [...fleet.values()].sort((a, b) =>
-    (isOn(b) - isOn(a)) || String(b.role).localeCompare(String(a.role)) || a.name.localeCompare(b.name));
-  for (const d of sorted) { render(d); $("rows").appendChild(d.row); }
+    (isOn(b) - isOn(a)) || String(b.role).localeCompare(String(a.role)) || (a.id || 99) - (b.id || 99) || a.name.localeCompare(b.name));
+  let shown = 0;
+  for (const d of sorted) {
+    render(d);
+    d.row.hidden = !matches(d);
+    shown += !d.row.hidden;
+    $("rows").appendChild(d.row);
+  }
   $("empty").hidden = fleet.size > 0;
+  $("noMatch").hidden = !fleet.size || shown > 0;
   summary();
 }
+document.querySelectorAll(".stat").forEach(b => b.onclick = () => {
+  filter = b.dataset.f;
+  document.querySelectorAll(".stat").forEach(x => x.setAttribute("aria-pressed", String(x === b)));
+  renderAll();
+});
+$("q").oninput = renderAll;
 function flashable() {
   return [...fleet.values()].filter(d => {
     const img = images[d.role];
@@ -440,16 +539,15 @@ function flashable() {
 }
 function summary() {
   const all = [...fleet.values()];
-  $("stOn").textContent = all.filter(isOn).length;
-  $("stOnSub").textContent = `z ${all.length} znanych`;
-  for (const [r, el] of [["transmitter", "stTx"], ["receiver", "stRx"]]) {
-    const n = all.filter(d => d.role === r);
-    $(el).textContent = `${n.filter(isOn).length}/${n.length}`;
-  }
-  const withImg = all.filter(d => images[d.role]);
-  $("stCur").textContent = withImg.length ? `${withImg.filter(d => images[d.role].version === d.version).length}/${withImg.length}` : "-";
+  const on = all.filter(isOn).length;
+  $("nAll").textContent = all.length;
+  $("nOn").textContent = on;
+  $("nOff").textContent = all.length - on;
+  $("nOld").textContent = all.filter(outdatedOf).length;
+  $("nTx").textContent = all.filter(d => d.role === "transmitter").length;
+  $("nRx").textContent = all.filter(d => d.role === "receiver").length;
   const n = flashable().length;
-  $("flashAll").textContent = n ? `Aktualizuj wszystkie (${n})` : "Wszystkie aktualne";
+  $("flashAll").querySelector("span").textContent = n ? `Aktualizuj włączone (${n})` : "Wszystkie aktualne";
   $("flashAll").disabled = !n;
   $("flashAll").classList.toggle("primary", n > 0);
 }
@@ -458,7 +556,7 @@ setInterval(renderAll, 2000);
 
 async function action(d, a) {
   if (a === "forget") {
-    if (!confirm(`Usunąć ${d.name} z listy? Wróci po ponownym dodaniu.`)) return;
+    if (!confirm(`Usunąć ${title(d)} (${d.name}) z listy? Wróci po ponownym dodaniu.`)) return;
     fleet.delete(d.name);
     d.row.remove();
     save();
@@ -602,11 +700,15 @@ async function flash(d) {
       check();
     });
     for (let o = 0; o < img.bytes.length; o += chunk) {
-      await until(() => o - HDR - acked <= WINDOW, 20000);
       const part = img.bytes.slice(o, o + chunk);
-      // firmware before the fast path only takes writes with response
-      if (d.data.properties.writeWithoutResponse) await d.data.writeValueWithoutResponse(part);
-      else await d.data.writeValueWithResponse(part);
+      if (d.data.properties.writeWithoutResponse) {
+        await until(() => o - HDR - acked <= WINDOW, 20000);
+        await d.data.writeValueWithoutResponse(part);
+      } else {
+        // firmware before the fast path: each write waits for its reply instead
+        if (failed) throw failed;
+        await d.data.writeValueWithResponse(part);
+      }
       d.progress = Math.max(0, acked) / (img.bytes.length - HDR);
       if ((o / chunk) % 8 === 0) render(d);
     }

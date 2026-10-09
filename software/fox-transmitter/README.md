@@ -46,7 +46,7 @@ Id  |  Kanał  |  Częstotliwość  |  Sync word  |  Odbiornik (od id 1)
 7  |  6  |  866.0 MHz  |  `CAFE07070707BABE`  |  6 naciśnięć albo `7`
 8  |  7  |  866.5 MHz  |  `CAFE08080808BABE`  |  7 naciśnięć albo `8`, tylko diody binarne
 
-Odbiornik startuje na id 1, każde naciśnięcie przycisku przechodzi na następny numer (po 7 wraca do 1, z diodami binarnymi po 8). Zamiast przycisku można wpisać cyfrę w monitorze portu szeregowego odbiornika. Po zmianie odbiornik pokazuje id na 0.5 s: zwykle tyle górnych diod, ile wynosi id, a z diodami binarnymi dwójkowo. Tryb diod przełącza się tylko na [stronie floty](../ota/README.md), więc nie da się go zmienić przypadkiem; szczegóły w [software/led-receiver](../led-receiver/README.md).
+Odbiornik startuje na id 1, każde naciśnięcie przycisku przechodzi na następny numer, a po ostatnim wraca do 1. Ile jest numerów (domyślnie 7, z diodami binarnymi do 8) i jak diody je pokazują, ustawia się tylko na [stronie floty](../ota/README.md), więc nie da się tego zmienić przypadkiem; szczegóły w [software/led-receiver](../led-receiver/README.md#ustawienia). Zamiast przycisku można wpisać cyfrę w monitorze portu szeregowego odbiornika.
 
 ### Zworki
 
@@ -58,6 +58,10 @@ CH_1  |  ○  |  ●  |  ○  |  ●  |  ○  |  ●  |  ○  |  ●
 CH_2  |  ○  |  ○  |  ●  |  ●  |  ○  |  ○  |  ●  |  ●
 CH_3  |  ○  |  ○  |  ○  |  ○  |  ●  |  ●  |  ●  |  ●
 CH_4  |  ○  |  ○  |  ○  |  ○  |  ○  |  ○  |  ○  |  ○
+
+## Bluetooth
+
+Lis nadaje przez Bluetooth (na [stronę floty](../ota/README.md)) tylko przez pierwsze 10 minut po włączeniu, potem milknie, żeby nikt nie namierzył go telefonem. W tym czasie można go sprawdzić, zaktualizować i zmienić mu ustawienia; potem trzeba go wyłączyć i włączyć. Czas ustawia się w **Ustawieniach** lisa na stronie: 10, 30 albo 60 minut, albo „zawsze widoczny” (na testy). Lis nie milknie, dopóki strona jest z nim połączona albo trwa aktualizacja.
 
 ## Programowanie
 
