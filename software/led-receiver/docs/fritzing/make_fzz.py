@@ -181,7 +181,7 @@ bat = Part(sk, LIPO, "core/sparkfun-electromechanical-lipo-outline-100.fzp", "Ba
            fzp=os.path.join(CORE, "sparkfun-electromechanical-lipo-outline-100.fzp"),
            schem_pos=(-300, 200), pcb_pos=(-300, 200))
 jb, jg = chg.pt(C_BAT), chg.pt(C_BGND)
-bat.place(L_RED, ((jb[0] + jg[0]) / 2 + 1.8, jb[1] - 13))
+bat.place(L_RED, (jg[0] - 40, jb[1] - 13))  # off to the side, left of the JST
 sw = Part(sk, "1238DBDC00-toggle-switch", "core/basic-toggle-switch.fzp", "Power",
           os.path.join(BB, "basic_toggle_switch.svg"), (0, 0), 180,
           fzp=os.path.join(CORE, "basic-toggle-switch.fzp"), schem_pos=(-100, 200), pcb_pos=(-100, 200))
@@ -193,9 +193,9 @@ out, ognd = chg.pt(C_OUT), chg.pt(C_OGND)
 so, com = sw.pt(S_OUT), sw.pt("connector1")
 v5 = esp.pt("connector18")
 X_GND_UP, X_5V_UP, Y_5V_IN = -86.0, -80.0, 10.0
-Y_5V_TOP, Y_GND_TOP, X_5V_DOWN = -15.0, -30.0, 105.0
+Y_5V_TOP, Y_GND_TOP, X_5V_DOWN = esp.bbox()[1] - 6, esp.bbox()[1] - 12, 105.0  # hug the top edge
 s_nodes.update({
-    "bat_p": (bat, L_RED), "bp1": (lr[0], jb[1] - 5), "bp2": (jb[0], jb[1] - 5), "c_bat": (chg, C_BAT),
+    "bat_p": (bat, L_RED), "bp1": (lr[0], jb[1] - 10), "bp2": (jb[0], jb[1] - 10), "c_bat": (chg, C_BAT),
     "c_out": (chg, C_OUT), "q1": (X_5V_UP, out[1]), "q2": (X_5V_UP, Y_5V_IN), "q3": (com[0], Y_5V_IN),
     "s_com": (sw, "connector1"), "s_out": (sw, S_OUT), "v5": (esp, "connector18"),
     "o1": (so[0], Y_5V_TOP), "o2": (X_5V_DOWN, Y_5V_TOP), "o3": (X_5V_DOWN, v5[1]),
