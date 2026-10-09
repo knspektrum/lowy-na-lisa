@@ -160,7 +160,7 @@ g_nodes.update({"gnd_l": (esp, E["GND_L"]), "l_gnd": (lora, "connector1"),
                 "lg1": (X_LGND, lora.pt("connector1")[1]), "lg2": (X_LGND, ey["GND_L"])})
 g_edges += [("l_gnd", "lg1", BLACK), ("lg1", "lg2", BLACK), ("lg2", "gnd_l", BLACK)]
 
-# Power, left of the ESP32: LiPo cell -> USB-C charger + 5 V boost board
+# Power, beside the ESP32 on its left (left of the LoRa-E5): LiPo cell -> USB-C charger + 5 V boost board
 # (Fritzing's Adafruit bq25185 + 5V boost breakout: battery into its JST, 5 V
 # out of its terminal block) -> slide switch on the + side -> over the top of
 # the board to V5. The charger's ground goes over the top to the LED ground bus.
@@ -169,7 +169,7 @@ chg = Part(sk, CHG, f"contrib/{CHG}.fzp", "Charger",
            os.path.join(LIB, f"svg/contrib/breadboard/{CHG}_breadboard.svg"), (0, 0), 0,
            fzp=os.path.join(LIB, f"contrib/{CHG}.fzp"), schem_pos=(-200, 200), pcb_pos=(-200, 200))
 C_BAT, C_BGND, C_OUT, C_OGND = "connector85", "connector84", "connector89", "connector88"
-chg.place(C_OUT, (-60.0, -85.0))
+chg.place(C_OUT, (-95.0, 14.0))
 bat = Part(sk, "SparkFun-Electromechanical-LIPO-OUTLINE-1100", "core/sparkfun-electromechanical-lipo-outline-1100.fzp",
            "Battery", os.path.join(BB, "sparkfun-electromechanical_lipo-1100_breadboard.svg"), (0, 0), 0,
            fzp=os.path.join(CORE, "sparkfun-electromechanical-lipo-outline-1100.fzp"),
@@ -178,14 +178,14 @@ bat.place("connector0", (chg.bbox()[0] - 14, chg.pt(C_BAT)[1] - 23))
 sw = Part(sk, "1238DBDC00-toggle-switch", "core/basic-toggle-switch.fzp", "Power",
           os.path.join(BB, "basic_toggle_switch.svg"), (0, 0), 180,
           fzp=os.path.join(CORE, "basic-toggle-switch.fzp"), schem_pos=(-100, 200), pcb_pos=(-100, 200))
-sw.place("connector1", (-30.0, -70.0))  # COM, pins facing up
+sw.place("connector1", (-60.0, 28.0))  # COM, pins facing up
 sw.label_at = (sw.bbox()[0] - 2, sw.bbox()[3] + 2)
 S_OUT = "connector0"  # the pin right of COM
 bp, bm = bat.pt("connector0"), bat.pt("connector1")
 out, ognd = chg.pt(C_OUT), chg.pt(C_OGND)
 so = sw.pt(S_OUT)
 v5 = esp.pt("connector18")
-Y_5V_TOP, Y_GND_TOP, X_GND_UP, X_5V_DOWN = -120.0, -165.0, -50.0, 105.0
+Y_5V_TOP, Y_GND_TOP, X_GND_UP, X_5V_DOWN = -15.0, -30.0, -85.0, 105.0
 s_nodes.update({
     "bat_p": (bat, "connector0"), "c_bat": (chg, C_BAT), "bp1": (chg.pt(C_BAT)[0], bp[1]),
     "c_out": (chg, C_OUT), "s_com": (sw, "connector1"), "s_out": (sw, S_OUT), "v5": (esp, "connector18"),
