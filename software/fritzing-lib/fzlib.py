@@ -251,14 +251,16 @@ def net(sketch, nodes, edges):
     """Draw a wire graph. nodes: name -> (x, y) or (Part, connectorId);
     edges: [(node_a, node_b, color)]. Every wire end meeting at a node is
     connected to every other one there (Fritzing bendpoint/junction), and to
-    the part connector when the node is one."""
+    the part connector when the node is one. Returns {(node_a, node_b): Wire}."""
     def where(n):
         v = nodes[n]
         return v[0].pt(v[1]) if isinstance(v[0], Part) else v
 
     ends = {}
+    made = {}
     for a, b, color in edges:
         w = Wire(sketch, where(a), where(b), color)
+        made[(a, b)] = w
         ends.setdefault(a, []).append((w, "connector0"))
         ends.setdefault(b, []).append((w, "connector1"))
     for n, lst in ends.items():
@@ -271,6 +273,7 @@ def net(sketch, nodes, edges):
                 part, pc = v
                 w.links[c].append((pc, part.index, "breadboardbreadboard"))
                 part.link(pc, c, w.index, "breadboardWire")
+    return made
 
 
 def route(sketch, a, a_conn, b, b_conn, via, color):

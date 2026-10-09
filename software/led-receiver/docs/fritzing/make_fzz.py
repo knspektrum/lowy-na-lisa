@@ -160,50 +160,57 @@ g_nodes.update({"gnd_l": (esp, E["GND_L"]), "l_gnd": (lora, "connector1"),
                 "lg1": (X_LGND, lora.pt("connector1")[1]), "lg2": (X_LGND, ey["GND_L"])})
 g_edges += [("l_gnd", "lg1", BLACK), ("lg1", "lg2", BLACK), ("lg2", "gnd_l", BLACK)]
 
-# Power, beside the ESP32 on its left (left of the LoRa-E5): LiPo cell -> USB-C charger + 5 V boost board
-# (Fritzing's Adafruit bq25185 + 5V boost breakout: battery into its JST, 5 V
-# out of its terminal block) -> slide switch on the + side -> over the top of
-# the board to V5. The charger's ground goes over the top to the LED ground bus.
+# Power, beside the ESP32 on its left (left of the LoRa-E5): charger at the
+# bottom, LiPo right above it, together no taller than the board. LiPo ->
+# USB-C charger + 5 V boost board (Fritzing's Adafruit bq25185 + 5V boost
+# breakout: battery into its JST, 5 V out of its terminal block) -> slide
+# switch on the + side -> over the top of the board to V5. The charger's
+# ground goes over the top to the LED ground bus.
 CHG = "Adafruit-_7e4e9c15920efa1ec265cff2ed46fc39_1_BB"
 chg = Part(sk, CHG, f"contrib/{CHG}.fzp", "Charger",
            os.path.join(LIB, f"svg/contrib/breadboard/{CHG}_breadboard.svg"), (0, 0), 0,
            fzp=os.path.join(LIB, f"contrib/{CHG}.fzp"), schem_pos=(-200, 200), pcb_pos=(-200, 200))
 C_BAT, C_BGND, C_OUT, C_OGND = "connector85", "connector84", "connector89", "connector88"
-chg.place(C_OUT, (-95.0, 14.0))
-bat = Part(sk, "SparkFun-Electromechanical-LIPO-OUTLINE-1100", "core/sparkfun-electromechanical-lipo-outline-1100.fzp",
-           "Battery", os.path.join(BB, "sparkfun-electromechanical_lipo-1100_breadboard.svg"), (0, 0), 180,
-           fzp=os.path.join(CORE, "sparkfun-electromechanical-lipo-outline-1100.fzp"),
+chg.pos = (-200.0, esp.bbox()[3] - chg.h)
+# Small LiPo, upside down so its leads hang down onto the JST (red lead on
+# the right over the JST's + pin, black on the left over GND).
+LIPO = "SparkFun-Electromechanical-LIPO-OUTLINE-100"
+L_RED, L_BLACK = "connector0", "connector1"
+bat = Part(sk, LIPO, "core/sparkfun-electromechanical-lipo-outline-100.fzp", "Battery",
+           os.path.join(BB, "sparkfun-electromechanical_lipo-100_breadboard.svg"), (0, 0), 180,
+           fzp=os.path.join(CORE, "sparkfun-electromechanical-lipo-outline-100.fzp"),
            schem_pos=(-300, 200), pcb_pos=(-300, 200))
-# battery above the charger, upside down so its leads hang down onto the JST
-bat.place("connector0", (chg.pt(C_BAT)[0] + 21, chg.pt(C_BAT)[1] - 22))
+jb, jg = chg.pt(C_BAT), chg.pt(C_BGND)
+bat.place(L_RED, ((jb[0] + jg[0]) / 2 + 1.8, jb[1] - 13))
 sw = Part(sk, "1238DBDC00-toggle-switch", "core/basic-toggle-switch.fzp", "Power",
           os.path.join(BB, "basic_toggle_switch.svg"), (0, 0), 180,
           fzp=os.path.join(CORE, "basic-toggle-switch.fzp"), schem_pos=(-100, 200), pcb_pos=(-100, 200))
-sw.place("connector1", (-60.0, 28.0))  # COM, pins facing up
+sw.place("connector1", (-52.0, 28.0))  # COM, pins facing up
 sw.label_at = (sw.bbox()[0] - 2, sw.bbox()[3] + 2)
 S_OUT = "connector0"  # the pin right of COM
-bp, bm = bat.pt("connector0"), bat.pt("connector1")
+lr, lb = bat.pt(L_RED), bat.pt(L_BLACK)
 out, ognd = chg.pt(C_OUT), chg.pt(C_OGND)
-so = sw.pt(S_OUT)
+so, com = sw.pt(S_OUT), sw.pt("connector1")
 v5 = esp.pt("connector18")
-Y_5V_TOP, Y_GND_TOP, X_GND_UP, X_5V_DOWN = -15.0, -30.0, -85.0, 105.0
+X_GND_UP, X_5V_UP, Y_5V_IN = -86.0, -80.0, 10.0
+Y_5V_TOP, Y_GND_TOP, X_5V_DOWN = -15.0, -30.0, 105.0
 s_nodes.update({
-    "bat_p": (bat, "connector0"), "c_bat": (chg, C_BAT), "bp1": (chg.pt(C_BAT)[0], bp[1]),
-    "c_out": (chg, C_OUT), "s_com": (sw, "connector1"), "s_out": (sw, S_OUT), "v5": (esp, "connector18"),
-    "q1": (sw.pt("connector1")[0], out[1]),
+    "bat_p": (bat, L_RED), "bp1": (lr[0], jb[1] - 5), "bp2": (jb[0], jb[1] - 5), "c_bat": (chg, C_BAT),
+    "c_out": (chg, C_OUT), "q1": (X_5V_UP, out[1]), "q2": (X_5V_UP, Y_5V_IN), "q3": (com[0], Y_5V_IN),
+    "s_com": (sw, "connector1"), "s_out": (sw, S_OUT), "v5": (esp, "connector18"),
     "o1": (so[0], Y_5V_TOP), "o2": (X_5V_DOWN, Y_5V_TOP), "o3": (X_5V_DOWN, v5[1]),
 })
 s_edges += [
-    ("bat_p", "bp1", RED), ("bp1", "c_bat", RED),
-    ("c_out", "q1", RED), ("q1", "s_com", RED),
+    ("bat_p", "bp1", RED), ("bp1", "bp2", RED), ("bp2", "c_bat", RED),
+    ("c_out", "q1", RED), ("q1", "q2", RED), ("q2", "q3", RED), ("q3", "s_com", RED),
     ("s_out", "o1", RED), ("o1", "o2", RED), ("o2", "o3", RED), ("o3", "v5", RED),
 ]
 g_nodes.update({
-    "bat_m": (bat, "connector1"), "c_bgnd": (chg, C_BGND), "bm1": (chg.pt(C_BGND)[0], bm[1]),
+    "bat_m": (bat, L_BLACK), "bm1": (lb[0], jg[1] - 5), "bm2": (jg[0], jg[1] - 5), "c_bgnd": (chg, C_BGND),
     "c_ognd": (chg, C_OGND), "w1": (X_GND_UP, ognd[1]), "w2": (X_GND_UP, Y_GND_TOP), "gtop": (X_GBUS, Y_GND_TOP),
 })
 g_edges += [
-    ("bat_m", "bm1", BLACK), ("bm1", "c_bgnd", BLACK),
+    ("bat_m", "bm1", BLACK), ("bm1", "bm2", BLACK), ("bm2", "c_bgnd", BLACK),
     ("c_ognd", "w1", BLACK), ("w1", "w2", BLACK), ("w2", "gtop", BLACK),
 ]
 bus.append((Y_GND_TOP, "gtop"))

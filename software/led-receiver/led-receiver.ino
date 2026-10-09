@@ -99,14 +99,44 @@ void display_strength_on_leds(int8_t strength) {
 
 // --- Radio setup, ported from receiver.ino's set_transmitter_id/SetChannel ---
 
-// Enters AT+TEST P2P mode at the frequency for transmitter_id and starts
-// continuous packet receive. Equivalent to receiver.ino's
-// set_transmitter_id() (channel part) + Radio.Rx(0).
-bool set_transmitter_id(uint8_t id) {
-  unsigned long freqHz = BASE_RF_FREQUENCY_HZ + (unsigned long)(id - 1) * FREQUENCY_STEP_HZ;
-  char freqMHz[16];
-  snprintf(freqMHz, sizeof freqMHz, "%lu.%lu", freqHz / 1000000UL, (freqHz % 1000000UL) / 100000UL);
+// Sends a command line to the module, dropping anything still buffered.
+void command(const char *cmd) {
+  while (Serial1.available()) Serial1.read();
+  Serial1.print(cmd);
+  Serial1.print("\r\n");
+}
 
+// Reads module lines until one starts with `prefix` (other lines, e.g. a
+// packet that was still in flight, are dropped). Returns as soon as it arrives.
+bool waitFor(const char *prefix, uint32_t timeoutMs) {
+  uint32_t start = millis();
+  while (millis() - start < timeoutMs) {
+    String l = readLine(timeoutMs - (millis() - start));
+    if (l.startsWith(prefix)) return true;
+  }
+  return false;
+}
+
+// Sets the frequency for `id` and starts continuous receive. Every step moves
+// on as soon as the module confirms it.
+bool tune_and_receive(uint8_t id) {
+  unsigned long freqHz = BASE_RF_FREQUENCY_HZ + (unsigned long)(id - 1) * FREQUENCY_STEP_HZ;
+  char cfg[64];
+  snprintf(cfg, sizeof cfg, "AT+TEST=RFCFG,%lu.%lu,%s,%s,%d,%d,%d,ON,OFF,OFF", freqHz / 1000000UL,
+           (freqHz % 1000000UL) / 100000UL, RF_SF, RF_BW, RF_PREAMBLE, RF_POWER, RF_POWER);
+  command(cfg);
+  if (!waitFor("+TEST: RFCFG", 500)) return false;
+  command("AT+TEST=RXLRPKT");
+  if (!waitFor("+TEST: RXLRPKT", 300)) return false;
+  transmitter_id = id;
+  return true;
+}
+
+// Full radio init: enters AT+TEST P2P mode at the frequency for `id` and
+// starts continuous packet receive. Equivalent to receiver.ino's
+// set_transmitter_id() (channel part) + Radio.Rx(0). Used at boot and as a
+// fallback when a quick retune fails.
+bool set_transmitter_id(uint8_t id) {
   // If a previous RXLRPKT session is still streaming (e.g. right after an
   // ESP32-only reset that didn't touch the module), plain AT won't interrupt
   // it - the module needs an explicit stop first. Best-effort: ignore the
@@ -126,22 +156,15 @@ bool set_transmitter_id(uint8_t id) {
   r = sendAT("AT+MODE=TEST");
   if (r.indexOf("+MODE: TEST") < 0) return false;
 
-  char cfg[64];
-  snprintf(cfg, sizeof cfg, "AT+TEST=RFCFG,%s,%s,%s,%d,%d,%d,ON,OFF,OFF", freqMHz, RF_SF, RF_BW, RF_PREAMBLE,
-           RF_POWER, RF_POWER);
-  while (Serial1.available()) Serial1.read();
-  Serial1.print(cfg);
-  Serial1.print("\r\n");
-  delay(300);
-  String all;
-  while (Serial1.available()) all += (char)Serial1.read();
-  if (all.indexOf("+TEST: RFCFG") < 0) return false;
+  return tune_and_receive(id);
+}
 
-  r = sendAT("AT+TEST=RXLRPKT");
-  if (r.length() == 0 || r.indexOf("ERROR") >= 0) return false;
-
-  transmitter_id = id;
-  return true;
+// Quick channel change for a module that is already receiving in TEST mode:
+// stop, set the new frequency, receive again.
+bool retune(uint8_t id) {
+  command("AT+TEST=STOP");
+  if (!waitFor("+TEST: STOP", 300)) return false;
+  return tune_and_receive(id);
 }
 
 // Parses "+TEST: LEN:2, RSSI:-42, SNR:9".
@@ -201,12 +224,18 @@ void setup() {
   Serial.println("into RX mode");
 }
 
+// While non-zero, the LEDs show the newly selected id until this millis() time
+// (receiver.ino's 500 ms id flash, without blocking presses or the radio).
+uint32_t id_flash_until = 0;
+
 void change_transmitter_id_to(uint8_t id) {
-  if (set_transmitter_id(id)) {
+  // Feedback first: the id shows on the LEDs the moment the button goes down.
+  display_bits_on_leds(to_first_led_bits(id));
+  id_flash_until = millis() + 500;
+  if (id_flash_until == 0) id_flash_until = 1;
+
+  if (retune(id) || set_transmitter_id(id)) {
     Serial.printf("\r\nChanged transmitter id to %d\r\n", transmitter_id);
-    display_bits_on_leds(to_first_led_bits(transmitter_id));
-    delay(500);
-    display_bits_on_leds(0);
   } else {
     Serial.println("failed to change transmitter id");
   }
@@ -217,17 +246,21 @@ void loop() {
 
   // Button: short press cycles the transmitter id, same as receiver.ino's
   // SW1 - but no long-press power-off, this board has no sleep mode to match.
-  static bool lastButtonHigh = true;
-  bool buttonHigh = digitalRead(BUTTON_PIN) == HIGH;
-  if (lastButtonHigh && !buttonHigh) {
-    delay(50);  // debounce
-    if (digitalRead(BUTTON_PIN) == LOW) {
-      change_transmitter_id_to(1 + (transmitter_id % 6));
-      while (digitalRead(BUTTON_PIN) == LOW)
-        ;
-    }
+  // Acts on the press edge itself; contact bounce within 30 ms of the last
+  // accepted edge is ignored instead of waited out.
+  static bool buttonHigh = true;
+  static uint32_t lastEdgeMs = 0;
+  bool high = digitalRead(BUTTON_PIN) == HIGH;
+  if (high != buttonHigh && millis() - lastEdgeMs >= 30) {
+    buttonHigh = high;
+    lastEdgeMs = millis();
+    if (!high) change_transmitter_id_to(1 + (transmitter_id % 6));
   }
-  lastButtonHigh = buttonHigh;
+
+  if (id_flash_until && (int32_t)(millis() - id_flash_until) >= 0) {
+    id_flash_until = 0;
+    display_bits_on_leds(0);
+  }
 
   // A digit over USB serial does the same thing.
   while (Serial.available()) {
@@ -271,7 +304,7 @@ void loop() {
               memcpy(rxpacket, payload, size);
               rxpacket[size] = '\0';
 
-              display_strength_on_leds((110 + pendingRssi) / (110 / 7));
+              if (!id_flash_until) display_strength_on_leds((110 + pendingRssi) / (110 / 7));
               Serial.printf("received packet \"%s\" with rssi=%d snr=%d length=%d packet_tx_id=%d\r\n", rxpacket,
                             pendingRssi, pendingSnr, size, rxpacket[1]);
             }
