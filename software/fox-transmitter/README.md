@@ -1,6 +1,6 @@
 # Nadajnik ("lis")
 
-Nadajnik wysyła co 100 ms pakiet LoRa ze swoim numerem (id 1-6). Odbiorniki ustawione na ten sam numer pokazują siłę jego sygnału na diodach.
+Nadajnik wysyła co 100 ms pakiet LoRa ze swoim numerem (id 1-8). Odbiorniki ustawione na ten sam numer pokazują siłę jego sygnału na diodach.
 
 ![Schemat połączeń](docs/fritzing/fox-transmitter_breadboard.png)
 
@@ -43,19 +43,21 @@ Id  |  Kanał  |  Częstotliwość  |  Sync word  |  Odbiornik (od id 1)
 4  |  3  |  864.5 MHz  |  `CAFE04040404BABE`  |  3 naciśnięcia albo `4`
 5  |  4  |  865.0 MHz  |  `CAFE05050505BABE`  |  4 naciśnięcia albo `5`
 6  |  5  |  865.5 MHz  |  `CAFE06060606BABE`  |  5 naciśnięć albo `6`
+7  |  6  |  866.0 MHz  |  `CAFE07070707BABE`  |  6 naciśnięć albo `7`
+8  |  7  |  866.5 MHz  |  `CAFE08080808BABE`  |  7 naciśnięć albo `8`, tylko diody binarne
 
-Odbiornik startuje na id 1, każde naciśnięcie przycisku przechodzi na następny numer (po 6 wraca do 1). Zamiast przycisku można wpisać cyfrę w monitorze portu szeregowego odbiornika. Po zmianie odbiornik zapala na 0.5 s tyle górnych diod, ile wynosi id.
+Odbiornik startuje na id 1, każde naciśnięcie przycisku przechodzi na następny numer (po 7 wraca do 1, z diodami binarnymi po 8). Zamiast przycisku można wpisać cyfrę w monitorze portu szeregowego odbiornika. Po zmianie odbiornik pokazuje id na 0.5 s: zwykle tyle górnych diod, ile wynosi id, a z diodami binarnymi dwójkowo. Tryb diod przełącza się tylko na [stronie floty](../ota/README.md), więc nie da się go zmienić przypadkiem; szczegóły w [software/led-receiver](../led-receiver/README.md).
 
 ### Zworki
 
 Zworki od góry do dołu, ● = założona, ○ = brak (kanał zapisany binarnie: CH_1 = 1, CH_2 = 2, CH_3 = 4, CH_4 = 8):
 
-Zworka  |  Id 1  |  Id 2  |  Id 3  |  Id 4  |  Id 5  |  Id 6
-:-------------------------:|:-------------------------:|:-------------------------:|:-------------------------:|:-------------------------:|:-------------------------:|:-------------------------:
-CH_1  |  ○  |  ●  |  ○  |  ●  |  ○  |  ●
-CH_2  |  ○  |  ○  |  ●  |  ●  |  ○  |  ○
-CH_3  |  ○  |  ○  |  ○  |  ○  |  ●  |  ●
-CH_4  |  ○  |  ○  |  ○  |  ○  |  ○  |  ○
+Zworka  |  Id 1  |  Id 2  |  Id 3  |  Id 4  |  Id 5  |  Id 6  |  Id 7  |  Id 8
+:-------------------------:|:-------------------------:|:-------------------------:|:-------------------------:|:-------------------------:|:-------------------------:|:-------------------------:|:-------------------------:|:-------------------------:
+CH_1  |  ○  |  ●  |  ○  |  ●  |  ○  |  ●  |  ○  |  ●
+CH_2  |  ○  |  ○  |  ●  |  ●  |  ○  |  ○  |  ●  |  ●
+CH_3  |  ○  |  ○  |  ○  |  ○  |  ●  |  ●  |  ●  |  ●
+CH_4  |  ○  |  ○  |  ○  |  ○  |  ○  |  ○  |  ○  |  ○
 
 ## Programowanie
 
@@ -65,7 +67,7 @@ CH_4  |  ○  |  ○  |  ○  |  ○  |  ○  |  ○
    software/ota/build.sh
    software/ota/usb-flash.sh transmitter /dev/ttyUSB0
    ```
-3. Otwórz monitor portu szeregowego (115200 baud) i wpisz cyfrę id (1-6). Nadajnik odpowiada `updated transmitter id id=N sync_word=CAFE...BABE`.
+3. Otwórz monitor portu szeregowego (115200 baud) i wpisz cyfrę id (1-8). Nadajnik odpowiada `updated transmitter id id=N sync_word=CAFE...BABE`.
 4. Wpisz `w`, żeby zapisać ustawienia w module (`saved to flash`). Po każdym starcie program odczytuje sync word z modułu i używa zapisanego id.
 5. Sprawdź na odbiorniku ustawionym na to samo id: diody pokazują siłę sygnału, a w monitorze odbiornika pojawia się `received packet ... packet_tx_id=N`.
 

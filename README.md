@@ -66,6 +66,8 @@ Id  |  Częstotliwość  |  Zworki CH_1-CH_4 (od góry)
 4  |  864.5 MHz  |  ● ● ○ ○
 5  |  865.0 MHz  |  ○ ○ ● ○
 6  |  865.5 MHz  |  ● ○ ● ○
+7  |  866.0 MHz  |  ○ ● ● ○
+8  |  866.5 MHz  |  ● ● ● ○
 
 Programowanie i szczegóły: [software/fox-transmitter](software/fox-transmitter/README.md)
 

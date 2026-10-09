@@ -31,6 +31,16 @@ void markHealthy();
 // Transmitter id / channel the device is set to, shown in the fleet view.
 void setId(uint8_t id);
 
+// Settings changed from the web panel ("set key=value" over BLE). The handler
+// runs on the Bluetooth task: store the value and return true, or return
+// false to reject it. Only the panel sends these, so nothing on the device
+// itself can change them by accident.
+void onSetting(bool (*handler)(const String &key, const String &value));
+
+// Flags shown in the fleet view (advertised), bit 1..4; meaning is per role
+// (receiver: bit 1 = binary LED mode).
+void setFlag(uint8_t bit, bool on);
+
 // True while an update is being received (the sketch can show it on LEDs).
 bool updating();
 

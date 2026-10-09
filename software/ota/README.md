@@ -30,11 +30,25 @@ software/ota/usb-flash.sh transmitter /dev/ttyUSB2
    python3 -m http.server 8765 --bind 127.0.0.1 --directory software/web-flasher
    ```
    i wejdź na http://localhost:8765. Programy wczytują się same; stronę można też otworzyć skądkolwiek i wczytać pliki `.lsk` ręcznie
-3. **Skanuj okolicę** pokazuje wszystkie włączone urządzenia (na Linuksie wymaga `chrome://flags/#enable-experimental-web-platform-features`); **Dodaj urządzenie** dodaje jedno przez okno wyboru
-4. Przy każdym nowym urządzeniu raz kliknij **Zezwól**, potem **Aktualizuj** albo **Aktualizuj wszystkie włączone**
-5. Nie zamykaj strony, dopóki stan nie pokaże „zaktualizowano”: bez potwierdzenia urządzenie wróci do poprzedniej wersji
+3. **Dodaj urządzenie** dodaje jedno urządzenie przez okno wyboru Chrome (okno pokazuje wszystkie włączone w pobliżu)
+4. **Aktualizuj** przy urządzeniu albo **Aktualizuj wszystkie włączone**
+5. Nie zamykaj strony, dopóki stan nie pokaże „Zaktualizowano”: bez potwierdzenia urządzenie wróci do poprzedniej wersji
 
-Strona pamięta wszystkie widziane urządzenia, więc wyłączone zostają na liście jako „wyłączone” z czasem ostatniego sygnału.
+Przy odbiornikach przycisk **Tryb diod** przełącza pokazywanie id między zwykłym (1-7) a binarnym (1-8), patrz [software/led-receiver](../led-receiver/README.md#tryb-diod).
+
+## Przeglądarki
+
+Chrome, Edge albo Chromium; Firefox i Safari nie mają Web Bluetooth.
+
+System  |  Bez ustawień  |  Z `chrome://flags/#enable-experimental-web-platform-features`
+:-------------------------:|:-------------------------:|:-------------------------
+Windows 10+  |  dodawanie, wersje, aktualizacje, stan co 30 s  |  + lista pamiętana między wizytami, sygnał na bieżąco
+macOS  |  dodawanie, wersje, aktualizacje, stan co 30 s  |  + to samo oraz **Skanuj okolicę** (wszystkie naraz, bez wybierania)
+Android  |  dodawanie, wersje, aktualizacje, stan co 30 s  |  + to samo oraz **Skanuj okolicę**
+ChromeOS  |  dodawanie, wersje, aktualizacje, stan co 30 s  |  + lista pamiętana między wizytami
+Linux  |  nic  |  dodawanie, wersje, aktualizacje, stan co 30 s, lista pamiętana
+
+„Stan co 30 s”: strona łączy się po kolei z dodanymi urządzeniami i odczytuje wersję; urządzenie, które nie odpowiada przez ok. minutę, jest „wyłączone”. Bez flagi po odświeżeniu strony urządzenia trzeba dodać ponownie (lista z wersjami i czasem ostatniego sygnału zostaje). Źródło: [stan implementacji Web Bluetooth](https://github.com/WebBluetoothCG/web-bluetooth/blob/main/implementation-status.md).
 
 ## Klucz
 

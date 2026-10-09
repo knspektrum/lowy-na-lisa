@@ -54,6 +54,7 @@
   progress { width: 110px; vertical-align: middle; accent-color: var(--primary); }
   code { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 13px; }
   #unsupported { display: none; border-color: var(--primary); }
+  #noScan { font-size: 13px; }
   td.actions { white-space: nowrap; text-align: right; }
   .table-card { padding: 4px 8px; }
   /* phones: each device becomes a stacked block */
@@ -75,9 +76,15 @@
 <p class="sub">Sprawdź, które lisy i odbiorniki są włączone, na jakim kanale i z jakim programem, i zaktualizuj je przez Bluetooth</p>
 
 <div class="card" id="unsupported">
-  Ta przeglądarka nie obsługuje Web Bluetooth. Użyj Chrome/Chromium i włącz
-  <code>chrome://flags/#enable-experimental-web-platform-features</code> (skanowanie wszystkich urządzeń naraz),
-  potem uruchom przeglądarkę ponownie. Strona musi być otwarta przez https albo z <code>localhost</code>.
+  Ta przeglądarka nie obsługuje Web Bluetooth. Użyj Chrome, Edge albo Chromium na Windows 10+, macOS, Androidzie albo
+  ChromeOS (na Linuksie trzeba włączyć <code>chrome://flags/#enable-experimental-web-platform-features</code>).
+  Strona musi być otwarta przez https albo z <code>localhost</code>.
+</div>
+<div class="card muted" id="noScan">
+  Bez dodatkowych ustawień urządzenia dodaje się po jednym („Dodaj urządzenie”), a strona co 30 s sprawdza, czy są
+  włączone. Po włączeniu <code>chrome://flags/#enable-experimental-web-platform-features</code> strona pamięta urządzenia
+  między wizytami i widzi ich sygnał na bieżąco (Windows, macOS, Android), a „Skanuj okolicę” pokazuje wszystkie
+  naraz (macOS, Android).
 </div>
 
 <div class="stats">
@@ -120,13 +127,18 @@ const ROLE_NAMES = { receiver: "odbiornik", transmitter: "nadajnik" };
 const ROLE_PLURAL = { receiver: "odbiorniki", transmitter: "nadajniki" };
 const STATES = { o: "ok", p: "pending", u: "updating", i: "installed" };
 const STORE = "lisek-fleet-v1";
+const POLL_MS = 30000;   // without advertisement watching: connect and read every 30 s
+const POLLED_ONLINE_MS = 75000;
+const FLAG_BINARY_LEDS = 2;
 
 const $ = id => document.getElementById(id);
 const sleep = ms => new Promise(r => setTimeout(r, ms));
 const td = new TextDecoder(), te = new TextEncoder();
 const esc = s => String(s ?? "").replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" })[c]);
 const bt = navigator.bluetooth;
-if (!bt || !bt.requestLEScan) $("unsupported").style.display = "block";
+if (!bt) $("unsupported").style.display = "block";
+if (bt && bt.requestLEScan) $("noScan").style.display = "none";
+else $("scan").style.display = "none";
 
 const images = {};       // role -> { role, version, size, bytes }
 const fleet = new Map(); // name -> device record
@@ -191,7 +203,9 @@ function onAdvert(e) {
     d.role = ROLES[s[0]] || d.role;
     d.state = STATES[s[1]] || s[1];
     d.id = +s[2];
-    d.healthy = s[3] === "h";
+    const f = s.charCodeAt(3) - 0x40;
+    d.healthy = !!(f & 1);
+    d.flags = f & ~1;
     d.version = s.slice(4);
   }
   save();
@@ -200,8 +214,20 @@ function onAdvert(e) {
 async function watch(dev) {
   permitted.add(dev.id);
   dev.addEventListener("advertisementreceived", onAdvert);
-  try { await dev.watchAdvertisements(); } catch (_) {}
+  const d = record(dev.name);
+  try { await dev.watchAdvertisements(); d.polled = false; } catch (_) { d.polled = true; }
 }
+// Without watchAdvertisements (no flag, Linux, ChromeOS): connect, read, disconnect.
+setInterval(async () => {
+  for (const d of fleet.values()) {
+    if (!d.polled || !d.dev || d.busy) continue;
+    try {
+      await connect(d);
+      d.dev.gatt.disconnect();
+    } catch (_) {}
+    render(d);
+  }
+}, POLL_MS);
 $("scan").onclick = async () => {
   try {
     await bt.requestLEScan({ filters: [{ services: [SVC] }], keepRepeatedDevices: true });
@@ -236,7 +262,7 @@ function ago(t) {
   return s < 60 ? `${s} s temu` : s < 3600 ? `${Math.round(s / 60)} min temu` : new Date(t).toLocaleString("pl");
 }
 const STATE_LABELS = { ok: "Działa", pending: "Czeka na potwierdzenie", updating: "Odbiera program", installed: "Wgrany, restart" };
-function isOn(d) { return d.live && d.lastSeen && Date.now() - d.lastSeen < ONLINE_MS; }
+function isOn(d) { return d.live && d.lastSeen && Date.now() - d.lastSeen < (d.polled ? POLLED_ONLINE_MS : ONLINE_MS); }
 function badge(cls, text) { return `<span class="badge ${cls}">${esc(text)}</span>`; }
 function render(d) {
   if ($("empty")) $("empty").remove();
@@ -254,11 +280,11 @@ function render(d) {
   else state = badge(d.state === "ok" ? "ok" : "warn", STATE_LABELS[d.state] || d.state || "?");
   d.row.innerHTML = `<td data-l="Urządzenie"><span class="mono">${esc(d.name)}</span></td>
     <td data-l="Typ">${ROLE_NAMES[d.role] || ""}</td>
-    <td data-l="Kanał">${d.id ? `id ${d.id}` : ""}</td>
+    <td data-l="Kanał"><span>${d.id ? `id ${d.id}` : ""}${d.role === "receiver" && d.flags != null ? ` ${badge("", d.flags & FLAG_BINARY_LEDS ? "diody binarnie" : "diody zwykle")}` : ""}</span></td>
     <td data-l="Program"><span><span class="mono">${esc(d.version || "?")}</span>${outdated ? ` ${badge("warn", "→ " + img.version)}` : img && d.version ? ` ${badge("ok", "aktualny")}` : ""}</span></td>
     <td data-l="Stan"><span>${state}${d.progress != null ? ` <progress max="1" value="${d.progress}"></progress>` : ""}</span></td>
     <td data-l="Sygnał">${on ? (d.rssi != null ? `${d.rssi} dBm` : "teraz") : `<span class="muted">${ago(d.lastSeen)}</span>`}</td>
-    <td class="actions">${d.dev && permitted.has(d.dev.id) ? "" : `<button class="small" data-a="allow">Zezwól</button> `}<button class="small" data-a="flash" ${img && on && !d.busy ? "" : "disabled"}>Aktualizuj</button> <button class="small" data-a="forget" ${d.busy ? "disabled" : ""}>Usuń</button></td>`;
+    <td class="actions">${d.dev && permitted.has(d.dev.id) ? "" : `<button class="small" data-a="allow">Zezwól</button> `}${d.role === "receiver" ? `<button class="small" data-a="leds" ${on && d.dev && permitted.has(d.dev.id) && !d.busy ? "" : "disabled"}>Tryb diod</button> ` : ""}<button class="small" data-a="flash" ${img && on && !d.busy ? "" : "disabled"}>Aktualizuj</button> <button class="small" data-a="forget" ${d.busy ? "disabled" : ""}>Usuń</button></td>`;
   d.row.querySelectorAll("button").forEach(b => b.onclick = () => action(d, b.dataset.a));
 }
 function renderAll() { fleet.forEach(render); summary(); }
@@ -291,11 +317,13 @@ async function action(d, a) {
     } catch (_) {}
   } else if (a === "flash") {
     flash(d);
+  } else if (a === "leds") {
+    setLeds(d);
   }
 }
 $("flashAll").onclick = () => fleet.forEach(d => {
   const img = images[d.role];
-  const on = d.live && Date.now() - d.lastSeen < ONLINE_MS;
+  const on = isOn(d);
   if (img && on && !d.busy && d.dev && permitted.has(d.dev.id) && ($("force").checked || img.version !== d.version)) flash(d);
 });
 
@@ -306,13 +334,16 @@ async function connect(d) {
   d.infoCh = await svc.getCharacteristic(INFO);
   d.ctrl = await svc.getCharacteristic(CTRL);
   d.data = await svc.getCharacteristic(DATA);
-  d.ctrl.addEventListener("characteristicvaluechanged", e => d.onNote && d.onNote(td.decode(e.target.value)));
+  if (!d.ctrl.hooked) {  // the same object comes back on every reconnect
+    d.ctrl.hooked = true;
+    d.ctrl.addEventListener("characteristicvaluechanged", e => d.onNote && d.onNote(td.decode(e.target.value)));
+  }
   await d.ctrl.startNotifications();
   await readInfo(d);
 }
 async function readInfo(d) {
   const i = JSON.parse(td.decode(await d.infoCh.readValue()));
-  Object.assign(d, { role: i.role, version: i.version, state: i.state, healthy: i.healthy, id: i.id, mtu: i.mtu });
+  Object.assign(d, { role: i.role, version: i.version, state: i.state, healthy: i.healthy, id: i.id, mtu: i.mtu, flags: i.flags });
   d.live = true;
   d.lastSeen = Date.now();
   save();
@@ -334,6 +365,31 @@ function note(d, want, ms) {
       else if (s.startsWith(want)) { clearTimeout(t); d.onNote = null; resolve(s); }
     };
   });
+}
+
+// Receiver LED mode: unary shows ids 1-7 as that many LEDs, binary shows 1-8 as a
+// binary number. Asked for explicitly so nobody switches it by accident.
+async function setLeds(d) {
+  const binary = !(d.flags & FLAG_BINARY_LEDS);
+  const msg = binary
+    ? `Przełączyć ${d.name} na diody binarne?\n\nOdbiornik obsłuży kanały 1-8, a wybrany numer pokaże dwójkowo: LED7 = 1, LED6 = 2, LED5 = 4, LED4 = 8.`
+    : `Przełączyć ${d.name} na zwykłe diody?\n\nOdbiornik obsłuży kanały 1-7, numer pokaże liczbą zapalonych diod. Kanał 8 zmieni się na 1.`;
+  if (!confirm(msg)) return;
+  d.busy = true;
+  d.msg = "Łączenie..."; d.cls = "warn"; render(d);
+  try {
+    if (!d.gatt || !d.gatt.connected) await connect(d);
+    const p = note(d, "set-ok", 5000);
+    await d.ctrl.writeValueWithResponse(te.encode(`set leds=${binary ? "binary" : "unary"}`));
+    await p;
+    await readInfo(d);
+    d.msg = binary ? "Diody binarnie" : "Diody zwykle"; d.cls = "ok";
+  } catch (e) {
+    d.msg = "Błąd: " + e.message; d.cls = "bad";
+  } finally {
+    d.busy = false;
+    render(d);
+  }
 }
 
 async function flash(d) {

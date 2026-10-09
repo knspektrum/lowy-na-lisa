@@ -91,7 +91,7 @@ void update_transmitter_id(int id) {
   transmitter_id = id;
   LisekOta::setId(id);
   Serial.printf("updated transmitter id id=%d sync_word=%s\r\n", id, buf);
-  if (id < 1 || id > 6) Serial.println("note: receiver.ino only tunes ids 1-6");
+  if (id < 1 || id > 8) Serial.println("note: led-receiver tunes ids 1-8 (8 only in binary LED mode)");
 }
 
 void save_to_flash() {

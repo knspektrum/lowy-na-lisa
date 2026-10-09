@@ -15,13 +15,14 @@
 //   - Id cycling: receiver.ino changes id on a SW1 press; here it's a button
 //     wired to GPIO32 (to GND, internal pull-up), short-press only - no
 //     long-press power-off, since this board has no equivalent sleep mode. A digit
-//     1-6 over USB serial does the same thing.
+//     1-7 over USB serial does the same thing (1-8 in binary LED mode).
 //
 // Wiring: ESP32 TX2 (GPIO17) -> LoRa-E5 RX, ESP32 RX2 (GPIO16) <- LoRa-E5 TX,
 // GND-GND. LEDs on LED_PINS[] (D33,D25,D26,D27,D14,D12,D13, reversed from the
 // original D13,D12,D14,D27,D26,D25,D33 wiring), each with a series resistor
 // to GND (active-HIGH).
 #include <Arduino.h>
+#include <Preferences.h>
 #include <LisekOta.h>  // updates and version readout over Bluetooth, software/libraries
 
 #define MODULE_RX 16  // ESP32 RX2 <- LoRa-E5 TX
@@ -46,6 +47,17 @@ const int NUM_LEDS = sizeof(LED_PINS) / sizeof(LED_PINS[0]);
 #define BUTTON_PIN 32  // external button to GND, matches receiver.ino's SW1 (GPIO0 on CubeCell)
 
 uint8_t transmitter_id = 1;  // matches receiver.ino's initial set_transmitter_id(1)
+
+// How the selected id is shown, switched only from the web panel (stored in
+// NVS, so it survives power-off):
+//   unary (default): ids 1-7, that many LEDs from LED7 down
+//   binary: ids 1-8 in binary, LED7 = 1, LED6 = 2, LED5 = 4, LED4 = 8
+volatile bool binary_leds = false;
+volatile bool led_mode_changed = false;
+
+uint8_t max_id() {
+  return binary_leds ? 8 : 7;
+}
 
 String lastLine;
 
@@ -100,6 +112,28 @@ void display_bits_on_leds(int8_t bits) {
 
 void display_strength_on_leds(int8_t strength) {
   display_bits_on_leds(to_last_led_bits(strength));
+}
+
+uint8_t id_bits(uint8_t id) {
+  if (!binary_leds) return to_first_led_bits(id);
+  uint8_t bits = 0;
+  for (int b = 0; b < 4; b++)
+    if (id & (1 << b)) bits |= 1 << (NUM_LEDS - 1 - b);
+  return bits;
+}
+
+// "set leds=binary|unary" from the web panel (runs on the Bluetooth task).
+bool on_setting(const String &key, const String &value) {
+  if (key != "leds" || (value != "binary" && value != "unary")) return false;
+  bool binary = value == "binary";
+  Preferences prefs;
+  prefs.begin("receiver", false);
+  prefs.putBool("binary_leds", binary);
+  prefs.end();
+  binary_leds = binary;
+  LisekOta::setFlag(1, binary);
+  led_mode_changed = true;
+  return true;
 }
 
 // --- Radio setup, ported from receiver.ino's set_transmitter_id/SetChannel ---
@@ -204,6 +238,12 @@ void setup() {
   Serial.begin(115200);
   Serial.println("Hej liski!");
   LisekOta::begin("receiver");
+  Preferences prefs;
+  prefs.begin("receiver", true);
+  binary_leds = prefs.getBool("binary_leds", false);
+  prefs.end();
+  LisekOta::setFlag(1, binary_leds);
+  LisekOta::onSetting(on_setting);
   Serial.println("firmware " LISEK_VERSION);
 
   pinMode(BUTTON_PIN, INPUT_PULLUP);
@@ -242,7 +282,7 @@ uint32_t last_packet_ms = 0;
 void change_transmitter_id_to(uint8_t id) {
   last_packet_ms = 0;  // the old transmitter's strength no longer applies
   // Feedback first: the id shows on the LEDs the moment the button goes down.
-  display_bits_on_leds(to_first_led_bits(id));
+  display_bits_on_leds(id_bits(id));
   id_flash_until = millis() + 500;
   if (id_flash_until == 0) id_flash_until = 1;
 
@@ -266,7 +306,19 @@ void loop() {
   if (high != buttonHigh && millis() - lastEdgeMs >= 30) {
     buttonHigh = high;
     lastEdgeMs = millis();
-    if (!high) change_transmitter_id_to(1 + (transmitter_id % 6));
+    if (!high) change_transmitter_id_to(1 + (transmitter_id % max_id()));
+  }
+
+  // LED mode switched from the panel: show the id the new way (an id the new
+  // mode can't show, 8 in unary, goes back to 1).
+  if (led_mode_changed) {
+    led_mode_changed = false;
+    if (transmitter_id > max_id()) {
+      change_transmitter_id_to(1);
+    } else {
+      display_bits_on_leds(id_bits(transmitter_id));
+      id_flash_until = millis() + 1500;
+    }
   }
 
   if (id_flash_until && (int32_t)(millis() - id_flash_until) >= 0) {
@@ -289,7 +341,7 @@ void loop() {
   // A digit over USB serial does the same thing.
   while (Serial.available()) {
     char c = Serial.read();
-    if (c >= '1' && c <= '6') {
+    if (c >= '1' && c <= '0' + max_id()) {
       change_transmitter_id_to(c - '0');
     }
   }

@@ -45,6 +45,8 @@ static const char *g_role = "";
 static bool g_pending = false, g_healthy = false;
 static uint16_t g_mtu = 23;
 static volatile uint8_t g_id = 0;
+static volatile uint8_t g_flags = 0;  // sketch flags, bits 1..4 (bit 0 = healthy)
+static bool (*g_setting)(const String &, const String &) = nullptr;
 static char g_name[16];
 
 enum State { IDLE, HEADER, IMAGE, DONE, FAILED };
@@ -154,6 +156,11 @@ static void on_command(const String &cmd) {
     esp_timer_stop(g_deadline_timer);
     notify("confirmed");
     refresh_adv();
+  } else if (cmd.startsWith("set ")) {
+    // Panel setting "set key=value"; the sketch decides and stores it.
+    int eq = cmd.indexOf('=');
+    if (eq < 0 || !g_setting || !g_setting(cmd.substring(4, eq), cmd.substring(eq + 1))) return notify("error:rejected");
+    notify("set-ok");
   } else if (cmd == "reboot") {
     notify("rebooting");
     esp_timer_start_once(g_reboot_timer, 300 * 1000);
@@ -167,7 +174,8 @@ static const char *state_name() {
 }
 
 // Scan response: name, then manufacturer data (company 0xFFFF, for testing and
-// internal use) = role letter, state letter, id digit, h(ealthy)/u, version. A web page
+// internal use) = role letter, state letter, id digit, '@' + flags (bit 0 =
+// healthy, 1..4 = setFlag), version. A web page
 // scanning for advertisements sees all of it without connecting.
 static void refresh_adv() {
   if (!g_info) return;
@@ -175,7 +183,7 @@ static void refresh_adv() {
   m += (char)toupper(g_role[0]);
   m += state_name()[0];
   m += (char)('0' + g_id % 10);  // printable: String stops at a 0 byte
-  m += g_healthy ? 'h' : 'u';
+  m += (char)('@' + ((g_flags & 0x1e) | (g_healthy ? 1 : 0)));  // '@'..'_': printable
   m += String(LISEK_VERSION).substring(0, 31 - 2 - strlen(g_name) - 2 - 6);
   BLEAdvertisementData sr;
   sr.setName(g_name);
@@ -190,7 +198,9 @@ static String info_json() {
   j += g_role;
   j += "\",\"version\":\"" LISEK_VERSION "\",\"state\":\"";
   j += state;
-  j += "\",\"healthy\":";
+  j += "\",\"flags\":";
+  j += (int)g_flags;
+  j += ",\"healthy\":";
   j += g_healthy ? "true" : "false";
   j += ",\"partition\":\"";
   j += run ? run->label : "?";
@@ -281,6 +291,16 @@ void begin(const char *role) {
   adv->setMinInterval(1600);  // 1000 ms
   adv->setMaxInterval(1760);  // 1100 ms
   BLEDevice::startAdvertising();
+}
+
+void onSetting(bool (*handler)(const String &key, const String &value)) {
+  g_setting = handler;
+}
+
+void setFlag(uint8_t bit, bool on) {
+  if (bit < 1 || bit > 4) return;
+  g_flags = on ? g_flags | (1 << bit) : g_flags & ~(1 << bit);
+  refresh_adv();
 }
 
 void markHealthy() {
