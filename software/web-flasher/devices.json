@@ -1,0 +1,6 @@
+[
+  {"mac": "c8:c9:a3:c5:90:c0", "name": "lisek-R-90C0", "role": "receiver", "usb": "10c4:ea60", "registered": "2026-10-09"},
+  {"mac": "00:70:07:a2:c7:b8", "name": "lisek-R-C7B8", "role": "receiver", "usb": "", "registered": "2026-10-09"},
+  {"mac": "30:76:f5:e1:e4:8c", "name": "lisek-R-E48C", "role": "receiver", "usb": "", "registered": "2026-10-09"},
+  {"mac": "10:06:1c:85:fd:cc", "name": "lisek-T-FDCC", "role": "transmitter", "usb": "1a86:7523", "registered": "2026-10-09"}
+]

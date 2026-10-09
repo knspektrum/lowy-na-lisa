@@ -3,6 +3,7 @@
     python3 ble_test.py info   <name>
     python3 ble_test.py flash  <name> <file.lsk> [--no-confirm]
     python3 ble_test.py set    <name> <key=value>
+    python3 ble_test.py confirm <name>
 
 Needs bleak (nix-shell -p 'python3.withPackages(p:[p.bleak])').
 """
@@ -51,7 +52,19 @@ class Dev:
                 return n
 
 
-async def connect(name):
+async def connect(name, tries=10):
+    # right after a reboot the device can refuse the first GATT requests
+    for i in range(tries):
+        try:
+            return await connect_once(name)
+        except Exception as e:
+            if i == tries - 1:
+                raise
+            print("connect:", type(e).__name__, e)
+            await asyncio.sleep(3)
+
+
+async def connect_once(name):
     c = BleakClient(await find(name))
     await c.connect()
     try:
@@ -67,7 +80,10 @@ async def main():
     op, name = sys.argv[1], sys.argv[2]
     d = await connect(name)
     print("before:", await d.info(), "host mtu", d.c.mtu_size)
-    if op == "set":
+    if op == "confirm":
+        print(await d.cmd("confirm", "confirmed"))
+        print("after:", await d.info())
+    elif op == "set":
         print(await d.cmd("set " + sys.argv[3], "set-ok"))
         print("after:", await d.info())
     elif op == "flash":

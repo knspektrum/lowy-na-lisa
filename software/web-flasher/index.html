@@ -376,6 +376,17 @@ $("files").onchange = async e => {
     try { addImage(await f.arrayBuffer()); toast(`Wczytano ${f.name}`); } catch (err) { toast(`${f.name}: ${err.message}`); }
   }
 };
+(async () => {  // registered modules (software/ota/usb-autoflash.sh): always listed, even if never seen here
+  try {
+    for (const r of await (await fetch("devices.json", { cache: "no-store" })).json()) {
+      const d = record(r.name);
+      d.role = d.role || r.role;
+      d.mac = r.mac;
+      d.registered = true;
+    }
+    renderAll();
+  } catch (_) {}
+})();
 (async () => {  // served next to firmware/ (software/ota/build.sh output): load it straight away
   try {
     const m = await (await fetch("firmware/manifest.json", { cache: "no-store" })).json();
@@ -500,6 +511,7 @@ function render(d) {
   const outdated = outdatedOf(d);
   let pill;
   if (d.msg) pill = `<span class="pill ${d.cls || ""}">${esc(d.msg)}</span>`;
+  else if (!on && !d.lastSeen) pill = `<span class="pill">Nigdy nie widziany</span>`;
   else if (!on) pill = `<span class="pill">${d.role === "transmitter" && d.hide ? "Wyłączony albo ukryty" : "Wyłączony"}</span>`;
   else if (d.healthy === false) pill = `<span class="pill warn">Radio nie odpowiada</span>`;
   else pill = `<span class="pill ${d.state === "ok" ? "ok" : "warn"}">${esc(STATE_LABELS[d.state] || d.state || "?")}</span>`;
@@ -514,14 +526,14 @@ function render(d) {
   if (!talk && on) btns.push(btn("allow", "link", "Połącz", true));
   btns.push(btn("settings", "gear", "Ustawienia", on && talk && !d.busy));
   btns.push(btn("flash", "upload", "Aktualizuj", img && on && talk && !d.busy && (outdated || $("force").checked)));
-  btns.push(btn("forget", "x", "Usuń z listy", !d.busy));
+  if (!d.registered) btns.push(btn("forget", "x", "Usuń z listy", !d.busy));
   d.row.className = "card dev" + (d.role === "transmitter" ? " tx" : d.role === "receiver" ? " rx" : "") + (on ? "" : " off");
   d.row.innerHTML = `
     <div class="dev-head">
       <div class="who">${roleTag(d)}<div class="dev-name">${esc(title(d))}</div><div class="dev-sub mono">${esc(d.name)}</div></div>
       <div class="btns">${btns.join("")}</div>
     </div>
-    <div class="seen ${on ? "on" : ""}">${icon(on ? "wifi" : "clock")}${on ? `teraz${d.rssi != null ? `, sygnał ${signal(d.rssi)}` : ""}` : `ostatnio ${ago(d.lastSeen)}`}</div>
+    <div class="seen ${on ? "on" : ""}">${icon(on ? "wifi" : "clock")}${on ? `teraz${d.rssi != null ? `, sygnał ${signal(d.rssi)}` : ""}` : d.lastSeen ? `ostatnio ${ago(d.lastSeen)}` : "jeszcze nie połączony z tą przeglądarką"}</div>
     ${d.progress != null ? `<div class="bar-progress" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="${Math.round(d.progress * 100)}"><div style="width:${(d.progress * 100).toFixed(1)}%"></div></div>` : ""}
     <div class="dev-foot"><div class="facts">${facts.join("")}</div>${pill}</div>`;
   d.row.querySelectorAll("button").forEach(b => b.onclick = () => action(d, b.dataset.a));

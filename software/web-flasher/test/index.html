@@ -7,6 +7,7 @@
 fetch("../index.html", { cache: "no-store" }).then(r => r.text()).then(html => {
   // 10x faster status polling so going offline shows up within seconds
   html = html.replace("const POLL_MS = 30000", "const POLL_MS = 3000").replace("const POLLED_ONLINE_MS = 75000", "const POLLED_ONLINE_MS = 7500");
+  html = html.replace('const STORE = "lisek-fleet-v1"', 'const STORE = "lisek-fleet-test"');  // keep the real list clean
   html = html.replace("<head>", '<head><base href="../">').replace("<script>", '<script src="test/mock-bluetooth.js"></' + 'script><script>');
   document.open();
   document.write(html);
