@@ -1,6 +1,6 @@
 # Nadajnik ("lis")
 
-Nadajnik wysyła co 100 ms pakiet LoRa ze swoim numerem (id 1-8). Odbiorniki ustawione na ten sam numer pokazują siłę jego sygnału na diodach.
+Nadajnik wysyła co 100 ms pakiet LoRa ze swoim numerem (id 1-9). Odbiorniki ustawione na ten sam numer pokazują siłę jego sygnału na diodach. Id 9 wymaga binarnego trybu diod w odbiorniku.
 
 ![Schemat połączeń](docs/fritzing/fox-transmitter_breadboard.png)
 
@@ -35,29 +35,30 @@ Numer nadajnika (id) wyznacza kanał radiowy i zawartość pakietów:
 - **Sync word:** `CAFE` + 4× id + `BABE`, zapisany w module
 - **Pakiet:** 32 bajty, każdy równy id
 
-Id  |  Kanał  |  Częstotliwość  |  Sync word  |  Odbiornik (od id 1)
-:-------------------------:|:-------------------------:|:-------------------------:|:-------------------------:|:-------------------------:
-1  |  0  |  863.0 MHz  |  `CAFE01010101BABE`  |  0 naciśnięć albo `1`
-2  |  1  |  863.5 MHz  |  `CAFE02020202BABE`  |  1 naciśnięcie albo `2`
-3  |  2  |  864.0 MHz  |  `CAFE03030303BABE`  |  2 naciśnięcia albo `3`
-4  |  3  |  864.5 MHz  |  `CAFE04040404BABE`  |  3 naciśnięcia albo `4`
-5  |  4  |  865.0 MHz  |  `CAFE05050505BABE`  |  4 naciśnięcia albo `5`
-6  |  5  |  865.5 MHz  |  `CAFE06060606BABE`  |  5 naciśnięć albo `6`
-7  |  6  |  866.0 MHz  |  `CAFE07070707BABE`  |  6 naciśnięć albo `7`
-8  |  7  |  866.5 MHz  |  `CAFE08080808BABE`  |  7 naciśnięć albo `8`, tylko diody binarne
+Id  |  Kanał |  Częstotliwość |  Sync word |  Kod binarny (LED4–LED7)
+:---:|:---:|:---:|:---:|:---:
+1 | 0 | 863.0 MHz | `CAFE01010101BABE` | `0001`
+2 | 1 | 863.5 MHz | `CAFE02020202BABE` | `0010`
+3 | 2 | 864.0 MHz | `CAFE03030303BABE` | `0011`
+4 | 3 | 864.5 MHz | `CAFE04040404BABE` | `0100`
+5 | 4 | 865.0 MHz | `CAFE05050505BABE` | `0101`
+6 | 5 | 865.5 MHz | `CAFE06060606BABE` | `0110`
+7 | 6 | 866.0 MHz | `CAFE07070707BABE` | `0111`
+8 | 7 | 866.5 MHz | `CAFE08080808BABE` | `1000`
+9 | 8 | 867.0 MHz | `CAFE09090909BABE` | `1001`
 
-Odbiornik startuje na id 1, każde naciśnięcie przycisku przechodzi na następny numer, a po ostatnim wraca do 1. Ile jest numerów (domyślnie 7, z diodami binarnymi do 8) i jak diody je pokazują, ustawia się tylko na [stronie floty](../ota/README.md), więc nie da się tego zmienić przypadkiem; szczegóły w [software/led-receiver](../led-receiver/README.md#ustawienia). Zamiast przycisku można wpisać cyfrę w monitorze portu szeregowego odbiornika.
+Odbiornik startuje na id 1, każde naciśnięcie przycisku przechodzi na następny numer, a po ostatnim wraca do 1. Liczbę numerów (domyślnie 7, maksymalnie 9 w trybie binarnym) i sposób ich wyświetlania ustawia się na [stronie floty](../ota/README.md); szczegóły w [software/led-receiver](../led-receiver/README.md#ustawienia). Kod binarny podano od LED4 do LED7: `1001` oznacza zapalone LED4 i LED7. Zamiast przycisku można wpisać cyfrę w monitorze portu szeregowego odbiornika.
 
 ### Zworki
 
 Zworki od góry do dołu, ● = założona, ○ = brak (kanał zapisany binarnie: CH_1 = 1, CH_2 = 2, CH_3 = 4, CH_4 = 8):
 
-Zworka  |  Id 1  |  Id 2  |  Id 3  |  Id 4  |  Id 5  |  Id 6  |  Id 7  |  Id 8
-:-------------------------:|:-------------------------:|:-------------------------:|:-------------------------:|:-------------------------:|:-------------------------:|:-------------------------:|:-------------------------:|:-------------------------:
-CH_1  |  ○  |  ●  |  ○  |  ●  |  ○  |  ●  |  ○  |  ●
-CH_2  |  ○  |  ○  |  ●  |  ●  |  ○  |  ○  |  ●  |  ●
-CH_3  |  ○  |  ○  |  ○  |  ○  |  ●  |  ●  |  ●  |  ●
-CH_4  |  ○  |  ○  |  ○  |  ○  |  ○  |  ○  |  ○  |  ○
+Zworka | Id 1 | Id 2 | Id 3 | Id 4 | Id 5 | Id 6 | Id 7 | Id 8 | Id 9
+:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:
+CH_1 | ○ | ● | ○ | ● | ○ | ● | ○ | ● | ○
+CH_2 | ○ | ○ | ● | ● | ○ | ○ | ● | ● | ○
+CH_3 | ○ | ○ | ○ | ○ | ● | ● | ● | ● | ○
+CH_4 | ○ | ○ | ○ | ○ | ○ | ○ | ○ | ○ | ●
 
 ## Bluetooth
 
@@ -71,7 +72,7 @@ Lis nadaje przez Bluetooth na [stronę](../ota/README.md) swój kanał, wersję 
    software/ota/build.sh
    software/ota/usb-flash.sh transmitter /dev/ttyUSB0
    ```
-3. Otwórz monitor portu szeregowego (115200 baud) i wpisz cyfrę id (1-8). Nadajnik odpowiada `updated transmitter id id=N sync_word=CAFE...BABE`.
+3. Otwórz monitor portu szeregowego (115200 baud) i wpisz cyfrę id (1-9). Nadajnik odpowiada `updated transmitter id id=N sync_word=CAFE...BABE`.
 4. Wpisz `w`, żeby zapisać ustawienia w module (`saved to flash`). Po każdym starcie program odczytuje sync word z modułu i używa zapisanego id.
 5. Sprawdź na odbiorniku ustawionym na to samo id: diody pokazują siłę sygnału, a w monitorze odbiornika pojawia się `received packet ... packet_tx_id=N`.
 

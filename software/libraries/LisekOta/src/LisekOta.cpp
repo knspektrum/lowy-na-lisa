@@ -47,7 +47,7 @@ static const char *g_role = "";
 static bool g_pending = false, g_healthy = false;
 static uint16_t g_mtu = 23;
 static volatile uint8_t g_id = 0;
-static volatile uint8_t g_user = 0;  // sketch value 0..15, advertised (setUserBits)
+static volatile uint8_t g_user = 0;  // sketch value 0..31, advertised (setUserBits)
 static bool (*g_setting)(const String &, const String &) = nullptr;
 static char g_name[16];
 // Why the last boots happened, newest first, one letter each (kept in NVS so a
@@ -184,7 +184,7 @@ static const char *state_name() {
 
 // Scan response: name, then manufacturer data (company 0xFFFF, for testing and
 // internal use) = role letter, state letter, id digit, '@' + (user bits << 1 |
-// healthy), version. A web page
+// healthy), version. Six bits encode five user bits and health. A web page
 // scanning for advertisements sees all of it without connecting.
 static void refresh_adv() {
   if (!g_info) return;
@@ -369,7 +369,7 @@ void onSetting(bool (*handler)(const String &key, const String &value)) {
 }
 
 void setUserBits(uint8_t value) {
-  g_user = value & 0x0f;
+  g_user = value & 0x1f;
   refresh_adv();
 }
 

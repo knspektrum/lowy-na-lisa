@@ -52,14 +52,17 @@ uint8_t transmitter_id = 1;  // matches receiver.ino's initial set_transmitter_i
 // power-off):
 //   leds: how the selected id is shown
 //     unary (default): that many LEDs from LED7 down, so at most 7
-//     binary: LED7 = 1, LED6 = 2, LED5 = 4, LED4 = 8, up to 8
+//     binary: LED7 = 1, LED6 = 2, LED5 = 4, LED4 = 8, up to 9
 //   channels: how many transmitter ids the button cycles through (default 7)
 volatile bool binary_leds = false;
 volatile uint8_t channels = 7;
 volatile bool settings_changed = false;
+volatile uint8_t requested_id = 0;  // applied by loop(), which owns the radio UART
+volatile bool requested_id_ok = false;
+SemaphoreHandle_t id_change_done;
 
 uint8_t max_id() {
-  uint8_t shown = binary_leds ? 8 : 7;
+  uint8_t shown = binary_leds ? 9 : 7;
   return channels < shown ? channels : shown;
 }
 
@@ -134,11 +137,23 @@ uint8_t id_bits(uint8_t id) {
 // Bluetooth task).
 bool on_setting(const String &key, const String &value) {
   Preferences prefs;
-  if (key == "leds" && (value == "binary" || value == "unary")) {
+  if (key == "id") {
+    int id = value.toInt();
+    if (value != String(id) || id < 1 || id > max_id()) return false;
+    while (xSemaphoreTake(id_change_done, 0) == pdTRUE) {}
+    requested_id = id;
+    requested_id_ok = false;
+    settings_changed = true;
+    if (xSemaphoreTake(id_change_done, pdMS_TO_TICKS(4000)) != pdTRUE || !requested_id_ok) return false;
+    prefs.begin("receiver", false);
+    prefs.putUChar("id", id);
+    prefs.end();
+    return true;
+  } else if (key == "leds" && (value == "binary" || value == "unary")) {
     binary_leds = value == "binary";
     prefs.begin("receiver", false);
     prefs.putBool("binary_leds", binary_leds);
-  } else if (key == "channels" && value.toInt() >= 1 && value.toInt() <= (binary_leds ? 8 : 7)) {
+  } else if (key == "channels" && value.toInt() >= 1 && value.toInt() <= (binary_leds ? 9 : 7)) {
     channels = value.toInt();
     prefs.begin("receiver", false);
     prefs.putUChar("channels", channels);
@@ -264,13 +279,14 @@ void setup() {
   Serial.begin(115200);
   Serial.println("Hej liski!");
   LisekOta::begin("receiver");
+  id_change_done = xSemaphoreCreateBinary();
   Preferences prefs;
   prefs.begin("receiver", true);
   binary_leds = prefs.getBool("binary_leds", false);
-  channels = constrain(prefs.getUChar("channels", 7), 1, 8);
+  channels = constrain(prefs.getUChar("channels", 7), 1, binary_leds ? 9 : 7);
+  transmitter_id = constrain(prefs.getUChar("id", 1), 1, min((int)channels, binary_leds ? 9 : 7));
   prefs.end();
   advertise_settings();
-  LisekOta::onSetting(on_setting);
   Serial.println("firmware " LISEK_VERSION);
 
   pinMode(BUTTON_PIN, INPUT_PULLUP);
@@ -297,6 +313,7 @@ void setup() {
     delay(2000);
   }
   LisekOta::markHealthy();
+  LisekOta::onSetting(on_setting);
   Serial.println("into RX mode");
 }
 
@@ -306,7 +323,7 @@ uint32_t id_flash_until = 0;
 // millis() of the last packet from the selected transmitter, 0 = none shown.
 uint32_t last_packet_ms = 0;
 
-void change_transmitter_id_to(uint8_t id) {
+bool change_transmitter_id_to(uint8_t id) {
   last_packet_ms = 0;  // the old transmitter's strength no longer applies
   // Feedback first: the id shows on the LEDs the moment the button goes down.
   display_bits_on_leds(id_bits(id));
@@ -315,8 +332,10 @@ void change_transmitter_id_to(uint8_t id) {
 
   if (retune(id) || set_transmitter_id(id)) {
     Serial.printf("\r\nChanged transmitter id to %d\r\n", transmitter_id);
+    return true;
   } else {
     Serial.println("failed to change transmitter id");
+    return false;
   }
 }
 
@@ -337,10 +356,15 @@ void loop() {
   }
 
   // Settings changed from the panel: show the id the new way; an id that is no
-  // longer allowed (fewer channels, 8 in unary) goes back to 1.
+  // longer allowed (fewer channels, 8+ in unary) goes back to 1.
   if (settings_changed) {
     settings_changed = false;
-    if (transmitter_id > max_id()) {
+    uint8_t new_id = requested_id;
+    requested_id = 0;
+    if (new_id) {
+      requested_id_ok = change_transmitter_id_to(new_id);
+      xSemaphoreGive(id_change_done);
+    } else if (transmitter_id > max_id()) {
       change_transmitter_id_to(1);
     } else {
       display_bits_on_leds(id_bits(transmitter_id));

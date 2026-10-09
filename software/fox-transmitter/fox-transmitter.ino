@@ -24,6 +24,11 @@ int transmitter_id = 1;
 // the web panel only ("set hide=N"), stored in NVS.
 const uint8_t HIDE_CHOICES[] = { 0, 10, 30, 60 };  // index = advertised user bits
 uint8_t hide_minutes = 0;
+SemaphoreHandle_t radio_mutex;
+
+int sendAT(const char *cmd);
+bool update_transmitter_id(int id);
+bool save_to_flash();
 
 void advertise_hide() {
   for (uint8_t i = 0; i < sizeof HIDE_CHOICES; i++)
@@ -32,16 +37,27 @@ void advertise_hide() {
 }
 
 bool on_setting(const String &key, const String &value) {
-  if (key != "hide") return false;
-  int m = value.toInt();
-  if (value != String(m) || memchr(HIDE_CHOICES, m, sizeof HIDE_CHOICES) == nullptr) return false;
-  hide_minutes = m;
-  Preferences prefs;
-  prefs.begin("transmitter", false);
-  prefs.putUChar("hide_min", hide_minutes);
-  prefs.end();
-  advertise_hide();
-  return true;
+  if (key == "id") {
+    int id = value.toInt();
+    if (value != String(id) || id < 1 || id > 9) return false;
+    xSemaphoreTake(radio_mutex, portMAX_DELAY);
+    bool ok = update_transmitter_id(id);
+    if (ok) ok = save_to_flash();
+    xSemaphoreGive(radio_mutex);
+    return ok;
+  }
+  if (key == "hide") {
+    int m = value.toInt();
+    if (value != String(m) || memchr(HIDE_CHOICES, m, sizeof HIDE_CHOICES) == nullptr) return false;
+    hide_minutes = m;
+    Preferences prefs;
+    prefs.begin("transmitter", false);
+    prefs.putUChar("hide_min", hide_minutes);
+    prefs.end();
+    advertise_hide();
+    return true;
+  }
+  return false;
 }
 String lastResponse;
 
@@ -104,7 +120,7 @@ int idFromSyncWord(const String &sw) {
   return -1;
 }
 
-void update_transmitter_id(int id) {
+bool update_transmitter_id(int id) {
   char buf[20];
   snprintf(buf, sizeof buf, "CAFE%02X%02X%02X%02XBABE", id, id, id, id);
   enterConfig();
@@ -112,23 +128,25 @@ void update_transmitter_id(int id) {
   exitConfig();
   if (res != 0) {
     Serial.printf("set sync word failed: %d (module said \"%s\")\r\n", res, lastResponse.c_str());
-    return;
+    return false;
   }
   transmitter_id = id;
   LisekOta::setId(id);
   Serial.printf("updated transmitter id id=%d sync_word=%s\r\n", id, buf);
-  if (id < 1 || id > 8) Serial.println("note: led-receiver tunes ids 1-8 (8 only in binary LED mode)");
+  if (id == 8 || id == 9) Serial.println("note: ids 8-9 require binary LED mode on the receiver");
+  return true;
 }
 
-void save_to_flash() {
+bool save_to_flash() {
   enterConfig();
   int res = sendAT("AT&W");
   exitConfig();
   if (res != 0) {
     Serial.printf("save to flash failed: %d (module said \"%s\")\r\n", res, lastResponse.c_str());
-    return;
+    return false;
   }
   Serial.printf("saved to flash\r\n");
+  return true;
 }
 
 void setup() {
@@ -139,12 +157,12 @@ void setup() {
   pinMode(CONFIG_PIN, OUTPUT);
   Serial.println("\r\n=== fox transmitter (reconstructed) ===");
   LisekOta::begin("transmitter");
+  radio_mutex = xSemaphoreCreateMutex();
   Preferences prefs;
   prefs.begin("transmitter", true);
   hide_minutes = prefs.getUChar("hide_min", 0);
   prefs.end();
   advertise_hide();
-  LisekOta::onSetting(on_setting);
   Serial.println("firmware " LISEK_VERSION);
 
   enterConfig();
@@ -191,6 +209,7 @@ void setup() {
   Serial.printf("transmitter_id=%d\r\n", transmitter_id);
   LisekOta::setId(transmitter_id);
   LisekOta::markHealthy();
+  LisekOta::onSetting(on_setting);
 }
 
 void loop() {
@@ -200,16 +219,23 @@ void loop() {
   while (Serial.available()) {
     char c = Serial.read();
     if (c >= '0' && c <= '9') {
+      xSemaphoreTake(radio_mutex, portMAX_DELAY);
       update_transmitter_id(c - '0');
+      xSemaphoreGive(radio_mutex);
     } else if (c == 'w') {
+      xSemaphoreTake(radio_mutex, portMAX_DELAY);
       save_to_flash();
+      xSemaphoreGive(radio_mutex);
     }
   }
 
   if (now - lastPacketMs >= PACKET_INTERVAL_MS && Serial1.availableForWrite() >= PACKET_LEN) {
     uint8_t packet[PACKET_LEN];
     memset(packet, transmitter_id, sizeof packet);
-    Serial1.write(packet, sizeof packet);
+    if (xSemaphoreTake(radio_mutex, 0) == pdTRUE) {
+      Serial1.write(packet, sizeof packet);
+      xSemaphoreGive(radio_mutex);
+    }
     packets++;
     lastPacketMs = now;
   }

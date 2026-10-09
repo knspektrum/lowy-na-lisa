@@ -1,6 +1,6 @@
 # Odbiornik z diodami
 
-Odbiornik nasłuchuje nadajnika o wybranym numerze (id 1-8) i pokazuje siłę jego sygnału na 7 diodach. Działa tak samo jak `software/receiver/receiver.ino`, tylko na ESP32 z modułem Seeed LoRa-E5 sterowanym komendami AT.
+Odbiornik nasłuchuje nadajnika o wybranym numerze (id 1-9) i pokazuje siłę jego sygnału na 7 diodach. Działa tak samo jak `software/receiver/receiver.ino`, tylko na ESP32 z modułem Seeed LoRa-E5 sterowanym komendami AT.
 
 ![Schemat połączeń](docs/fritzing/led-receiver_breadboard.png)
 
@@ -48,20 +48,21 @@ Ustawia się je tylko w **Ustawieniach** odbiornika na [stronie floty](../ota/RE
 
 - **Liczba kanałów:** przez ile numerów nadajników przechodzi przycisk, domyślnie 7 (1-7)
 - **Diody zwykłe** (domyślnie): zapala się tyle diod od LED7 w dół, ile wynosi id, więc najwyżej 7 kanałów
-- **Diody binarne:** id zapisane dwójkowo, do 8 kanałów, ● = świeci
+- **Diody binarne:** id zapisane dwójkowo, do 9 kanałów, ● = świeci
 
-Id  |  LED4 (8)  |  LED5 (4)  |  LED6 (2)  |  LED7 (1)
-:-------------------------:|:-------------------------:|:-------------------------:|:-------------------------:|:-------------------------:
-1  |  ○  |  ○  |  ○  |  ●
-2  |  ○  |  ○  |  ●  |  ○
-3  |  ○  |  ○  |  ●  |  ●
-4  |  ○  |  ●  |  ○  |  ○
-5  |  ○  |  ●  |  ○  |  ●
-6  |  ○  |  ●  |  ●  |  ○
-7  |  ○  |  ●  |  ●  |  ●
-8  |  ●  |  ○  |  ○  |  ○
+Id | LED4 (8) | LED5 (4) | LED6 (2) | LED7 (1) | Kod
+:--:|:--:|:--:|:--:|:--:|:--:
+1 | ○ | ○ | ○ | ● | `0001`
+2 | ○ | ○ | ● | ○ | `0010`
+3 | ○ | ○ | ● | ● | `0011`
+4 | ○ | ● | ○ | ○ | `0100`
+5 | ○ | ● | ○ | ● | `0101`
+6 | ○ | ● | ● | ○ | `0110`
+7 | ○ | ● | ● | ● | `0111`
+8 | ● | ○ | ○ | ○ | `1000`
+9 | ● | ○ | ○ | ● | `1001`
 
-Jeśli wybrane id nie mieści się w nowych ustawieniach (mniej kanałów, id 8 przy zwykłych diodach), odbiornik wraca do id 1.
+Jeśli wybrane id nie mieści się w nowych ustawieniach (mniej kanałów albo id 8–9 przy zwykłych diodach), odbiornik wraca do id 1.
 
 ## Programowanie
 

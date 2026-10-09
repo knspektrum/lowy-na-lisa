@@ -250,6 +250,10 @@
   <form method="dialog" id="setForm">
     <h2 id="setTitle">Ustawienia</h2>
     <div class="muted mono" id="setName"></div>
+    <div class="field">
+      <label for="setId">Kanał radiowy</label>
+      <select id="setId"></select>
+    </div>
     <div id="txFields">
     <div class="field">
       <label for="setHide">Ukryj Bluetooth po włączeniu lisa</label>
@@ -269,7 +273,7 @@
       <label class="choice"><input type="radio" name="leds" value="unary">
         <span><b>Zwykłe</b><br><span class="muted small-text">Tyle zapalonych diod, ile wynosi numer (do 7 kanałów)</span></span></label>
       <label class="choice"><input type="radio" name="leds" value="binary">
-        <span><b>Binarne</b><br><span class="muted small-text">Numer dwójkowo: LED7 = 1, LED6 = 2, LED5 = 4, LED4 = 8 (do 8 kanałów)</span></span></label>
+        <span><b>Binarne</b><br><span class="muted small-text">Numer dwójkowo: LED7 = 1, LED6 = 2, LED5 = 4, LED4 = 8 (do 9 kanałów)</span></span></label>
     </div>
     <div class="field">
       <label for="setChannels">Liczba kanałów (przycisk przełącza 1 → … → N → 1)</label>
@@ -311,13 +315,13 @@ const bt = navigator.bluetooth;
 const images = {};            // role -> { role, version, size, bytes }
 const fleet = new Map();      // name -> device record
 const permitted = new Set();  // BluetoothDevice ids this page may connect to
+let scanPending = false;
+let activeScan = null;
 
 if (!bt) $("unsupported").hidden = false;
-// Chrome implements scanning everything (requestLEScan) only on macOS and Android;
-// elsewhere the flag exposes it but every call is rejected as "cancelled".
-const platform = (navigator.userAgentData && navigator.userAgentData.platform) || navigator.platform || "";
-const canScan = !!(bt && bt.requestLEScan) && /mac|android/i.test(platform + " " + navigator.userAgent);
-if (canScan) $("scan").hidden = false;
+// Let the browser decide whether nearby BLE scanning is available; some builds expose
+// Web Bluetooth but reject requestLEScan. Keep the control visible so the user can try.
+if (bt) $("scan").hidden = false;
 
 function toast(msg) {
   const t = $("toast");
@@ -333,12 +337,12 @@ function decodeUser(d, u) {
   if (u == null) return;
   if (d.role === "receiver") {
     d.binary = !!(u & 1);
-    d.channels = ((u >> 1) & 7) + 1;
+    d.channels = ((u >> 1) & 15) + 1;
   } else if (d.role === "transmitter") {
     d.hide = HIDE_CHOICES[u & 3];
   }
 }
-const maxChannels = d => Math.min(d.channels || 7, d.binary ? 8 : 7);
+const maxChannels = d => Math.min(d.channels || 7, d.binary ? 9 : 7);
 
 // --- persistence: every device this browser has seen ---
 function save() {
@@ -383,6 +387,11 @@ $("files").onchange = async e => {
       d.role = d.role || r.role;
       d.mac = r.mac;
       d.registered = true;
+      d.usbVersion = r.flashed_version || null;
+      d.usbFlashedAt = r.flashed_at || null;
+      d.lastAttemptVersion = r.last_attempt_version || null;
+      d.lastAttemptStatus = r.last_attempt_status || null;
+      d.radioStatus = r.radio_status || null;
     }
     renderAll();
   } catch (_) {}
@@ -398,6 +407,7 @@ $("files").onchange = async e => {
 function onAdvert(e) {
   const name = e.name || e.device.name;
   if (!name || !name.startsWith("lisek-")) return;
+  const isNew = !fleet.has(name);
   const d = record(name);
   d.dev = d.dev || e.device;
   d.live = true;
@@ -415,7 +425,8 @@ function onAdvert(e) {
     decodeUser(d, f >> 1);
   }
   save();
-  render(d);
+  if (isNew) renderAll();
+  else render(d);
 }
 async function watch(dev) {
   permitted.add(dev.id);
@@ -434,19 +445,39 @@ setInterval(async () => {
 }, POLL_MS);
 
 $("scan").onclick = async () => {
+  if (scanPending || activeScan) return;
+  scanPending = true;
+  const button = $("scan");
+  const label = button.innerHTML;
+  button.disabled = true;
+  button.textContent = "Skanowanie…";
   try {
-    await bt.requestLEScan({ filters: [{ services: [SVC] }], keepRepeatedDevices: true });
+    if (typeof bt?.requestLEScan !== "function")
+      throw new Error("Ta przeglądarka nie udostępnia Web Bluetooth requestLEScan");
     bt.addEventListener("advertisementreceived", onAdvert);
-    $("scan").textContent = "Skanowanie…";
-    $("scan").disabled = true;
+    activeScan = await bt.requestLEScan({
+      filters: ["R", "T"].map(role => ({
+        namePrefix: "lisek-",
+        manufacturerData: [{ companyIdentifier: COMPANY, dataPrefix: new TextEncoder().encode(role) }]
+      })),
+      keepRepeatedDevices: true
+    });
+    button.textContent = "Skanowanie…";
   } catch (e) {
-    $("scan").hidden = true;
-    toast("Skanowanie wszystkich naraz nie działa w tej przeglądarce. Dodaj urządzenia po jednym („Dodaj urządzenie”).");
+    console.error("Nearby BLE scan failed", e);
+    bt?.removeEventListener("advertisementreceived", onAdvert);
+    toast(`Nie udało się uruchomić skanowania BLE: ${e.message}`);
+  } finally {
+    scanPending = false;
+    if (!activeScan) {
+      button.innerHTML = label;
+      button.disabled = false;
+    }
   }
 };
 $("add").onclick = async () => {
   let dev;
-  try { dev = await bt.requestDevice({ filters: [{ services: [SVC] }] }); }
+  try { dev = await bt.requestDevice({ filters: [{ namePrefix: "lisek-" }], optionalServices: [SVC], optionalManufacturerData: [COMPANY] }); }
   catch (e) {
     // closing the chooser is a NotFoundError mentioning the chooser; anything else is a real problem
     if (/globally disabled|not available|adapter/i.test(e.message)) {
@@ -483,8 +514,7 @@ function ago(t) {
   return new Date(t).toLocaleDateString("pl");
 }
 function signal(rssi) {
-  if (rssi == null) return "";
-  return rssi > -65 ? "mocny" : rssi > -80 ? "średni" : "słaby";
+  return rssi == null ? "" : `${Math.round(rssi)} dBm`;
 }
 const icon = (id, label) => `<svg class="i" ${label ? `role="img" aria-label="${label}"` : 'aria-hidden="true"'}><use href="#i-${id}"/></svg>`;
 function title(d) {
@@ -499,7 +529,13 @@ function roleTag(d) {
 }
 function outdatedOf(d) {
   const img = images[d.role];
-  return !!(img && d.version && img.version !== d.version);
+  const version = knownVersion(d);
+  return !!(img && version && img.version !== version);
+}
+function knownVersion(d) {
+  // A live or newer browser observation is stronger than the USB registry snapshot.
+  if (d.version && (d.live || !d.usbFlashedAt || !d.lastSeen || d.lastSeen > Date.parse(d.usbFlashedAt))) return d.version;
+  return d.usbVersion || d.version;
 }
 function render(d) {
   if (!d.row) {
@@ -518,7 +554,14 @@ function render(d) {
   const facts = [];
   if (d.role === "receiver" && d.channels) facts.push(`<span>Kanały <b>1-${maxChannels(d)}</b></span>`, `<span>Diody <b>${d.binary ? "binarnie" : "zwykle"}</b></span>`);
   if (d.role === "transmitter" && d.hide) facts.push(`<span>Ukrywa się po <b>${d.hide} min</b></span>`);
-  facts.push(`<span>Program <b class="mono">${esc(d.version || "?")}</b> ${outdated ? `<span class="tag">→ ${esc(img.version)}</span>` : img && d.version ? '<span class="tag ok">aktualny</span>' : ""}</span>`);
+  const version = knownVersion(d);
+  facts.push(`<span>Program <b class="mono">${esc(version || "?")}</b> ${outdated ? `<span class="tag">→ ${esc(img.version)}</span>` : img && version ? '<span class="tag ok">aktualny</span>' : ""}</span>`);
+  if (d.registered) {
+    const usbDate = d.usbFlashedAt ? ` · ${new Date(d.usbFlashedAt).toLocaleDateString()}` : "";
+    facts.push(`<span>Ostatni USB flash <b class="mono">${esc(d.usbVersion || "brak zapisu")}</b>${esc(usbDate)}</span>`);
+  }
+  if (d.radioStatus === "failed" || d.lastAttemptStatus === "radio_failed")
+    facts.push(`<span class="tag">Radio nie odpowiedziało po wgraniu ${esc(d.lastAttemptVersion || "programu")}</span>`);
   const talk = canTalk(d);
   const btn = (a, ic, label, enabled) =>
     `<button class="icon-btn" data-a="${a}" title="${label}" aria-label="${label}" ${enabled ? "" : "disabled"}>${icon(ic)}</button>`;
@@ -533,7 +576,7 @@ function render(d) {
       <div class="who">${roleTag(d)}<div class="dev-name">${esc(title(d))}</div><div class="dev-sub mono">${esc(d.name)}</div></div>
       <div class="btns">${btns.join("")}</div>
     </div>
-    <div class="seen ${on ? "on" : ""}">${icon(on ? "wifi" : "clock")}${on ? `teraz${d.rssi != null ? `, sygnał ${signal(d.rssi)}` : ""}` : d.lastSeen ? `ostatnio ${ago(d.lastSeen)}` : "jeszcze nie połączony z tą przeglądarką"}</div>
+    <div class="seen ${on ? "on" : ""}">${icon(on ? "wifi" : "clock")}${on ? `teraz${d.rssi != null ? ` · RSSI ${signal(d.rssi)}` : ""}` : d.lastSeen ? `ostatnio ${ago(d.lastSeen)}` : "jeszcze nie połączony z tą przeglądarką"}</div>
     ${d.progress != null ? `<div class="bar-progress" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="${Math.round(d.progress * 100)}"><div style="width:${(d.progress * 100).toFixed(1)}%"></div></div>` : ""}
     <div class="dev-foot"><div class="facts">${facts.join("")}</div>${pill}</div>`;
   d.row.querySelectorAll("button").forEach(b => b.onclick = () => action(d, b.dataset.a));
@@ -604,7 +647,7 @@ async function action(d, a) {
     renderAll();
   } else if (a === "allow") {
     try {  // must be the first await: it needs the click
-      const dev = await bt.requestDevice({ filters: [{ name: d.name }], optionalServices: [SVC] });
+      const dev = await bt.requestDevice({ filters: [{ name: d.name }], optionalServices: [SVC], optionalManufacturerData: [COMPANY] });
       await watch(dev);
       await connect(d);
     } catch (_) {}
@@ -666,9 +709,13 @@ async function command(d, cmd, want, ms = 5000) {
 // --- receiver settings (only from here, so nobody changes them on the device by accident) ---
 let editing = null;
 function fillChannels(binary, current) {
-  const max = binary ? 8 : 7;
+  const max = binary ? 9 : 7;
   $("setChannels").innerHTML = Array.from({ length: max }, (_, i) => i + 1)
     .map(n => `<option value="${n}" ${n === Math.min(current, max) ? "selected" : ""}>${n}${n === 7 ? " (domyślnie)" : ""}</option>`).join("");
+}
+function fillIdOptions(max, current) {
+  $("setId").innerHTML = Array.from({ length: max }, (_, i) => i + 1)
+    .map(n => `<option value="${n}" ${n === Math.min(current || 1, max) ? "selected" : ""}>${n}</option>`).join("");
 }
 function openSettings(d) {
   editing = d;
@@ -680,27 +727,38 @@ function openSettings(d) {
   $("setName").textContent = d.name;
   $("setForm").leds.value = d.binary ? "binary" : "unary";
   fillChannels(!!d.binary, d.channels || 7);
+  fillIdOptions(rx ? maxChannels(d) : 9, d.id);
   $("settings").showModal();
 }
-$("setForm").leds.forEach(r => r.onchange = () => fillChannels(r.value === "binary", +$("setChannels").value));
+$("setForm").leds.forEach(r => r.onchange = () => {
+  fillChannels(r.value === "binary", +$("setChannels").value);
+  fillIdOptions(Math.min(+$("setChannels").value, r.value === "binary" ? 9 : 7), +$("setId").value);
+});
+$("setChannels").onchange = () => {
+  const binary = $("setForm").leds.value === "binary";
+  fillIdOptions(Math.min(+$("setChannels").value, binary ? 9 : 7), +$("setId").value);
+};
 $("settings").onclose = async () => {
   const d = editing;
   editing = null;
   if (!d || $("settings").returnValue !== "save") return;
   const binary = $("setForm").leds.value === "binary";
   const channels = +$("setChannels").value;
+  const id = +$("setId").value;
   const hide = +$("setHide").value;
   d.busy = true; d.msg = "Zapisywanie…"; d.cls = "warn"; render(d);
   try {
     if (!d.gatt || !d.gatt.connected) await connect(d);
     if (d.role === "receiver") {
-      // mode first: 8 channels are only accepted in binary mode
+      // mode first: more than 7 channels are only accepted in binary mode
       if (binary !== !!d.binary) await command(d, `set leds=${binary ? "binary" : "unary"}`, "set-ok");
       if (channels !== d.channels) await command(d, `set channels=${channels}`, "set-ok");
-      toast(`Zapisano: ${channels} kanałów, diody ${binary ? "binarnie" : "zwykle"}`);
+      if (id !== d.id) await command(d, `set id=${id}`, "set-ok");
+      toast(`Zapisano: kanał ${id}, ${channels} kanałów, diody ${binary ? "binarnie" : "zwykle"}`);
     } else {
       if (hide !== d.hide) await command(d, `set hide=${hide}`, "set-ok");
-      toast(hide ? `Zapisano: lis ukryje się ${hide} min po włączeniu` : "Zapisano: lis zawsze widoczny");
+      if (id !== d.id) await command(d, `set id=${id}`, "set-ok");
+      toast(`Zapisano: kanał ${id}${hide ? `, lis ukryje się po ${hide} min` : ", lis zawsze widoczny"}`);
     }
     await readInfo(d);
     d.msg = null;
@@ -715,7 +773,7 @@ $("settings").onclose = async () => {
 // --- update ---
 async function flash(d) {
   const img = images[d.role];
-  if (!img || d.busy || !d.dev) return;
+  if (!img || d.busy || !d.dev || !permitted.has(d.dev.id)) return;
   d.busy = true; d.progress = 0;
   const step = m => { d.msg = m; d.cls = "warn"; render(d); };
   try {
