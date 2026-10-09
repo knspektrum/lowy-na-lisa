@@ -2,8 +2,9 @@
 // software/web-flasher, any Chromium browser).
 //
 // The device advertises as "lisek-R-xxxx" (receiver) or "lisek-T-xxxx"
-// (transmitter) all the time it is on, with its role, state, id and firmware
-// version in the advertisement (fleet view). Anyone can read those; it only
+// (transmitter) while it is on (until hideAfter()), with its role, state, id
+// and firmware version in the advertisement (fleet view). Anyone can read
+// those; it only
 // installs images signed with the project key (ECDSA P-256, public half in
 // lisek_pubkey.h) and built for its own role.
 //
@@ -37,9 +38,16 @@ void setId(uint8_t id);
 // itself can change them by accident.
 void onSetting(bool (*handler)(const String &key, const String &value));
 
-// Flags shown in the fleet view (advertised), bit 1..4; meaning is per role
-// (receiver: bit 1 = binary LED mode).
-void setFlag(uint8_t bit, bool on);
+// Four bits shown in the fleet view (advertised and in the info JSON as
+// "user"); meaning is per role. Receiver: bit 0 = binary LED mode, bits 1-3 =
+// number of channels - 1. Transmitter: index into 0/10/30/60 hide minutes.
+void setUserBits(uint8_t value);
+
+// Stop advertising this many minutes after power-on (0 = never), so phones
+// cannot find the device by its Bluetooth signal during the game. Not while a
+// client is connected, an update is in progress or an update awaits
+// confirmation. Visible again only after a restart.
+void hideAfter(uint32_t minutes);
 
 // True while an update is being received (the sketch can show it on LEDs).
 bool updating();

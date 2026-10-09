@@ -15,7 +15,7 @@
 //   - Id cycling: receiver.ino changes id on a SW1 press; here it's a button
 //     wired to GPIO32 (to GND, internal pull-up), short-press only - no
 //     long-press power-off, since this board has no equivalent sleep mode. A digit
-//     1-7 over USB serial does the same thing (1-8 in binary LED mode).
+//     1-N over USB serial does the same thing (N = channel setting, default 7).
 //
 // Wiring: ESP32 TX2 (GPIO17) -> LoRa-E5 RX, ESP32 RX2 (GPIO16) <- LoRa-E5 TX,
 // GND-GND. LEDs on LED_PINS[] (D33,D25,D26,D27,D14,D12,D13, reversed from the
@@ -48,15 +48,23 @@ const int NUM_LEDS = sizeof(LED_PINS) / sizeof(LED_PINS[0]);
 
 uint8_t transmitter_id = 1;  // matches receiver.ino's initial set_transmitter_id(1)
 
-// How the selected id is shown, switched only from the web panel (stored in
-// NVS, so it survives power-off):
-//   unary (default): ids 1-7, that many LEDs from LED7 down
-//   binary: ids 1-8 in binary, LED7 = 1, LED6 = 2, LED5 = 4, LED4 = 8
+// Panel settings (web page over Bluetooth only, stored in NVS so they survive
+// power-off):
+//   leds: how the selected id is shown
+//     unary (default): that many LEDs from LED7 down, so at most 7
+//     binary: LED7 = 1, LED6 = 2, LED5 = 4, LED4 = 8, up to 8
+//   channels: how many transmitter ids the button cycles through (default 7)
 volatile bool binary_leds = false;
-volatile bool led_mode_changed = false;
+volatile uint8_t channels = 7;
+volatile bool settings_changed = false;
 
 uint8_t max_id() {
-  return binary_leds ? 8 : 7;
+  uint8_t shown = binary_leds ? 8 : 7;
+  return channels < shown ? channels : shown;
+}
+
+void advertise_settings() {
+  LisekOta::setUserBits((binary_leds ? 1 : 0) | ((channels - 1) << 1));
 }
 
 String lastLine;
@@ -122,17 +130,24 @@ uint8_t id_bits(uint8_t id) {
   return bits;
 }
 
-// "set leds=binary|unary" from the web panel (runs on the Bluetooth task).
+// "set leds=binary|unary" / "set channels=N" from the web panel (runs on the
+// Bluetooth task).
 bool on_setting(const String &key, const String &value) {
-  if (key != "leds" || (value != "binary" && value != "unary")) return false;
-  bool binary = value == "binary";
   Preferences prefs;
-  prefs.begin("receiver", false);
-  prefs.putBool("binary_leds", binary);
+  if (key == "leds" && (value == "binary" || value == "unary")) {
+    binary_leds = value == "binary";
+    prefs.begin("receiver", false);
+    prefs.putBool("binary_leds", binary_leds);
+  } else if (key == "channels" && value.toInt() >= 1 && value.toInt() <= (binary_leds ? 8 : 7)) {
+    channels = value.toInt();
+    prefs.begin("receiver", false);
+    prefs.putUChar("channels", channels);
+  } else {
+    return false;
+  }
   prefs.end();
-  binary_leds = binary;
-  LisekOta::setFlag(1, binary);
-  led_mode_changed = true;
+  advertise_settings();
+  settings_changed = true;
   return true;
 }
 
@@ -241,8 +256,9 @@ void setup() {
   Preferences prefs;
   prefs.begin("receiver", true);
   binary_leds = prefs.getBool("binary_leds", false);
+  channels = constrain(prefs.getUChar("channels", 7), 1, 8);
   prefs.end();
-  LisekOta::setFlag(1, binary_leds);
+  advertise_settings();
   LisekOta::onSetting(on_setting);
   Serial.println("firmware " LISEK_VERSION);
 
@@ -309,10 +325,10 @@ void loop() {
     if (!high) change_transmitter_id_to(1 + (transmitter_id % max_id()));
   }
 
-  // LED mode switched from the panel: show the id the new way (an id the new
-  // mode can't show, 8 in unary, goes back to 1).
-  if (led_mode_changed) {
-    led_mode_changed = false;
+  // Settings changed from the panel: show the id the new way; an id that is no
+  // longer allowed (fewer channels, 8 in unary) goes back to 1.
+  if (settings_changed) {
+    settings_changed = false;
     if (transmitter_id > max_id()) {
       change_transmitter_id_to(1);
     } else {

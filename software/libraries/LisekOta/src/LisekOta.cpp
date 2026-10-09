@@ -45,7 +45,7 @@ static const char *g_role = "";
 static bool g_pending = false, g_healthy = false;
 static uint16_t g_mtu = 23;
 static volatile uint8_t g_id = 0;
-static volatile uint8_t g_flags = 0;  // sketch flags, bits 1..4 (bit 0 = healthy)
+static volatile uint8_t g_user = 0;  // sketch value 0..15, advertised (setUserBits)
 static bool (*g_setting)(const String &, const String &) = nullptr;
 static char g_name[16];
 
@@ -59,7 +59,10 @@ static mbedtls_sha256_context g_sha;
 
 static BLECharacteristic *g_info, *g_ctrl;
 static void refresh_adv();
-static esp_timer_handle_t g_reboot_timer, g_deadline_timer;
+static esp_timer_handle_t g_reboot_timer, g_deadline_timer, g_hide_timer;
+static volatile bool g_connected = false, g_hidden = false;
+static uint32_t g_hide_after_ms = 0;  // 0 = always visible
+static int64_t g_deadline_us = 0;     // esp_timer time of the rollback, while pending
 
 static void notify(const String &s) {
   g_ctrl->setValue(s);
@@ -117,7 +120,7 @@ static void on_data(const uint8_t *p, size_t n) {
   if (Update.write((uint8_t *)p, n) != n) return fail(String("write: ") + Update.errorString());
   mbedtls_sha256_update(&g_sha, p, n);
   g_written += n;
-  if (g_written - g_last_note >= 32768 || g_written == g_total) {
+  if (g_written - g_last_note >= 8192 || g_written == g_total) {  // also the client's flow-control ack
     g_last_note = g_written;
     notify("progress:" + String(g_written) + "/" + String(g_total));
   }
@@ -174,8 +177,8 @@ static const char *state_name() {
 }
 
 // Scan response: name, then manufacturer data (company 0xFFFF, for testing and
-// internal use) = role letter, state letter, id digit, '@' + flags (bit 0 =
-// healthy, 1..4 = setFlag), version. A web page
+// internal use) = role letter, state letter, id digit, '@' + (user bits << 1 |
+// healthy), version. A web page
 // scanning for advertisements sees all of it without connecting.
 static void refresh_adv() {
   if (!g_info) return;
@@ -183,7 +186,7 @@ static void refresh_adv() {
   m += (char)toupper(g_role[0]);
   m += state_name()[0];
   m += (char)('0' + g_id % 10);  // printable: String stops at a 0 byte
-  m += (char)('@' + ((g_flags & 0x1e) | (g_healthy ? 1 : 0)));  // '@'..'_': printable
+  m += (char)('@' + ((g_user << 1) | (g_healthy ? 1 : 0)));  // '@'..'_': printable
   m += String(LISEK_VERSION).substring(0, 31 - 2 - strlen(g_name) - 2 - 6);
   BLEAdvertisementData sr;
   sr.setName(g_name);
@@ -198,14 +201,22 @@ static String info_json() {
   j += g_role;
   j += "\",\"version\":\"" LISEK_VERSION "\",\"state\":\"";
   j += state;
-  j += "\",\"flags\":";
-  j += (int)g_flags;
+  j += "\",\"user\":";
+  j += (int)g_user;
   j += ",\"healthy\":";
   j += g_healthy ? "true" : "false";
   j += ",\"partition\":\"";
   j += run ? run->label : "?";
   j += "\",\"mtu\":";
   j += g_mtu;
+  j += ",\"uptime\":";
+  j += (uint32_t)(esp_timer_get_time() / 1000000);
+  if (g_pending) {
+    j += ",\"rollback_in\":";
+    j += (int32_t)((g_deadline_us - esp_timer_get_time()) / 1000000);
+  }
+  j += ",\"hide_after\":";
+  j += g_hide_after_ms / 60000;
   j += ",\"id\":";
   j += g_id;
   j += "}";
@@ -228,15 +239,20 @@ class DataCb : public BLECharacteristicCallbacks {
   }
 };
 class ServerCb : public BLEServerCallbacks {
-  void onConnect(BLEServer *) override {
+  void onConnect(BLEServer *srv, esp_ble_gatts_cb_param_t *param) override {
     g_mtu = 23;
+    g_connected = true;
+    // 7.5-15 ms connection interval: several firmware chunks per interval
+    // instead of one every 30-50 ms. Supervision timeout 4 s.
+    srv->updateConnParams(param->connect.remote_bda, 6, 12, 0, 400);
   }
   void onDisconnect(BLEServer *) override {
+    g_connected = false;
     if (g_state == HEADER || g_state == IMAGE) {
       if (g_state == IMAGE) Update.abort();
       g_state = IDLE;
     }
-    BLEDevice::startAdvertising();
+    if (!g_hidden) BLEDevice::startAdvertising();
   }
   void onMtuChanged(BLEServer *, esp_ble_gatts_cb_param_t *param) override {
     g_mtu = param->mtu.mtu;
@@ -261,6 +277,7 @@ void begin(const char *role) {
     deadline_args.name = "lisek-rollback";
     esp_timer_create(&deadline_args, &g_deadline_timer);
     esp_timer_start_once(g_deadline_timer, (uint64_t)CONFIRM_TIMEOUT_MS * 1000);
+    g_deadline_us = esp_timer_get_time() + (int64_t)CONFIRM_TIMEOUT_MS * 1000;
   }
 
   uint64_t mac = ESP.getEfuseMac();
@@ -275,7 +292,8 @@ void begin(const char *role) {
   g_ctrl = svc->createCharacteristic(CTRL_UUID, BLECharacteristic::PROPERTY_WRITE | BLECharacteristic::PROPERTY_NOTIFY);
   g_ctrl->addDescriptor(new BLE2902());
   g_ctrl->setCallbacks(new CtrlCb());
-  BLECharacteristic *data = svc->createCharacteristic(DATA_UUID, BLECharacteristic::PROPERTY_WRITE);
+  BLECharacteristic *data =
+    svc->createCharacteristic(DATA_UUID, BLECharacteristic::PROPERTY_WRITE | BLECharacteristic::PROPERTY_WRITE_NR);
   data->setCallbacks(new DataCb());
   svc->start();
 
@@ -291,15 +309,30 @@ void begin(const char *role) {
   adv->setMinInterval(1600);  // 1000 ms
   adv->setMaxInterval(1760);  // 1100 ms
   BLEDevice::startAdvertising();
+
+  // Going quiet after hideAfter(): checked once a second from the timer task.
+  esp_timer_create_args_t hide_args = {};
+  hide_args.callback = [](void *) {
+    bool busy = g_connected || g_pending || g_state == HEADER || g_state == IMAGE || g_state == DONE;
+    if (g_hidden || !g_hide_after_ms || busy || esp_timer_get_time() / 1000 < g_hide_after_ms) return;
+    g_hidden = true;
+    BLEDevice::stopAdvertising();
+  };
+  hide_args.name = "lisek-hide";
+  esp_timer_create(&hide_args, &g_hide_timer);
+  esp_timer_start_periodic(g_hide_timer, 1000 * 1000);
+}
+
+void hideAfter(uint32_t minutes) {
+  g_hide_after_ms = minutes * 60000;
 }
 
 void onSetting(bool (*handler)(const String &key, const String &value)) {
   g_setting = handler;
 }
 
-void setFlag(uint8_t bit, bool on) {
-  if (bit < 1 || bit > 4) return;
-  g_flags = on ? g_flags | (1 << bit) : g_flags & ~(1 << bit);
+void setUserBits(uint8_t value) {
+  g_user = value & 0x0f;
   refresh_adv();
 }
 

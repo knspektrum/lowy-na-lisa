@@ -2,118 +2,225 @@
 <html lang="pl">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#000000">
 <title>Łowy na Lisa - flota</title>
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath d='M1 8h4l1.5-5 3 10 1.5-5h4' fill='none' stroke='%23ef4444' stroke-width='2'/%3E%3C/svg%3E">
 <style>
   /* KN Spektrum house style (management-dash): red primary, zinc neutrals, 0.5rem radius */
   :root {
-    --background: #f9f9f9; --foreground: #111; --card: #fff; --primary: #ef4444; --primary-fg: #fff;
+    --background: #f9f9f9; --foreground: #111; --card: #fff; --primary: #ef4444; --primary-hover: #dc2626; --primary-fg: #fff;
     --muted: #f4f4f5; --muted-fg: #71717a; --border: #e4e4e7; --radius: 0.5rem;
     --ok-bg: #dcfce7; --ok-fg: #166534; --bad-bg: #fee2e2; --bad-fg: #991b1b; --warn-bg: #fef3c7; --warn-fg: #92400e;
+    color-scheme: light;
   }
   @media (prefers-color-scheme: dark) {
     :root:not([data-theme="light"]) {
-      --background: #111; --foreground: #fafafa; --card: #141414; --muted: #27272a; --muted-fg: #a1a1aa; --border: #313136;
+      --background: #111; --foreground: #fafafa; --card: #18181b; --muted: #27272a; --muted-fg: #a1a1aa; --border: #313136;
       --ok-bg: #14532d; --ok-fg: #bbf7d0; --bad-bg: #7f1d1d; --bad-fg: #fecaca; --warn-bg: #78350f; --warn-fg: #fde68a;
+      color-scheme: dark;
     }
   }
   * { box-sizing: border-box; }
+  [hidden] { display: none !important; }
+  html { -webkit-text-size-adjust: 100%; }
   body { background: var(--background); color: var(--foreground); margin: 0;
-    font: 14px/1.5 ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji"; }
-  header { background: #000; padding: 12px 16px; }
-  header img { height: 32px; width: auto; display: block; }
-  main { max-width: 1100px; margin: 0 auto; padding: 24px 16px; }
-  h1 { font-size: 24px; font-weight: 700; margin: 0; }
-  .sub { color: var(--muted-fg); font-size: 14px; margin: 2px 0 20px; }
+    font: 15px/1.5 ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji"; }
+  header { background: #000; padding: 12px 16px; padding-top: max(12px, env(safe-area-inset-top)); }
+  header img { height: 30px; width: auto; display: block; }
+  main { max-width: 1100px; margin: 0 auto; padding: 20px 16px 96px; }
+  h1 { font-size: 24px; line-height: 1.2; font-weight: 700; margin: 0; }
+  h2 { font-size: 17px; margin: 0 0 4px; }
+  .sub { color: var(--muted-fg); margin: 4px 0 20px; }
   .muted { color: var(--muted-fg); }
+  .small-text { font-size: 13px; }
+  .mono { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 13px; }
+  code { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 13px; word-break: break-all; }
   .card { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); padding: 16px;
     box-shadow: 0 1px 2px rgba(0,0,0,.05); margin-bottom: 16px; }
-  .stats { display: grid; gap: 16px; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); margin-bottom: 16px; }
-  .stats .card { margin: 0; }
+  .alert { border-color: var(--primary); }
+  details.card > summary { cursor: pointer; font-weight: 500; min-height: 24px; }
+  details.card[open] > summary { margin-bottom: 8px; }
+
+  .stats { display: grid; gap: 12px; grid-template-columns: repeat(4, 1fr); margin-bottom: 16px; }
+  .stats .card { margin: 0; padding: 12px 14px; }
   .stat-label { font-size: 13px; color: var(--muted-fg); }
-  .stat-value { font-size: 24px; font-weight: 700; }
-  button { font: inherit; font-size: 14px; font-weight: 500; padding: 7px 14px; border-radius: calc(var(--radius) - 2px);
-    border: 1px solid var(--border); background: var(--card); color: var(--foreground); cursor: pointer; }
+  .stat-value { font-size: 24px; font-weight: 700; line-height: 1.3; }
+  .stat-sub { font-size: 13px; color: var(--muted-fg); }
+
+  button { font: inherit; font-size: 14px; font-weight: 500; min-height: 36px; padding: 6px 14px;
+    border-radius: calc(var(--radius) - 2px); border: 1px solid var(--border); background: var(--card); color: var(--foreground);
+    cursor: pointer; display: inline-flex; align-items: center; justify-content: center; gap: 6px; }
   button:hover:not(:disabled) { background: var(--muted); }
+  button:focus-visible, select:focus-visible, input:focus-visible, summary:focus-visible { outline: 2px solid var(--primary); outline-offset: 2px; }
   button.primary { background: var(--primary); border-color: var(--primary); color: var(--primary-fg); }
-  button.primary:hover:not(:disabled) { background: #dc2626; }
-  button.small { padding: 3px 10px; font-size: 13px; }
+  button.primary:hover:not(:disabled) { background: var(--primary-hover); }
+  button.ghost { border-color: transparent; background: transparent; color: var(--muted-fg); }
   button:disabled { opacity: .5; cursor: default; }
   .bar { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; margin-bottom: 16px; }
-  .badge { display: inline-flex; align-items: center; border-radius: 999px; padding: 2px 10px; font-size: 12px; font-weight: 600;
+  .bar .spacer { flex: 1; }
+
+  .badge { display: inline-flex; align-items: center; border-radius: 999px; padding: 1px 9px; font-size: 12px; font-weight: 600;
     border: 1px solid var(--border); color: var(--muted-fg); white-space: nowrap; }
   .badge.ok { background: var(--ok-bg); color: var(--ok-fg); border-color: transparent; }
-  .badge.bad { background: var(--bad-bg); color: var(--bad-fg); border-color: transparent; }
+  .badge.bad { background: var(--bad-bg); color: var(--bad-fg); border-color: transparent; white-space: normal; }
   .badge.warn { background: var(--warn-bg); color: var(--warn-fg); border-color: transparent; }
+  .dot { display: inline-block; width: 8px; height: 8px; border-radius: 50%; background: var(--muted-fg); flex: none; }
+  .dot.on { background: #22c55e; box-shadow: 0 0 0 3px rgba(34, 197, 94, .25); }
+
+  /* device list: a table on wide screens, cards on phones */
+  .list { padding: 0; overflow: hidden; }
   table { border-collapse: collapse; width: 100%; }
-  th, td { text-align: left; padding: 10px 8px; border-bottom: 1px solid var(--border); vertical-align: middle; }
-  tr:last-child td { border-bottom: 0; }
-  th { font-weight: 500; font-size: 13px; color: var(--muted-fg); }
-  .mono { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 13px; }
-  progress { width: 110px; vertical-align: middle; accent-color: var(--primary); }
-  code { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 13px; }
-  #unsupported { display: none; border-color: var(--primary); }
-  #noScan { font-size: 13px; }
-  td.actions { white-space: nowrap; text-align: right; }
-  .table-card { padding: 4px 8px; }
-  /* phones: each device becomes a stacked block */
-  @media (max-width: 700px) {
+  th, td { text-align: left; padding: 10px 12px; border-bottom: 1px solid var(--border); vertical-align: middle; }
+  tbody tr:last-child td { border-bottom: 0; }
+  th { font-weight: 500; font-size: 13px; color: var(--muted-fg); background: var(--muted); }
+  .name { display: flex; align-items: center; gap: 10px; }
+  .cell { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; }
+  td.actions { text-align: right; white-space: nowrap; }
+  td.actions .cell { justify-content: flex-end; flex-wrap: nowrap; }
+  progress { width: 100px; height: 8px; accent-color: var(--primary); }
+  .empty { padding: 28px 16px; text-align: center; }
+
+  dialog { border: 1px solid var(--border); border-radius: var(--radius); background: var(--card); color: var(--foreground);
+    padding: 20px; width: min(440px, calc(100vw - 32px)); max-height: calc(100dvh - 32px); overflow: auto;
+    box-shadow: 0 10px 30px rgba(0,0,0,.25); }
+  dialog::backdrop { background: rgba(0,0,0,.45); }
+  .field { margin: 16px 0; }
+  .field > label, .field > .label { display: block; font-weight: 500; margin-bottom: 6px; }
+  select { font: inherit; min-height: 44px; width: 100%; padding: 6px 10px; border-radius: calc(var(--radius) - 2px);
+    border: 1px solid var(--border); background: var(--card); color: var(--foreground); }
+  .choice { display: flex; gap: 10px; align-items: flex-start; padding: 10px 12px; border: 1px solid var(--border);
+    border-radius: calc(var(--radius) - 2px); margin-bottom: 8px; cursor: pointer; }
+  .choice:has(input:checked) { border-color: var(--primary); box-shadow: 0 0 0 1px var(--primary); }
+  .choice input { margin-top: 4px; accent-color: var(--primary); width: 18px; height: 18px; flex: none; }
+  .dialog-actions { display: flex; gap: 8px; justify-content: flex-end; margin-top: 20px; }
+
+  #toast { position: fixed; left: 50%; bottom: max(16px, env(safe-area-inset-bottom)); transform: translateX(-50%);
+    background: var(--foreground); color: var(--background); padding: 10px 16px; border-radius: var(--radius);
+    font-size: 14px; width: max-content; max-width: calc(100vw - 32px); opacity: 0; pointer-events: none; transition: opacity .2s; z-index: 10; }
+  #toast.show { opacity: 1; }
+
+  @media (max-width: 760px) {
+    main { padding-top: 16px; }
+    h1 { font-size: 21px; }
+    .stats { grid-template-columns: repeat(2, 1fr); gap: 8px; }
+    .stat-value { font-size: 21px; }
+    button { min-height: 44px; }   /* touch targets */
+    .bar button { flex: 1 1 auto; }
+    .bar .spacer { display: none; }
+    .dialog-actions button { flex: 1; }
     thead { display: none; }
-    tr { display: block; border-bottom: 1px solid var(--border); padding: 8px 0; }
-    tr:last-child { border-bottom: 0; }
-    td { display: flex; justify-content: space-between; gap: 12px; border: 0; padding: 3px 4px; }
-    td::before { content: attr(data-l); color: var(--muted-fg); font-size: 13px; }
-    td.actions { justify-content: flex-end; }
-    td.actions::before { content: none; }
+    table, tbody, tr, td { display: block; width: 100%; }
+    tbody tr { padding: 12px 14px; border-bottom: 1px solid var(--border); }
+    tbody tr:last-child { border-bottom: 0; }
+    td { border: 0; padding: 3px 0; display: flex; justify-content: space-between; align-items: center; gap: 12px; }
+    td::before { content: attr(data-l); color: var(--muted-fg); font-size: 13px; flex: none; }
+    td.first { padding-bottom: 8px; }
+    td.first::before, td.actions::before { content: none; }
+    td.actions { padding-top: 10px; }
+    td.actions .cell { width: 100%; }
+    td.actions button { flex: 1; }
+    td.actions button.ghost { flex: 0 0 auto; }
+    td .cell { justify-content: flex-end; text-align: right; }
   }
+  @media (prefers-reduced-motion: reduce) { #toast { transition: none; } }
 </style>
 </head>
 <body>
-<header><img src="spektrum-logo.png" alt="KN Spektrum"></header>
+<header><img src="spektrum-logo.png" alt="KN Spektrum" width="144" height="30"></header>
 <main>
 <h1>Łowy na Lisa - flota</h1>
-<p class="sub">Sprawdź, które lisy i odbiorniki są włączone, na jakim kanale i z jakim programem, i zaktualizuj je przez Bluetooth</p>
+<p class="sub">Które lisy i odbiorniki są włączone, na jakim kanale i z jakim programem</p>
 
-<div class="card" id="unsupported">
-  Ta przeglądarka nie obsługuje Web Bluetooth. Użyj Chrome, Edge albo Chromium na Windows 10+, macOS, Androidzie albo
-  ChromeOS (na Linuksie trzeba włączyć <code>chrome://flags/#enable-experimental-web-platform-features</code>).
-  Strona musi być otwarta przez https albo z <code>localhost</code>.
-</div>
-<div class="card muted" id="noScan">
-  Bez dodatkowych ustawień urządzenia dodaje się po jednym („Dodaj urządzenie”), a strona co 30 s sprawdza, czy są
-  włączone. Po włączeniu <code>chrome://flags/#enable-experimental-web-platform-features</code> strona pamięta urządzenia
-  między wizytami i widzi ich sygnał na bieżąco (Windows, macOS, Android), a „Skanuj okolicę” pokazuje wszystkie
-  naraz (macOS, Android).
+<div class="card alert" id="unsupported" hidden>
+  <h2>Ta przeglądarka nie obsługuje Bluetooth</h2>
+  Otwórz stronę w Chrome albo Edge na Windows 10+, macOS, Androidzie albo ChromeOS. Na Linuksie najpierw włącz
+  <code>chrome://flags/#enable-experimental-web-platform-features</code>. Adres musi zaczynać się od https albo być
+  <code>localhost</code>.
 </div>
 
 <div class="stats">
-  <div class="card"><div class="stat-label">Włączone</div><div class="stat-value" id="stOn">0</div><div class="muted" id="stOnSub">z 0 znanych</div></div>
-  <div class="card"><div class="stat-label">Nadajniki (lisy)</div><div class="stat-value" id="stTx">0</div><div class="muted" id="stTxSub">włączone</div></div>
-  <div class="card"><div class="stat-label">Odbiorniki</div><div class="stat-value" id="stRx">0</div><div class="muted" id="stRxSub">włączone</div></div>
-  <div class="card"><div class="stat-label">Najnowszy program</div><div class="stat-value" id="stCur">-</div><div class="muted mono" id="images">nie wczytano</div></div>
+  <div class="card"><div class="stat-label">Włączone</div><div class="stat-value" id="stOn">0</div><div class="stat-sub" id="stOnSub">z 0 znanych</div></div>
+  <div class="card"><div class="stat-label">Lisy (nadajniki)</div><div class="stat-value" id="stTx">0/0</div><div class="stat-sub">włączone / znane</div></div>
+  <div class="card"><div class="stat-label">Odbiorniki</div><div class="stat-value" id="stRx">0/0</div><div class="stat-sub">włączone / znane</div></div>
+  <div class="card"><div class="stat-label">Najnowszy program</div><div class="stat-value" id="stCur">-</div><div class="stat-sub mono" id="images">nie wczytano</div></div>
 </div>
 
 <div class="bar">
-  <button class="primary" id="scan">Skanuj okolicę</button>
-  <button id="add">Dodaj urządzenie</button>
-  <button class="primary" id="flashAll">Aktualizuj wszystkie włączone</button>
-  <button id="loadFiles">Wczytaj program (.lsk)</button>
-  <input type="file" id="files" accept=".lsk" multiple hidden>
-  <label class="muted"><input type="checkbox" id="force"> także tę samą wersję</label>
+  <button class="primary" id="add">Dodaj urządzenie</button>
+  <button id="scan" hidden>Skanuj okolicę</button>
+  <span class="spacer"></span>
+  <button id="flashAll" disabled>Wszystkie aktualne</button>
 </div>
 
-<div class="card table-card">
+<div class="card list">
 <table>
-  <thead><tr><th>Urządzenie</th><th>Typ</th><th>Kanał</th><th>Program</th><th>Stan</th><th>Sygnał</th><th></th></tr></thead>
-  <tbody id="rows"><tr id="empty"><td colspan="7" class="muted">Brak urządzeń. Kliknij „Skanuj okolicę” albo „Dodaj urządzenie”.</td></tr></tbody>
+  <thead><tr><th>Urządzenie</th><th>Kanał</th><th>Program</th><th>Stan</th><th>Sygnał</th><th aria-label="Akcje"></th></tr></thead>
+  <tbody id="rows"></tbody>
 </table>
+<div class="empty muted" id="empty">
+  Brak urządzeń. Włącz lisa albo odbiornik w pobliżu i kliknij <b>Dodaj urządzenie</b>.
+</div>
 </div>
 
-<p class="muted">Lista pamięta wszystkie urządzenia, które ta przeglądarka kiedykolwiek widziała, więc wyłączone zostają na niej
-z czasem ostatniego sygnału. Nowy program po restarcie musi się zgłosić i potwierdzić, że radio działa; inaczej po 5 minutach
-(albo po awarii) urządzenie wraca do poprzedniej wersji. Nie zamykaj strony, dopóki stan nie pokaże „Zaktualizowano”.</p>
+<details class="card small-text" id="help">
+  <summary>Jak to działa i co obsługuje przeglądarka</summary>
+  <p>Każde urządzenie przez cały czas pracy nadaje przez Bluetooth swoją wersję, kanał i stan. Lista pamięta wszystkie
+  urządzenia, które ta przeglądarka widziała, więc wyłączone zostają na niej z czasem ostatniego sygnału.</p>
+  <p>Urządzenia dodaje się po jednym; strona co 30 s sprawdza, czy są włączone. Po włączeniu
+  <code>chrome://flags/#enable-experimental-web-platform-features</code> widzi je na bieżąco i pamięta między wizytami
+  (Windows, macOS, Android), a na macOS i Androidzie „Skanuj okolicę” dodaje wszystkie naraz.</p>
+  <p>Aktualizacja: urządzenie przyjmuje tylko podpisany program dla swojego typu. Po restarcie nowy program musi się zgłosić
+  i potwierdzić, że radio działa; inaczej po 5 minutach (albo po awarii) wraca poprzednia wersja. Nie zamykaj strony, dopóki
+  stan nie pokaże „Zaktualizowano”.</p>
+  <div class="bar" style="margin: 8px 0 0">
+    <button id="loadFiles">Wczytaj program z pliku (.lsk)</button>
+    <input type="file" id="files" accept=".lsk" multiple hidden>
+    <label class="muted"><input type="checkbox" id="force"> Aktualizuj także urządzenia z tą samą wersją</label>
+  </div>
+</details>
 </main>
+
+<dialog id="settings" aria-labelledby="setTitle">
+  <form method="dialog" id="setForm">
+    <h2 id="setTitle">Ustawienia</h2>
+    <div class="muted mono" id="setName"></div>
+    <div id="txFields">
+    <div class="field">
+      <label for="setHide">Ukryj Bluetooth po włączeniu lisa</label>
+      <select id="setHide">
+        <option value="10">po 10 min (domyślnie)</option>
+        <option value="30">po 30 min</option>
+        <option value="60">po 60 min</option>
+        <option value="0">nigdy, zawsze widoczny</option>
+      </select>
+    </div>
+    <p class="muted small-text">Ukryty lis nie nadaje nic przez Bluetooth, więc nie da się go namierzyć telefonem. Strona
+    też go wtedy nie widzi: włącz lisa ponownie, żeby go sprawdzić albo zaktualizować.</p>
+    </div>
+    <div id="rxFields">
+    <div class="field">
+      <span class="label">Pokazywanie numeru nadajnika</span>
+      <label class="choice"><input type="radio" name="leds" value="unary">
+        <span><b>Zwykłe</b><br><span class="muted small-text">Tyle zapalonych diod, ile wynosi numer (do 7 kanałów)</span></span></label>
+      <label class="choice"><input type="radio" name="leds" value="binary">
+        <span><b>Binarne</b><br><span class="muted small-text">Numer dwójkowo: LED7 = 1, LED6 = 2, LED5 = 4, LED4 = 8 (do 8 kanałów)</span></span></label>
+    </div>
+    <div class="field">
+      <label for="setChannels">Liczba kanałów (przycisk przełącza 1 → … → N → 1)</label>
+      <select id="setChannels"></select>
+    </div>
+    <p class="muted small-text">Odbiornik zapamięta ustawienia po wyłączeniu. Jeśli wybrany numer nie mieści się w nowych
+    ustawieniach, odbiornik wróci do kanału 1.</p>
+    </div>
+    <div class="dialog-actions">
+      <button value="cancel" formnovalidate>Anuluj</button>
+      <button class="primary" value="save">Zapisz</button>
+    </div>
+  </form>
+</dialog>
+
+<div id="toast" role="status" aria-live="polite"></div>
 
 <script>
 const SVC = "4c49534b-0001-4f54-8000-00805f9b34fb";
@@ -121,34 +228,54 @@ const INFO = "4c49534b-0002-4f54-8000-00805f9b34fb";
 const CTRL = "4c49534b-0003-4f54-8000-00805f9b34fb";
 const DATA = "4c49534b-0004-4f54-8000-00805f9b34fb";
 const COMPANY = 0xffff;
-const ONLINE_MS = 15000;  // devices advertise about once a second
-const ROLES = { R: "receiver", T: "transmitter" };
-const ROLE_NAMES = { receiver: "odbiornik", transmitter: "nadajnik" };
-const ROLE_PLURAL = { receiver: "odbiorniki", transmitter: "nadajniki" };
-const STATES = { o: "ok", p: "pending", u: "updating", i: "installed" };
-const STORE = "lisek-fleet-v1";
-const POLL_MS = 30000;   // without advertisement watching: connect and read every 30 s
+const ONLINE_MS = 15000;          // devices advertise about once a second
+const POLL_MS = 30000;            // without advertisement watching: connect and read every 30 s
 const POLLED_ONLINE_MS = 75000;
-const FLAG_BINARY_LEDS = 2;
+const STORE = "lisek-fleet-v1";
+const ROLES = { R: "receiver", T: "transmitter" };
+const ROLE_NAMES = { receiver: "Odbiornik", transmitter: "Lis (nadajnik)" };
+const STATES = { o: "ok", p: "pending", u: "updating", i: "installed" };
+const STATE_LABELS = { ok: "Działa", pending: "Czeka na potwierdzenie", updating: "Odbiera program", installed: "Wgrany, restart" };
 
 const $ = id => document.getElementById(id);
 const sleep = ms => new Promise(r => setTimeout(r, ms));
 const td = new TextDecoder(), te = new TextEncoder();
 const esc = s => String(s ?? "").replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" })[c]);
 const bt = navigator.bluetooth;
-if (!bt) $("unsupported").style.display = "block";
-if (bt && bt.requestLEScan) $("noScan").style.display = "none";
-else $("scan").style.display = "none";
 
-const images = {};       // role -> { role, version, size, bytes }
-const fleet = new Map(); // name -> device record
-const permitted = new Set(); // BluetoothDevice ids this page may connect to
+const images = {};            // role -> { role, version, size, bytes }
+const fleet = new Map();      // name -> device record
+const permitted = new Set();  // BluetoothDevice ids this page may connect to
 
-// --- persistence: remember every device ever seen (per browser) ---
+if (!bt) $("unsupported").hidden = false;
+if (bt && bt.requestLEScan) $("scan").hidden = false;
+
+function toast(msg) {
+  const t = $("toast");
+  t.textContent = msg;
+  t.classList.add("show");
+  clearTimeout(toast.t);
+  toast.t = setTimeout(() => t.classList.remove("show"), 3500);
+}
+
+// --- settings packed in the advertisement / info "user" bits ---
+const HIDE_CHOICES = [0, 10, 30, 60];
+function decodeUser(d, u) {
+  if (u == null) return;
+  if (d.role === "receiver") {
+    d.binary = !!(u & 1);
+    d.channels = ((u >> 1) & 7) + 1;
+  } else if (d.role === "transmitter") {
+    d.hide = HIDE_CHOICES[u & 3];
+  }
+}
+const maxChannels = d => Math.min(d.channels || 7, d.binary ? 8 : 7);
+
+// --- persistence: every device this browser has seen ---
 function save() {
   try {
     localStorage.setItem(STORE, JSON.stringify([...fleet.values()].map(d =>
-      ({ name: d.name, role: d.role, id: d.id, version: d.version, lastSeen: d.lastSeen }))));
+      ({ name: d.name, role: d.role, id: d.id, version: d.version, lastSeen: d.lastSeen, binary: d.binary, channels: d.channels, hide: d.hide }))));
   } catch (_) {}
 }
 function load() {
@@ -171,14 +298,13 @@ function parseImage(buf) {
 function addImage(buf) {
   const img = parseImage(buf);
   images[img.role] = img;
-  $("images").innerHTML = Object.values(images)
-    .map(i => `${ROLE_NAMES[i.role] || esc(i.role)} ${esc(i.version)}`).join("<br>");
+  $("images").innerHTML = Object.values(images).map(i => `${i.role === "receiver" ? "odb." : "lis"} ${esc(i.version)}`).join(" · ");
   renderAll();
 }
 $("loadFiles").onclick = () => $("files").click();
 $("files").onchange = async e => {
   for (const f of e.target.files) {
-    try { addImage(await f.arrayBuffer()); } catch (err) { alert(`${f.name}: ${err.message}`); }
+    try { addImage(await f.arrayBuffer()); toast(`Wczytano ${f.name}`); } catch (err) { toast(`${f.name}: ${err.message}`); }
   }
 };
 (async () => {  // served next to firmware/ (software/ota/build.sh output): load it straight away
@@ -200,72 +326,74 @@ function onAdvert(e) {
   const m = e.manufacturerData && e.manufacturerData.get(COMPANY);
   if (m) {
     const s = td.decode(m.buffer.slice(m.byteOffset, m.byteOffset + m.byteLength));
+    const f = s.charCodeAt(3) - 0x40;
     d.role = ROLES[s[0]] || d.role;
     d.state = STATES[s[1]] || s[1];
     d.id = +s[2];
-    const f = s.charCodeAt(3) - 0x40;
     d.healthy = !!(f & 1);
-    d.flags = f & ~1;
     d.version = s.slice(4);
+    decodeUser(d, f >> 1);
   }
   save();
   render(d);
 }
 async function watch(dev) {
   permitted.add(dev.id);
-  dev.addEventListener("advertisementreceived", onAdvert);
   const d = record(dev.name);
+  d.dev = dev;
+  dev.addEventListener("advertisementreceived", onAdvert);
   try { await dev.watchAdvertisements(); d.polled = false; } catch (_) { d.polled = true; }
 }
 // Without watchAdvertisements (no flag, Linux, ChromeOS): connect, read, disconnect.
 setInterval(async () => {
   for (const d of fleet.values()) {
     if (!d.polled || !d.dev || d.busy) continue;
-    try {
-      await connect(d);
-      d.dev.gatt.disconnect();
-    } catch (_) {}
+    try { await connect(d); d.dev.gatt.disconnect(); } catch (_) {}
     render(d);
   }
 }, POLL_MS);
+
 $("scan").onclick = async () => {
   try {
     await bt.requestLEScan({ filters: [{ services: [SVC] }], keepRepeatedDevices: true });
     bt.addEventListener("advertisementreceived", onAdvert);
-    $("scan").textContent = "Skanowanie...";
+    $("scan").textContent = "Skanowanie…";
     $("scan").disabled = true;
-  } catch (e) { alert("Skanowanie niedostępne: " + e.message); }
+  } catch (e) { toast("Skanowanie niedostępne: " + e.message); }
 };
 $("add").onclick = async () => {
   let dev;
   try { dev = await bt.requestDevice({ filters: [{ services: [SVC] }] }); } catch (_) { return; }
-  const d = record(dev.name);
-  d.dev = dev;
   await watch(dev);
-  try { await connect(d); } catch (_) {}
-  render(d);
+  const d = record(dev.name);
+  d.msg = "Łączenie…"; d.cls = "warn"; renderAll();
+  try { await connect(d); d.msg = null; toast(`Dodano ${dev.name}`); }
+  catch (e) { d.msg = "Nie udało się połączyć"; d.cls = "bad"; }
+  renderAll();
 };
-(async () => {  // devices allowed earlier: watch them without asking again
+(async () => {  // devices allowed earlier: watch them without asking again (needs the flag)
   if (!bt || !bt.getDevices) return;
-  for (const dev of await bt.getDevices()) {
-    const d = record(dev.name);
-    d.dev = dev;
-    watch(dev);
-  }
+  try { for (const dev of await bt.getDevices()) await watch(dev); } catch (_) {}
   renderAll();
 })();
 
-// --- table ---
+// --- list ---
+function isOn(d) { return !!(d.live && d.lastSeen && Date.now() - d.lastSeen < (d.polled ? POLLED_ONLINE_MS : ONLINE_MS)); }
+function canTalk(d) { return !!(d.dev && permitted.has(d.dev.id)); }
+function badge(cls, text) { return `<span class="badge ${cls}">${esc(text)}</span>`; }
 function ago(t) {
   if (!t) return "nigdy";
   const s = Math.round((Date.now() - t) / 1000);
-  return s < 60 ? `${s} s temu` : s < 3600 ? `${Math.round(s / 60)} min temu` : new Date(t).toLocaleString("pl");
+  if (s < 60) return "przed chwilą";
+  if (s < 3600) return `${Math.round(s / 60)} min temu`;
+  if (s < 86400) return `${Math.round(s / 3600)} godz. temu`;
+  return new Date(t).toLocaleDateString("pl");
 }
-const STATE_LABELS = { ok: "Działa", pending: "Czeka na potwierdzenie", updating: "Odbiera program", installed: "Wgrany, restart" };
-function isOn(d) { return d.live && d.lastSeen && Date.now() - d.lastSeen < (d.polled ? POLLED_ONLINE_MS : ONLINE_MS); }
-function badge(cls, text) { return `<span class="badge ${cls}">${esc(text)}</span>`; }
+function signal(rssi) {
+  if (rssi == null) return "";
+  return rssi > -65 ? "mocny" : rssi > -80 ? "średni" : "słaby";
+}
 function render(d) {
-  if ($("empty")) $("empty").remove();
   if (!d.row) {
     d.row = document.createElement("tr");
     $("rows").appendChild(d.row);
@@ -275,23 +403,44 @@ function render(d) {
   const outdated = img && d.version && img.version !== d.version;
   let state;
   if (d.msg) state = badge(d.cls || "", d.msg);
-  else if (!on) state = badge("", "Wyłączone");
+  else if (!on) state = badge("", d.role === "transmitter" && d.hide ? "Ukryty albo wyłączony" : "Wyłączone");
   else if (d.healthy === false) state = badge("warn", "Radio nie odpowiada");
   else state = badge(d.state === "ok" ? "ok" : "warn", STATE_LABELS[d.state] || d.state || "?");
-  d.row.innerHTML = `<td data-l="Urządzenie"><span class="mono">${esc(d.name)}</span></td>
-    <td data-l="Typ">${ROLE_NAMES[d.role] || ""}</td>
-    <td data-l="Kanał"><span>${d.id ? `id ${d.id}` : ""}${d.role === "receiver" && d.flags != null ? ` ${badge("", d.flags & FLAG_BINARY_LEDS ? "diody binarnie" : "diody zwykle")}` : ""}</span></td>
-    <td data-l="Program"><span><span class="mono">${esc(d.version || "?")}</span>${outdated ? ` ${badge("warn", "→ " + img.version)}` : img && d.version ? ` ${badge("ok", "aktualny")}` : ""}</span></td>
-    <td data-l="Stan"><span>${state}${d.progress != null ? ` <progress max="1" value="${d.progress}"></progress>` : ""}</span></td>
-    <td data-l="Sygnał">${on ? (d.rssi != null ? `${d.rssi} dBm` : "teraz") : `<span class="muted">${ago(d.lastSeen)}</span>`}</td>
-    <td class="actions">${d.dev && permitted.has(d.dev.id) ? "" : `<button class="small" data-a="allow">Zezwól</button> `}${d.role === "receiver" ? `<button class="small" data-a="leds" ${on && d.dev && permitted.has(d.dev.id) && !d.busy ? "" : "disabled"}>Tryb diod</button> ` : ""}<button class="small" data-a="flash" ${img && on && !d.busy ? "" : "disabled"}>Aktualizuj</button> <button class="small" data-a="forget" ${d.busy ? "disabled" : ""}>Usuń</button></td>`;
+  const channel = d.id ? `<span><b>${d.id}</b>${d.role === "receiver" && d.channels ? `<span class="muted">/${maxChannels(d)}</span>` : ""}</span>` : "";
+  const mode = d.role === "receiver" && d.binary != null ? badge("", d.binary ? "binarnie" : "zwykle")
+    : d.role === "transmitter" && d.hide != null ? badge("", d.hide ? `ukrywa się po ${d.hide} min` : "zawsze widoczny") : "";
+  const actions = [];
+  if (!canTalk(d) && on) actions.push(`<button data-a="allow">Połącz</button>`);
+  actions.push(`<button data-a="settings" ${on && canTalk(d) && !d.busy ? "" : "disabled"}>Ustawienia</button>`);
+  actions.push(`<button data-a="flash" ${img && on && canTalk(d) && !d.busy && (outdated || $("force").checked) ? "" : "disabled"}>Aktualizuj</button>`);
+  actions.push(`<button class="ghost" data-a="forget" ${d.busy ? "disabled" : ""} aria-label="Usuń ${esc(d.name)} z listy">Usuń</button>`);
+  d.row.innerHTML = `
+    <td class="first"><div class="name"><span class="dot ${on ? "on" : ""}" role="img" aria-label="${on ? "włączone" : "wyłączone"}"></span>
+      <div><b>${ROLE_NAMES[d.role] || "Urządzenie"}</b><div class="mono muted">${esc(d.name)}</div></div></div></td>
+    <td data-l="Kanał"><span class="cell">${channel || '<span class="muted">-</span>'} ${mode}</span></td>
+    <td data-l="Program"><span class="cell"><span class="mono">${esc(d.version || "?")}</span>${outdated ? badge("warn", "→ " + img.version) : img && d.version ? badge("ok", "aktualny") : ""}</span></td>
+    <td data-l="Stan"><span class="cell">${state}${d.progress != null ? `<progress max="1" value="${d.progress}" aria-label="postęp"></progress>` : ""}</span></td>
+    <td data-l="Sygnał"><span class="cell">${on ? esc(signal(d.rssi) || "teraz") : `<span class="muted">${ago(d.lastSeen)}</span>`}</span></td>
+    <td class="actions"><span class="cell">${actions.join("")}</span></td>`;
   d.row.querySelectorAll("button").forEach(b => b.onclick = () => action(d, b.dataset.a));
 }
-function renderAll() { fleet.forEach(render); summary(); }
+function renderAll() {
+  // on first, then lisy before odbiorniki, then by name
+  const sorted = [...fleet.values()].sort((a, b) =>
+    (isOn(b) - isOn(a)) || String(b.role).localeCompare(String(a.role)) || a.name.localeCompare(b.name));
+  for (const d of sorted) { render(d); $("rows").appendChild(d.row); }
+  $("empty").hidden = fleet.size > 0;
+  summary();
+}
+function flashable() {
+  return [...fleet.values()].filter(d => {
+    const img = images[d.role];
+    return img && isOn(d) && canTalk(d) && !d.busy && ($("force").checked || img.version !== d.version);
+  });
+}
 function summary() {
   const all = [...fleet.values()];
-  const on = all.filter(isOn);
-  $("stOn").textContent = on.length;
+  $("stOn").textContent = all.filter(isOn).length;
   $("stOnSub").textContent = `z ${all.length} znanych`;
   for (const [r, el] of [["transmitter", "stTx"], ["receiver", "stRx"]]) {
     const n = all.filter(d => d.role === r);
@@ -299,35 +448,37 @@ function summary() {
   }
   const withImg = all.filter(d => images[d.role]);
   $("stCur").textContent = withImg.length ? `${withImg.filter(d => images[d.role].version === d.version).length}/${withImg.length}` : "-";
+  const n = flashable().length;
+  $("flashAll").textContent = n ? `Aktualizuj wszystkie (${n})` : "Wszystkie aktualne";
+  $("flashAll").disabled = !n;
+  $("flashAll").classList.toggle("primary", n > 0);
 }
+$("force").onchange = renderAll;
 setInterval(renderAll, 2000);
 
 async function action(d, a) {
   if (a === "forget") {
+    if (!confirm(`Usunąć ${d.name} z listy? Wróci po ponownym dodaniu.`)) return;
     fleet.delete(d.name);
     d.row.remove();
     save();
-    summary();
+    renderAll();
   } else if (a === "allow") {
     try {  // must be the first await: it needs the click
       const dev = await bt.requestDevice({ filters: [{ name: d.name }], optionalServices: [SVC] });
-      d.dev = dev;
       await watch(dev);
-      render(d);
+      await connect(d);
     } catch (_) {}
+    render(d);
   } else if (a === "flash") {
     flash(d);
-  } else if (a === "leds") {
-    setLeds(d);
+  } else if (a === "settings") {
+    openSettings(d);
   }
 }
-$("flashAll").onclick = () => fleet.forEach(d => {
-  const img = images[d.role];
-  const on = isOn(d);
-  if (img && on && !d.busy && d.dev && permitted.has(d.dev.id) && ($("force").checked || img.version !== d.version)) flash(d);
-});
+$("flashAll").onclick = () => flashable().forEach(flash);
 
-// --- GATT: version readout and updates ---
+// --- GATT ---
 async function connect(d) {
   d.gatt = await d.dev.gatt.connect();
   const svc = await d.gatt.getPrimaryService(SVC);
@@ -343,7 +494,8 @@ async function connect(d) {
 }
 async function readInfo(d) {
   const i = JSON.parse(td.decode(await d.infoCh.readValue()));
-  Object.assign(d, { role: i.role, version: i.version, state: i.state, healthy: i.healthy, id: i.id, mtu: i.mtu, flags: i.flags });
+  Object.assign(d, { role: i.role, version: i.version, state: i.state, healthy: i.healthy, id: i.id, mtu: i.mtu });
+  decodeUser(d, i.user);
   d.live = true;
   d.lastSeen = Date.now();
   save();
@@ -366,74 +518,118 @@ function note(d, want, ms) {
     };
   });
 }
+async function command(d, cmd, want, ms = 5000) {
+  const p = note(d, want, ms);
+  await d.ctrl.writeValueWithResponse(te.encode(cmd));
+  return p;
+}
 
-// Receiver LED mode: unary shows ids 1-7 as that many LEDs, binary shows 1-8 as a
-// binary number. Asked for explicitly so nobody switches it by accident.
-async function setLeds(d) {
-  const binary = !(d.flags & FLAG_BINARY_LEDS);
-  const msg = binary
-    ? `Przełączyć ${d.name} na diody binarne?\n\nOdbiornik obsłuży kanały 1-8, a wybrany numer pokaże dwójkowo: LED7 = 1, LED6 = 2, LED5 = 4, LED4 = 8.`
-    : `Przełączyć ${d.name} na zwykłe diody?\n\nOdbiornik obsłuży kanały 1-7, numer pokaże liczbą zapalonych diod. Kanał 8 zmieni się na 1.`;
-  if (!confirm(msg)) return;
-  d.busy = true;
-  d.msg = "Łączenie..."; d.cls = "warn"; render(d);
+// --- receiver settings (only from here, so nobody changes them on the device by accident) ---
+let editing = null;
+function fillChannels(binary, current) {
+  const max = binary ? 8 : 7;
+  $("setChannels").innerHTML = Array.from({ length: max }, (_, i) => i + 1)
+    .map(n => `<option value="${n}" ${n === Math.min(current, max) ? "selected" : ""}>${n}${n === 7 ? " (domyślnie)" : ""}</option>`).join("");
+}
+function openSettings(d) {
+  editing = d;
+  const rx = d.role === "receiver";
+  $("setTitle").textContent = rx ? "Ustawienia odbiornika" : "Ustawienia lisa";
+  $("rxFields").hidden = !rx;
+  $("txFields").hidden = rx;
+  $("setHide").value = String(d.hide ?? 10);
+  $("setName").textContent = d.name;
+  $("setForm").leds.value = d.binary ? "binary" : "unary";
+  fillChannels(!!d.binary, d.channels || 7);
+  $("settings").showModal();
+}
+$("setForm").leds.forEach(r => r.onchange = () => fillChannels(r.value === "binary", +$("setChannels").value));
+$("settings").onclose = async () => {
+  const d = editing;
+  editing = null;
+  if (!d || $("settings").returnValue !== "save") return;
+  const binary = $("setForm").leds.value === "binary";
+  const channels = +$("setChannels").value;
+  const hide = +$("setHide").value;
+  d.busy = true; d.msg = "Zapisywanie…"; d.cls = "warn"; render(d);
   try {
     if (!d.gatt || !d.gatt.connected) await connect(d);
-    const p = note(d, "set-ok", 5000);
-    await d.ctrl.writeValueWithResponse(te.encode(`set leds=${binary ? "binary" : "unary"}`));
-    await p;
+    if (d.role === "receiver") {
+      // mode first: 8 channels are only accepted in binary mode
+      if (binary !== !!d.binary) await command(d, `set leds=${binary ? "binary" : "unary"}`, "set-ok");
+      if (channels !== d.channels) await command(d, `set channels=${channels}`, "set-ok");
+      toast(`Zapisano: ${channels} kanałów, diody ${binary ? "binarnie" : "zwykle"}`);
+    } else {
+      if (hide !== d.hide) await command(d, `set hide=${hide}`, "set-ok");
+      toast(hide ? `Zapisano: lis ukryje się ${hide} min po włączeniu` : "Zapisano: lis zawsze widoczny");
+    }
     await readInfo(d);
-    d.msg = binary ? "Diody binarnie" : "Diody zwykle"; d.cls = "ok";
+    d.msg = null;
   } catch (e) {
-    d.msg = "Błąd: " + e.message; d.cls = "bad";
+    d.msg = "Nie zapisano: " + e.message; d.cls = "bad";
   } finally {
     d.busy = false;
     render(d);
   }
-}
+};
 
+// --- update ---
 async function flash(d) {
   const img = images[d.role];
   if (!img || d.busy || !d.dev) return;
   d.busy = true; d.progress = 0;
   const step = m => { d.msg = m; d.cls = "warn"; render(d); };
   try {
-    step("Łączenie...");
-    if (!d.gatt || !d.gatt.connected) await connect(d); else await readInfo(d);
+    step("Łączenie…");
+    if (!d.gatt || !d.gatt.connected) await connect(d); else await readInfo(d);  // fresh MTU
     if (images[d.role] !== img) throw new Error("program jest dla innego typu urządzenia");
-    step("Wysyłanie...");
-    let p = note(d, "ready", 5000);
-    await d.ctrl.writeValueWithResponse(te.encode("begin"));
-    await p;
+    step("Wysyłanie…");
+    await command(d, "begin", "ready");
+    // Writes without response; the device acks every 8 KiB ("progress:N/T", N =
+    // image bytes) and at most WINDOW bytes may be unacknowledged.
     const chunk = Math.max(20, Math.min(512, (d.mtu || 23) - 3));
-    const done = note(d, "done", 600000);
-    let failed = null;
-    done.catch(e => { failed = e; });
-    for (let o = 0; o < img.bytes.length && !failed; o += chunk) {
-      await d.data.writeValueWithResponse(img.bytes.slice(o, o + chunk));
-      if ((o / chunk) % 16 === 0) { d.progress = o / img.bytes.length; render(d); }
+    const WINDOW = 24 * 1024, HDR = 168;
+    let acked = 0, failed = null, finished = false, wake = null;
+    d.onNote = s => {
+      if (s.startsWith("error:")) failed = new Error(s.slice(6));
+      else if (s.startsWith("progress:")) acked = +s.split(":")[1].split("/")[0];
+      else if (s.startsWith("done")) finished = true;
+      if (wake) { wake(); wake = null; }
+    };
+    const until = (cond, ms) => new Promise((resolve, reject) => {
+      const t = setTimeout(() => reject(new Error("brak odpowiedzi")), ms);
+      const check = () => { if (failed) { clearTimeout(t); reject(failed); } else if (cond()) { clearTimeout(t); resolve(); } else wake = check; };
+      check();
+    });
+    for (let o = 0; o < img.bytes.length; o += chunk) {
+      await until(() => o - HDR - acked <= WINDOW, 20000);
+      const part = img.bytes.slice(o, o + chunk);
+      // firmware before the fast path only takes writes with response
+      if (d.data.properties.writeWithoutResponse) await d.data.writeValueWithoutResponse(part);
+      else await d.data.writeValueWithResponse(part);
+      d.progress = Math.max(0, acked) / (img.bytes.length - HDR);
+      if ((o / chunk) % 8 === 0) render(d);
     }
-    await done;
+    await until(() => finished, 30000);
+    d.onNote = null;
     d.progress = null;
-    step("Restart...");
+    step("Restart…");
     await sleep(3000);
     await reconnect(d, 60000);
     // The new program only stays once confirmed; it needs a moment to bring its radio up.
     const end = Date.now() + 90000;
     while (d.state === "pending") {
-      step("Potwierdzanie...");
-      try {
-        p = note(d, "confirmed", 5000);
-        await d.ctrl.writeValueWithResponse(te.encode("confirm"));
-        await p;
-      } catch (e) {
-        if (Date.now() > end) throw new Error(`nie potwierdzono (${e.message}), urządzenie wróci do poprzedniej wersji`);
+      step("Potwierdzanie…");
+      try { await command(d, "confirm", "confirmed"); }
+      catch (e) {
+        if (Date.now() > end) throw new Error(`nie potwierdzono (${e.message}), wróci poprzednia wersja`);
         await sleep(3000);
       }
       await readInfo(d);
     }
     if (d.version !== img.version) throw new Error(`urządzenie wróciło do ${d.version}`);
     d.msg = "Zaktualizowano"; d.cls = "ok";
+    toast(`${d.name}: zaktualizowano do ${img.version}`);
   } catch (e) {
     d.msg = "Błąd: " + e.message; d.cls = "bad";
   } finally {

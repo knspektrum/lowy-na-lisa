@@ -4,6 +4,7 @@
 // source. Sync word CAFE<id>x4BABE matches sync_word[] in receiver.ino.
 //   USB serial '0'-'9': set transmitter id      'w': save config to module flash
 #include <Arduino.h>
+#include <Preferences.h>
 #include <LisekOta.h>  // updates and version readout over Bluetooth, software/libraries
 
 #define CONFIG_PIN 14  // LOW = AT/config mode, HIGH = transparent mode
@@ -17,6 +18,31 @@
 #define STATUS_INTERVAL_MS 2000
 
 int transmitter_id = 1;
+
+// Minutes after power-on until Bluetooth goes quiet, so nobody can find the
+// fox with a phone during the game (0 = always visible). Set from the web
+// panel only ("set hide=N"), stored in NVS.
+const uint8_t HIDE_CHOICES[] = { 0, 10, 30, 60 };  // index = advertised user bits
+uint8_t hide_minutes = 10;
+
+void advertise_hide() {
+  for (uint8_t i = 0; i < sizeof HIDE_CHOICES; i++)
+    if (HIDE_CHOICES[i] == hide_minutes) LisekOta::setUserBits(i);
+  LisekOta::hideAfter(hide_minutes);
+}
+
+bool on_setting(const String &key, const String &value) {
+  if (key != "hide") return false;
+  int m = value.toInt();
+  if (value != String(m) || memchr(HIDE_CHOICES, m, sizeof HIDE_CHOICES) == nullptr) return false;
+  hide_minutes = m;
+  Preferences prefs;
+  prefs.begin("transmitter", false);
+  prefs.putUChar("hide_min", hide_minutes);
+  prefs.end();
+  advertise_hide();
+  return true;
+}
 String lastResponse;
 
 // 0 on OK, -(n+1) on "ERROR:n", -4 on anything else
@@ -110,6 +136,12 @@ void setup() {
   pinMode(CONFIG_PIN, OUTPUT);
   Serial.println("\r\n=== fox transmitter (reconstructed) ===");
   LisekOta::begin("transmitter");
+  Preferences prefs;
+  prefs.begin("transmitter", true);
+  hide_minutes = prefs.getUChar("hide_min", 10);
+  prefs.end();
+  advertise_hide();
+  LisekOta::onSetting(on_setting);
   Serial.println("firmware " LISEK_VERSION);
 
   enterConfig();
