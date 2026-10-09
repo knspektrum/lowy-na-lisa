@@ -4,7 +4,7 @@ Odbiorniki ESP32 i nadajniki można aktualizować i sprawdzać bez kabla, ze str
 
 ## Jak to działa
 - Każde urządzenie nadaje przez Bluetooth LE (raz na sekundę) swoją nazwę `lisek-R-xxxx` (odbiornik) albo `lisek-T-xxxx` (nadajnik; `xxxx` to końcówka adresu MAC płytki), id, stan i wersję programu
-- Lisy milkną domyślnie 10 minut po włączeniu, żeby nie dało się ich namierzyć telefonem; odbiorniki nadają cały czas
+- Lisy można ustawić tak, żeby milkły 10-60 minut po włączeniu (domyślnie nie milkną), żeby nie dało się ich namierzyć telefonem
 - Wersja to skrót commita (`5a431fb`), z `+` gdy program zbudowano z niezacommitowanych zmian
 - Bluetooth dokłada ok. 1-3 mA do kilkudziesięciu mA, które i tak pobiera ESP32; wyłączone urządzenie nic nie pobiera
 - Urządzenie przyjmuje tylko program podpisany kluczem projektu (ECDSA P-256) i zbudowany dla jego typu; inne pliki odrzuca przed zapisem

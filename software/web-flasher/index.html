@@ -31,12 +31,15 @@
     font: 15px/1.5 "Inter", ui-sans-serif, system-ui, sans-serif; font-feature-settings: "cv11", "ss01";
     -webkit-font-smoothing: antialiased; }
   svg.i { width: 18px; height: 18px; flex: none; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
-  header { background: #000; color: #fff; padding: 10px 16px; padding-top: max(10px, env(safe-area-inset-top)); }
-  .top { max-width: 1200px; margin: 0 auto; display: flex; align-items: center; gap: 12px; }
-  header img { height: 28px; width: auto; display: block; }
-  .gh { margin-left: auto; display: inline-flex; align-items: center; gap: 6px; color: #d4d4d8; text-decoration: none;
-    font-size: 14px; font-weight: 500; padding: 8px 10px; border-radius: var(--radius); min-height: 40px; }
-  .gh:hover { color: #fff; background: #27272a; }
+  /* floating, fully rounded top pills */
+  .top { position: sticky; top: max(12px, env(safe-area-inset-top)); z-index: 5; max-width: 1200px; margin: 12px auto 0;
+    padding: 0 16px; display: flex; align-items: center; justify-content: space-between; gap: 12px; pointer-events: none; }
+  .pill-nav { pointer-events: auto; display: inline-flex; align-items: center; gap: 8px; min-height: 44px; padding: 8px 18px;
+    border-radius: 999px; background: #000; color: #d4d4d8; text-decoration: none; font-size: 14px; font-weight: 500;
+    box-shadow: 0 4px 16px rgba(0,0,0,.18), 0 1px 3px rgba(0,0,0,.12); }
+  .pill-nav:hover { color: #fff; background: #18181b; }
+  .pill-nav.brand { padding: 9px 20px; }
+  .pill-nav img { height: 26px; width: auto; display: block; }
   .gh .sep { color: #52525b; }
   main { max-width: 1200px; margin: 0 auto; padding: 20px 16px 96px; }
   .title { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; margin-bottom: 16px; }
@@ -152,7 +155,9 @@
     .tools > button { flex: 1; }
     .dialog-actions button { flex: 1; }
     .gh span { display: none; }
-    .gh { gap: 10px; }
+    .gh { gap: 10px; padding: 8px 14px; }
+    .pill-nav.brand { padding: 9px 16px; }
+    .pill-nav img { height: 22px; }
   }
   @media (prefers-reduced-motion: reduce) { #toast, .bar-progress > div { transition: none; } }
 </style>
@@ -173,10 +178,13 @@
   <symbol id="i-oss" viewBox="0 0 24 24"><path d="M9.2 20.6A9 9 0 1 1 14.8 20.6L13.1 15.8A4 4 0 1 0 10.9 15.8Z"/></symbol>
   <symbol id="i-plus" viewBox="0 0 24 24"><path d="M5 12h14"/><path d="M12 5v14"/></symbol>
 </svg>
-<header><div class="top"><img src="spektrum-logo.png" alt="KN Spektrum" width="134" height="28">
-  <a class="gh" href="https://github.com/knspektrum/lowy-na-lisa" target="_blank" rel="noopener"
+<nav class="top" aria-label="Linki">
+  <a class="pill-nav brand" href="https://github.com/knspektrum" target="_blank" rel="noopener" aria-label="KN Spektrum">
+    <img src="spektrum-logo.png" alt="KN Spektrum" width="125" height="26"></a>
+  <a class="pill-nav gh" href="https://github.com/knspektrum/lowy-na-lisa" target="_blank" rel="noopener"
     title="Open source (GPLv3): kod na GitHubie" aria-label="Open source, GPLv3, kod na GitHubie">
-    <svg class="i"><use href="#i-oss"/></svg><span>Open source</span><span class="sep">·</span><svg class="i"><use href="#i-github"/></svg><span>GitHub</span></a></div></header>
+    <svg class="i"><use href="#i-oss"/></svg><span>Open source</span><span class="sep">·</span><svg class="i"><use href="#i-github"/></svg><span>GitHub</span></a>
+</nav>
 <main>
 <div class="title">
   <div class="icon"><svg class="i"><use href="#i-radar"/></svg></div>
@@ -188,10 +196,11 @@
 </div>
 
 <div class="card alert" id="unsupported" hidden>
-  <h2>Ta przeglądarka nie obsługuje Bluetooth</h2>
+  <h2 id="unsupTitle">Ta przeglądarka nie obsługuje Bluetooth</h2>
   Otwórz stronę w Chrome albo Edge na Windows 10+, macOS, Androidzie albo ChromeOS. Na Linuksie najpierw włącz
-  <code>chrome://flags/#enable-experimental-web-platform-features</code>. Adres musi zaczynać się od https albo być
-  <code>localhost</code>.
+  <code>chrome://flags/#enable-experimental-web-platform-features</code>, w Brave
+  <code>brave://flags/#brave-web-bluetooth-api</code>, i uruchom przeglądarkę ponownie. Adres musi zaczynać się od https
+  albo być <code>localhost</code>.
 </div>
 
 <div class="card strip" role="group" aria-label="Filtr">
@@ -217,8 +226,9 @@
 
 <details class="card small-text" id="help">
   <summary>Jak to działa i co obsługuje przeglądarka</summary>
-  <p>Każde urządzenie nadaje przez Bluetooth swoją wersję, kanał i stan; lisy milkną po ustawionym czasie od włączenia,
-  żeby nie dało się ich namierzyć telefonem. Lista pamięta wszystkie urządzenia, które ta przeglądarka widziała.</p>
+  <p>Każde urządzenie nadaje przez Bluetooth swoją wersję, kanał i stan. W ustawieniach lisa można włączyć ukrywanie: lis
+  milknie wtedy po 10-60 min od włączenia, żeby nie dało się go namierzyć telefonem, a strona widzi go jako
+  „wyłączony albo ukryty”. Lista pamięta wszystkie urządzenia, które ta przeglądarka widziała.</p>
   <p>Urządzenia dodaje się po jednym; strona co 30 s sprawdza, czy są włączone. Po włączeniu
   <code>chrome://flags/#enable-experimental-web-platform-features</code> widzi je na bieżąco i pamięta między wizytami
   (Windows, macOS, Android), a na macOS i Androidzie „Skanuj okolicę” dodaje wszystkie naraz.</p>
@@ -244,10 +254,10 @@
     <div class="field">
       <label for="setHide">Ukryj Bluetooth po włączeniu lisa</label>
       <select id="setHide">
-        <option value="10">po 10 min (domyślnie)</option>
+        <option value="0">nigdy, zawsze widoczny (domyślnie)</option>
+        <option value="10">po 10 min</option>
         <option value="30">po 30 min</option>
         <option value="60">po 60 min</option>
-        <option value="0">nigdy, zawsze widoczny</option>
       </select>
     </div>
     <p class="muted small-text">Ukryty lis nie nadaje nic przez Bluetooth, więc nie da się go namierzyć telefonem. Strona
@@ -303,14 +313,18 @@ const fleet = new Map();      // name -> device record
 const permitted = new Set();  // BluetoothDevice ids this page may connect to
 
 if (!bt) $("unsupported").hidden = false;
-if (bt && bt.requestLEScan) $("scan").hidden = false;
+// Chrome implements scanning everything (requestLEScan) only on macOS and Android;
+// elsewhere the flag exposes it but every call is rejected as "cancelled".
+const platform = (navigator.userAgentData && navigator.userAgentData.platform) || navigator.platform || "";
+const canScan = !!(bt && bt.requestLEScan) && /mac|android/i.test(platform + " " + navigator.userAgent);
+if (canScan) $("scan").hidden = false;
 
 function toast(msg) {
   const t = $("toast");
   t.textContent = msg;
   t.classList.add("show");
   clearTimeout(toast.t);
-  toast.t = setTimeout(() => t.classList.remove("show"), 3500);
+  toast.t = setTimeout(() => t.classList.remove("show"), Math.max(3500, msg.length * 60));
 }
 
 // --- settings packed in the advertisement / info "user" bits ---
@@ -414,11 +428,25 @@ $("scan").onclick = async () => {
     bt.addEventListener("advertisementreceived", onAdvert);
     $("scan").textContent = "Skanowanie…";
     $("scan").disabled = true;
-  } catch (e) { toast("Skanowanie niedostępne: " + e.message); }
+  } catch (e) {
+    $("scan").hidden = true;
+    toast("Skanowanie wszystkich naraz nie działa w tej przeglądarce. Dodaj urządzenia po jednym („Dodaj urządzenie”).");
+  }
 };
 $("add").onclick = async () => {
   let dev;
-  try { dev = await bt.requestDevice({ filters: [{ services: [SVC] }] }); } catch (_) { return; }
+  try { dev = await bt.requestDevice({ filters: [{ services: [SVC] }] }); }
+  catch (e) {
+    // closing the chooser is a NotFoundError mentioning the chooser; anything else is a real problem
+    if (/globally disabled|not available|adapter/i.test(e.message)) {
+      // Web Bluetooth switched off in the browser (Linux without the flag, Brave by default) or no adapter
+      $("unsupTitle").textContent = /adapter|not available/i.test(e.message)
+        ? "Bluetooth jest wyłączony albo niedostępny" : "Bluetooth jest wyłączony w przeglądarce";
+      $("unsupported").hidden = false;
+      $("unsupported").scrollIntoView({ behavior: "smooth", block: "center" });
+    } else if (!(e.name === "NotFoundError" && /chooser/i.test(e.message))) toast(`Bluetooth: ${e.message}`);
+    return;
+  }
   await watch(dev);
   const d = record(dev.name);
   d.msg = "Łączenie…"; d.cls = "warn"; renderAll();
@@ -472,12 +500,12 @@ function render(d) {
   const outdated = outdatedOf(d);
   let pill;
   if (d.msg) pill = `<span class="pill ${d.cls || ""}">${esc(d.msg)}</span>`;
-  else if (!on) pill = `<span class="pill">${d.role === "transmitter" && d.hide ? "Ukryty / wył." : "Wyłączony"}</span>`;
+  else if (!on) pill = `<span class="pill">${d.role === "transmitter" && d.hide ? "Wyłączony albo ukryty" : "Wyłączony"}</span>`;
   else if (d.healthy === false) pill = `<span class="pill warn">Radio nie odpowiada</span>`;
   else pill = `<span class="pill ${d.state === "ok" ? "ok" : "warn"}">${esc(STATE_LABELS[d.state] || d.state || "?")}</span>`;
   const facts = [];
   if (d.role === "receiver" && d.channels) facts.push(`<span>Kanały <b>1-${maxChannels(d)}</b></span>`, `<span>Diody <b>${d.binary ? "binarnie" : "zwykle"}</b></span>`);
-  if (d.role === "transmitter" && d.hide != null) facts.push(`<span>Bluetooth <b>${d.hide ? `${d.hide} min` : "zawsze"}</b></span>`);
+  if (d.role === "transmitter" && d.hide) facts.push(`<span>Ukrywa się po <b>${d.hide} min</b></span>`);
   facts.push(`<span>Program <b class="mono">${esc(d.version || "?")}</b> ${outdated ? `<span class="tag">→ ${esc(img.version)}</span>` : img && d.version ? '<span class="tag ok">aktualny</span>' : ""}</span>`);
   const talk = canTalk(d);
   const btn = (a, ic, label, enabled) =>
@@ -497,6 +525,7 @@ function render(d) {
     ${d.progress != null ? `<div class="bar-progress" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="${Math.round(d.progress * 100)}"><div style="width:${(d.progress * 100).toFixed(1)}%"></div></div>` : ""}
     <div class="dev-foot"><div class="facts">${facts.join("")}</div>${pill}</div>`;
   d.row.querySelectorAll("button").forEach(b => b.onclick = () => action(d, b.dataset.a));
+  summary();
 }
 let filter = "all";
 function matches(d) {
@@ -635,7 +664,7 @@ function openSettings(d) {
   $("setTitle").textContent = rx ? "Ustawienia odbiornika" : "Ustawienia lisa";
   $("rxFields").hidden = !rx;
   $("txFields").hidden = rx;
-  $("setHide").value = String(d.hide ?? 10);
+  $("setHide").value = String(d.hide ?? 0);
   $("setName").textContent = d.name;
   $("setForm").leds.value = d.binary ? "binary" : "unary";
   fillChannels(!!d.binary, d.channels || 7);
@@ -692,7 +721,9 @@ async function flash(d) {
       if (s.startsWith("error:")) failed = new Error(s.slice(6));
       else if (s.startsWith("progress:")) acked = +s.split(":")[1].split("/")[0];
       else if (s.startsWith("done")) finished = true;
-      if (wake) { wake(); wake = null; }
+      const w = wake;  // clear first: the check may re-arm itself
+      wake = null;
+      if (w) w();
     };
     const until = (cond, ms) => new Promise((resolve, reject) => {
       const t = setTimeout(() => reject(new Error("brak odpowiedzi")), ms);

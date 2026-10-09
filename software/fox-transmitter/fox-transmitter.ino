@@ -20,10 +20,10 @@
 int transmitter_id = 1;
 
 // Minutes after power-on until Bluetooth goes quiet, so nobody can find the
-// fox with a phone during the game (0 = always visible). Set from the web
-// panel only ("set hide=N"), stored in NVS.
+// fox with a phone during the game (0 = always visible, the default). Set from
+// the web panel only ("set hide=N"), stored in NVS.
 const uint8_t HIDE_CHOICES[] = { 0, 10, 30, 60 };  // index = advertised user bits
-uint8_t hide_minutes = 10;
+uint8_t hide_minutes = 0;
 
 void advertise_hide() {
   for (uint8_t i = 0; i < sizeof HIDE_CHOICES; i++)
@@ -138,7 +138,7 @@ void setup() {
   LisekOta::begin("transmitter");
   Preferences prefs;
   prefs.begin("transmitter", true);
-  hide_minutes = prefs.getUChar("hide_min", 10);
+  hide_minutes = prefs.getUChar("hide_min", 0);
   prefs.end();
   advertise_hide();
   LisekOta::onSetting(on_setting);

@@ -61,7 +61,7 @@ CH_4  |  ○  |  ○  |  ○  |  ○  |  ○  |  ○  |  ○  |  ○
 
 ## Bluetooth
 
-Lis nadaje przez Bluetooth (na [stronę floty](../ota/README.md)) tylko przez pierwsze 10 minut po włączeniu, potem milknie, żeby nikt nie namierzył go telefonem. W tym czasie można go sprawdzić, zaktualizować i zmienić mu ustawienia; potem trzeba go wyłączyć i włączyć. Czas ustawia się w **Ustawieniach** lisa na stronie: 10, 30 albo 60 minut, albo „zawsze widoczny” (na testy). Lis nie milknie, dopóki strona jest z nim połączona albo trwa aktualizacja.
+Lis nadaje przez Bluetooth na [stronę](../ota/README.md) swój kanał, wersję programu i stan. Telefon z aplikacją do Bluetooth też go widzi i mógłby po sile sygnału namierzyć lisa, więc w **Ustawieniach** lisa na stronie można włączyć ukrywanie: lis milknie 10, 30 albo 60 minut po włączeniu. Domyślnie nie ukrywa się nigdy. Ukryty lis jest na stronie „wyłączony albo ukryty”; żeby go sprawdzić albo zaktualizować, trzeba go wyłączyć i włączyć. Lis nie milknie, dopóki strona jest z nim połączona albo trwa aktualizacja.
 
 ## Programowanie
 
