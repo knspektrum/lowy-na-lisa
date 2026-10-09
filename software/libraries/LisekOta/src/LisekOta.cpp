@@ -4,6 +4,7 @@
 #include <BLEDevice.h>
 #include <BLEServer.h>
 #include <Update.h>
+#include <esp_bt.h>
 #include <esp_ota_ops.h>
 #include <esp_timer.h>
 #include <mbedtls/pk.h>
@@ -315,6 +316,10 @@ void begin(const char *role) {
   uint64_t mac = ESP.getEfuseMac();
   snprintf(g_name, sizeof g_name, "lisek-%c-%02X%02X", toupper(role[0]), (uint8_t)(mac >> 32), (uint8_t)(mac >> 40));
   BLEDevice::init(g_name);
+  // 0 dBm instead of the default +3: smaller current spikes per packet, so a
+  // battery-fed board does not brown out; still ~10-20 m for the panel.
+  esp_ble_tx_power_set(ESP_BLE_PWR_TYPE_DEFAULT, ESP_PWR_LVL_N0);
+  esp_ble_tx_power_set(ESP_BLE_PWR_TYPE_ADV, ESP_PWR_LVL_N0);
   BLEDevice::setMTU(517);
   BLEServer *srv = BLEDevice::createServer();
   srv->setCallbacks(new ServerCb());

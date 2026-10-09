@@ -132,6 +132,9 @@ void save_to_flash() {
 }
 
 void setup() {
+  // 80 MHz is plenty (UART, LEDs, Bluetooth) and draws far less than 240 MHz,
+  // which matters on battery: Bluetooth on top of 240 MHz browned the boards out.
+  setCpuFrequencyMhz(80);
   Serial.begin(115200);
   pinMode(CONFIG_PIN, OUTPUT);
   Serial.println("\r\n=== fox transmitter (reconstructed) ===");

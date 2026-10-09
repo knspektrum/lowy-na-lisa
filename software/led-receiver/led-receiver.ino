@@ -258,6 +258,9 @@ int pendingSnr = 0;
 bool havePending = false;
 
 void setup() {
+  // 80 MHz is plenty (UART, LEDs, Bluetooth) and draws far less than 240 MHz,
+  // which matters on battery: Bluetooth on top of 240 MHz browned the boards out.
+  setCpuFrequencyMhz(80);
   Serial.begin(115200);
   Serial.println("Hej liski!");
   LisekOta::begin("receiver");
