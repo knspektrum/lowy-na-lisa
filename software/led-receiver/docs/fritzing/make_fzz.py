@@ -172,8 +172,8 @@ chg = Part(sk, CHG, f"contrib/{CHG}.fzp", "Charger",
            fzp=os.path.join(LIB, f"contrib/{CHG}.fzp"), schem_pos=(-200, 200), pcb_pos=(-200, 200))
 C_BAT, C_BGND, C_OUT, C_OGND = "connector85", "connector84", "connector89", "connector88"
 chg.pos = (-200.0, esp.bbox()[3] - chg.h)
-# Small LiPo, upside down so its leads hang down onto the JST (red lead on
-# the right over the JST's + pin, black on the left over GND).
+# Small LiPo above the charger, upside down so its leads hang down and turn
+# into the JST (black turns first into GND, red below it into +).
 LIPO = "SparkFun-Electromechanical-LIPO-OUTLINE-100"
 L_RED, L_BLACK = "connector0", "connector1"
 bat = Part(sk, LIPO, "core/sparkfun-electromechanical-lipo-outline-100.fzp", "Battery",
@@ -181,7 +181,8 @@ bat = Part(sk, LIPO, "core/sparkfun-electromechanical-lipo-outline-100.fzp", "Ba
            fzp=os.path.join(CORE, "sparkfun-electromechanical-lipo-outline-100.fzp"),
            schem_pos=(-300, 200), pcb_pos=(-300, 200))
 jb, jg = chg.pt(C_BAT), chg.pt(C_BGND)
-bat.place(L_RED, (jg[0] - 40, jb[1] - 13))  # off to the side, left of the JST
+bat.place(L_RED, (0, jb[1] - 13))
+bat.pos = (bat.pos[0] + chg.bbox()[0] - bat.bbox()[0], bat.pos[1])  # left edge in line with the charger's
 sw = Part(sk, "1238DBDC00-toggle-switch", "core/basic-toggle-switch.fzp", "Power",
           os.path.join(BB, "basic_toggle_switch.svg"), (0, 0), 180,
           fzp=os.path.join(CORE, "basic-toggle-switch.fzp"), schem_pos=(-100, 200), pcb_pos=(-100, 200))
@@ -192,10 +193,10 @@ lr, lb = bat.pt(L_RED), bat.pt(L_BLACK)
 out, ognd = chg.pt(C_OUT), chg.pt(C_OGND)
 so, com = sw.pt(S_OUT), sw.pt("connector1")
 v5 = esp.pt("connector18")
-X_GND_UP, X_5V_UP, Y_5V_IN = -86.0, -80.0, 10.0
+X_GND_UP, X_5V_UP, Y_5V_IN = bat.bbox()[2] + 5, bat.bbox()[2] + 11, 10.0  # up between battery and LoRa-E5
 Y_5V_TOP, Y_GND_TOP, X_5V_DOWN = esp.bbox()[1] - 6, esp.bbox()[1] - 12, 105.0  # hug the top edge
 s_nodes.update({
-    "bat_p": (bat, L_RED), "bp1": (lr[0], jb[1] - 10), "bp2": (jb[0], jb[1] - 10), "c_bat": (chg, C_BAT),
+    "bat_p": (bat, L_RED), "bp1": (lr[0], jb[1] - 5), "bp2": (jb[0], jb[1] - 5), "c_bat": (chg, C_BAT),
     "c_out": (chg, C_OUT), "q1": (X_5V_UP, out[1]), "q2": (X_5V_UP, Y_5V_IN), "q3": (com[0], Y_5V_IN),
     "s_com": (sw, "connector1"), "s_out": (sw, S_OUT), "v5": (esp, "connector18"),
     "o1": (so[0], Y_5V_TOP), "o2": (X_5V_DOWN, Y_5V_TOP), "o3": (X_5V_DOWN, v5[1]),
@@ -206,7 +207,7 @@ s_edges += [
     ("s_out", "o1", RED), ("o1", "o2", RED), ("o2", "o3", RED), ("o3", "v5", RED),
 ]
 g_nodes.update({
-    "bat_m": (bat, L_BLACK), "bm1": (lb[0], jg[1] - 5), "bm2": (jg[0], jg[1] - 5), "c_bgnd": (chg, C_BGND),
+    "bat_m": (bat, L_BLACK), "bm1": (lb[0], jg[1] - 10), "bm2": (jg[0], jg[1] - 10), "c_bgnd": (chg, C_BGND),
     "c_ognd": (chg, C_OGND), "w1": (X_GND_UP, ognd[1]), "w2": (X_GND_UP, Y_GND_TOP), "gtop": (X_GBUS, Y_GND_TOP),
 })
 g_edges += [
