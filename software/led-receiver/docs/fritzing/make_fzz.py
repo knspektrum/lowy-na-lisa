@@ -59,11 +59,13 @@ LEDS = [
 ]
 
 # The LEDs form a column right of the ESP32, domes pointing right, LED7 at the
-# top level with G13 and LED1 at the bottom. Each row: GPIO -> resistor ->
-# anode (upper leg); cathode (lower leg) -> ground bus that runs vertically
-# underneath the signal wires.
+# top and LED1 at the bottom, one row above the pins so the button fits under
+# the column. Each row: GPIO -> resistor -> anode (upper leg); cathode (lower
+# leg) -> ground bus that runs vertically underneath the signal wires.
+# Fan-out: rows above their pin bend upwards (upper wire bends first), rows
+# below bend downwards (lower wire bends first).
 ROW = 24.0
-X_TURN0, X_TURN_STEP = 109.0, 7.0  # fan-out bends, LED1 first
+X_TURN0, X_TURN_STEP = 109.0, 7.0
 X_GBUS = 160.0
 X_RES = 172.0
 X_LEG = 222.0
@@ -71,10 +73,15 @@ X_BTN = 102.0
 
 g_nodes, g_edges = {}, []  # ground net, drawn first so it sits under the signals
 s_nodes, s_edges = {}, []
-a7 = ey["G13"]
+a7 = ey["G13"] - ROW
+rows = {i + 1: a7 + (6 - i) * ROW for i in range(7)}
+up = sorted([n for n in rows if rows[n] < ey[LEDS[n - 1][0]] - 0.5], key=lambda n: rows[n])
+down = sorted([n for n in rows if rows[n] > ey[LEDS[n - 1][0]] + 0.5], key=lambda n: -rows[n])
+x_turn = {n: X_TURN0 + X_TURN_STEP * k for group in (up, down) for k, n in enumerate(group)}
+bus = []  # (y, node) along the ground bus
 for i, (pin, color, ohms) in enumerate(LEDS):
     n = i + 1
-    ya = a7 + (7 - n) * ROW
+    ya = rows[n]
     r = Part(sk, "ResistorModuleID", "core/resistor.fzp", f"R{n}", os.path.join(BB, "resistor_220.svg"), (0, 0), 0,
              {"resistance": ohms, "tolerance": "±5%", "pin spacing": "400 mil"},
              fzp=os.path.join(CORE, "resistor.fzp"), schem_pos=(250 + 40 * i, 0), pcb_pos=(250 + 40 * i, 0))
@@ -91,42 +98,58 @@ for i, (pin, color, ohms) in enumerate(LEDS):
     px, py = esp.pt(E[pin])
     s_nodes.update({f"p{n}": (esp, E[pin]), f"r{n}a": (r, "connector0"), f"r{n}b": (r, "connector1"),
                     f"a{n}": (led, "connector1")})
-    if n == 7:
+    if n not in x_turn:
         s_edges.append((f"p{n}", f"r{n}a", BLUE))
     else:
-        xt = X_TURN0 + X_TURN_STEP * i
-        s_nodes.update({f"t{n}a": (xt, py), f"t{n}b": (xt, ya)})
+        s_nodes.update({f"t{n}a": (x_turn[n], py), f"t{n}b": (x_turn[n], ya)})
         s_edges += [(f"p{n}", f"t{n}a", BLUE), (f"t{n}a", f"t{n}b", BLUE), (f"t{n}b", f"r{n}a", BLUE)]
     s_edges.append((f"r{n}b", f"a{n}", BLUE))
     g_nodes.update({f"k{n}": (led, "connector0"), f"gb{n}": (X_GBUS, yk)})
     g_edges.append((f"k{n}", f"gb{n}", BLACK))
+    bus.append((yk, f"gb{n}"))
 
-# Button G32 -> GND, diagonal legs of the tactile switch (switched pair).
+# GND pin between G13 and G12 joins the bus (sharing a node if a cathode row
+# sits at the same height).
+same = [name for yb, name in bus if abs(yb - ey["GND_R"]) < 0.05]
+g_nodes["gnd"] = (esp, E["GND_R"])
+if same:
+    g_edges.append(("gnd", same[0], BLACK))
+else:
+    g_nodes["gbP"] = (X_GBUS, ey["GND_R"])
+    g_edges.append(("gnd", "gbP", BLACK))
+    bus.append((ey["GND_R"], "gbP"))
+
+# Button G32 -> GND under the LED column, diagonal legs of the tactile switch
+# (switched pair); its ground side joins LED1's cathode wire.
 btn = Part(sk, "20A9BBEE34_ST", "core/pushbutton_4_horizontal.fzp", "SW1", os.path.join(BB, "basic_pbutton.svg"),
            (0, 0), 0, fzp=os.path.join(CORE, "pushbutton_4_horizontal.fzp"), schem_pos=(250, 240), pcb_pos=(250, 240))
-btn.place("connector2", (X_BTN + 10, 232))
+Y_BTN = rows[1] + 30
+btn.place("connector2", (X_RES + 6, Y_BTN))
 btn.label_at = (btn.bbox()[0] - 2, btn.bbox()[3] + 2)
-y_btn_gnd = btn.pt("connector1")[1]
-s_nodes.update({"g32": (esp, E["G32"]), "g32a": (X_BTN, ey["G32"]), "g32b": (X_BTN, btn.pt("connector2")[1]),
-                "btn_in": (btn, "connector2")})
+bo = btn.pt("connector1")
+k1y = g_nodes["gb1"][1]
+X_BTN_GND = bo[0] + 10
+s_nodes.update({"g32": (esp, E["G32"]), "g32a": (X_BTN, ey["G32"]), "g32b": (X_BTN, Y_BTN), "btn_in": (btn, "connector2")})
 s_edges += [("g32", "g32a", PURPLE), ("g32a", "g32b", PURPLE), ("g32b", "btn_in", PURPLE)]
-g_nodes.update({"gnd": (esp, E["GND_R"]), "btn_out": (btn, "connector1"), "gbB": (X_GBUS, y_btn_gnd)})
-g_edges += [("gnd", "gb7", BLACK), ("btn_out", "gbB", BLACK)]
-bus = [f"gb{n}" for n in range(7, 0, -1)] + ["gbB"]
-g_edges += [(a, b, BLACK) for a, b in zip(bus, bus[1:])]
+# split LED1's cathode wire where the button's ground comes up into it
+g_edges.remove(("k1", "gb1", BLACK))
+g_nodes.update({"k1j": (X_BTN_GND, k1y), "btn_out": (btn, "connector1"), "bo1": (X_BTN_GND, bo[1])})
+g_edges += [("k1", "k1j", BLACK), ("k1j", "gb1", BLACK), ("btn_out", "bo1", BLACK), ("bo1", "k1j", BLACK)]
 
 # LoRa-E5, as a generic 4-pin SIP: pin1 VCC, pin2 GND, pin3 RX (PB7, pad 9),
-# pin4 TX (PB6, pad 10). Rotated so its pins face the ESP32.
+# pin4 TX (PB6, pad 10). Rotated so its pins face the ESP32. 3V3 runs right
+# under the bottom edge of the board.
 sip_conns = {f"connector{i}": (4.5 + 9.0 * i, 25.65) for i in range(4)}
 lora = Part(sk, "generic_sip_4_300mil", "", "LoRa-E5", None, (0, 0), 270, {"chip label": "LoRa-E5"},
             size=(36.0, 27.0), conns=sip_conns, schem_pos=(-200, 0), pcb_pos=(-200, 0))
 lora.place("connector3", (-45, ey["RX2"]))
-X_LGND, X_LVCC, Y_LOW = -20.0, -32.0, 307.0
+X_LGND, X_LVCC = -20.0, -32.0
+Y_3V3 = esp.bbox()[3] + 6
 v33 = esp.pt(E["3V3"])
 s_nodes.update({
     "tx2": (esp, E["TX2"]), "rx2": (esp, E["RX2"]), "v33": (esp, E["3V3"]),
     "l_tx": (lora, "connector3"), "l_rx": (lora, "connector2"), "l_vcc": (lora, "connector0"),
-    "lv1": (X_LVCC, lora.pt("connector0")[1]), "lv2": (X_LVCC, Y_LOW), "lv3": (v33[0], Y_LOW),
+    "lv1": (X_LVCC, lora.pt("connector0")[1]), "lv2": (X_LVCC, Y_3V3), "lv3": (v33[0], Y_3V3),
 })
 s_edges += [
     ("l_tx", "rx2", GREEN),   # LoRa-E5 TX (PB6) -> ESP32 RX2 (GPIO16)
@@ -137,34 +160,37 @@ g_nodes.update({"gnd_l": (esp, E["GND_L"]), "l_gnd": (lora, "connector1"),
                 "lg1": (X_LGND, lora.pt("connector1")[1]), "lg2": (X_LGND, ey["GND_L"])})
 g_edges += [("l_gnd", "lg1", BLACK), ("lg1", "lg2", BLACK), ("lg2", "gnd_l", BLACK)]
 
-# Power: LiPo cell -> USB-C charger + 5 V boost board (Fritzing's Adafruit
-# bq25185 + 5V boost breakout: battery into its JST, 5 V out of its terminal
-# block) -> slide switch on the + side -> ESP32 V5.
+# Power, left of the ESP32: LiPo cell -> USB-C charger + 5 V boost board
+# (Fritzing's Adafruit bq25185 + 5V boost breakout: battery into its JST, 5 V
+# out of its terminal block) -> slide switch on the + side -> over the top of
+# the board to V5. The charger's ground goes over the top to the LED ground bus.
 CHG = "Adafruit-_7e4e9c15920efa1ec265cff2ed46fc39_1_BB"
 chg = Part(sk, CHG, f"contrib/{CHG}.fzp", "Charger",
            os.path.join(LIB, f"svg/contrib/breadboard/{CHG}_breadboard.svg"), (0, 0), 0,
            fzp=os.path.join(LIB, f"contrib/{CHG}.fzp"), schem_pos=(-200, 200), pcb_pos=(-200, 200))
-chg.pos = (-10.0, -130.0)
 C_BAT, C_BGND, C_OUT, C_OGND = "connector85", "connector84", "connector89", "connector88"
+chg.place(C_OUT, (-60.0, -85.0))
 bat = Part(sk, "SparkFun-Electromechanical-LIPO-OUTLINE-1100", "core/sparkfun-electromechanical-lipo-outline-1100.fzp",
            "Battery", os.path.join(BB, "sparkfun-electromechanical_lipo-1100_breadboard.svg"), (0, 0), 0,
            fzp=os.path.join(CORE, "sparkfun-electromechanical-lipo-outline-1100.fzp"),
            schem_pos=(-300, 200), pcb_pos=(-300, 200))
-bat.place("connector0", (-30.0, chg.pt(C_BAT)[1] - 23))
+bat.place("connector0", (chg.bbox()[0] - 14, chg.pt(C_BAT)[1] - 23))
 sw = Part(sk, "1238DBDC00-toggle-switch", "core/basic-toggle-switch.fzp", "Power",
           os.path.join(BB, "basic_toggle_switch.svg"), (0, 0), 180,
           fzp=os.path.join(CORE, "basic-toggle-switch.fzp"), schem_pos=(-100, 200), pcb_pos=(-100, 200))
-sw.place("connector1", (130.0, -60.0))  # COM, pins facing up
+sw.place("connector1", (-30.0, -70.0))  # COM, pins facing up
 sw.label_at = (sw.bbox()[0] - 2, sw.bbox()[3] + 2)
+S_OUT = "connector0"  # the pin right of COM
 bp, bm = bat.pt("connector0"), bat.pt("connector1")
 out, ognd = chg.pt(C_OUT), chg.pt(C_OGND)
-l2 = sw.pt("connector2")
+so = sw.pt(S_OUT)
 v5 = esp.pt("connector18")
+Y_5V_TOP, Y_GND_TOP, X_GND_UP, X_5V_DOWN = -120.0, -165.0, -50.0, 105.0
 s_nodes.update({
     "bat_p": (bat, "connector0"), "c_bat": (chg, C_BAT), "bp1": (chg.pt(C_BAT)[0], bp[1]),
-    "c_out": (chg, C_OUT), "s_com": (sw, "connector1"), "s_out": (sw, "connector2"), "v5": (esp, "connector18"),
+    "c_out": (chg, C_OUT), "s_com": (sw, "connector1"), "s_out": (sw, S_OUT), "v5": (esp, "connector18"),
     "q1": (sw.pt("connector1")[0], out[1]),
-    "o1": (l2[0], l2[1] - 10), "o2": (105.0, l2[1] - 10), "o3": (105.0, v5[1]),
+    "o1": (so[0], Y_5V_TOP), "o2": (X_5V_DOWN, Y_5V_TOP), "o3": (X_5V_DOWN, v5[1]),
 })
 s_edges += [
     ("bat_p", "bp1", RED), ("bp1", "c_bat", RED),
@@ -173,12 +199,15 @@ s_edges += [
 ]
 g_nodes.update({
     "bat_m": (bat, "connector1"), "c_bgnd": (chg, C_BGND), "bm1": (chg.pt(C_BGND)[0], bm[1]),
-    "c_ognd": (chg, C_OGND), "gtop": (X_GBUS, ognd[1]),
+    "c_ognd": (chg, C_OGND), "w1": (X_GND_UP, ognd[1]), "w2": (X_GND_UP, Y_GND_TOP), "gtop": (X_GBUS, Y_GND_TOP),
 })
 g_edges += [
     ("bat_m", "bm1", BLACK), ("bm1", "c_bgnd", BLACK),
-    ("c_ognd", "gtop", BLACK), ("gtop", "gb7", BLACK),
+    ("c_ognd", "w1", BLACK), ("w1", "w2", BLACK), ("w2", "gtop", BLACK),
 ]
+bus.append((Y_GND_TOP, "gtop"))
+bus.sort()
+g_edges += [(a, b, BLACK) for (_, a), (_, b) in zip(bus, bus[1:])]
 
 net(sk, g_nodes, g_edges)
 net(sk, s_nodes, s_edges)
