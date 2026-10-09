@@ -59,8 +59,8 @@ LEDS = [
 ]
 
 # The LEDs form a column right of the ESP32, domes pointing right, LED7 at the
-# top and LED1 at the bottom, one row above the pins so the button fits under
-# the column. Each row: GPIO -> resistor -> anode (upper leg); cathode (lower
+# top and LED1 at the bottom, LED4 level with G27, so the button fits under
+# the column within the height of the board. Each row: GPIO -> resistor -> anode (upper leg); cathode (lower
 # leg) -> ground bus that runs vertically underneath the signal wires.
 # Fan-out: rows above their pin bend upwards (upper wire bends first), rows
 # below bend downwards (lower wire bends first).
@@ -73,7 +73,7 @@ X_BTN = 102.0
 
 g_nodes, g_edges = {}, []  # ground net, drawn first so it sits under the signals
 s_nodes, s_edges = {}, []
-a7 = ey["G13"] - ROW
+a7 = ey["G27"] - 3 * ROW  # LED4 level with its pin, so its wire runs straight
 rows = {i + 1: a7 + (6 - i) * ROW for i in range(7)}
 up = sorted([n for n in rows if rows[n] < ey[LEDS[n - 1][0]] - 0.5], key=lambda n: rows[n])
 down = sorted([n for n in rows if rows[n] > ey[LEDS[n - 1][0]] + 0.5], key=lambda n: -rows[n])
@@ -123,7 +123,7 @@ else:
 # (switched pair); its ground side joins LED1's cathode wire.
 btn = Part(sk, "20A9BBEE34_ST", "core/pushbutton_4_horizontal.fzp", "SW1", os.path.join(BB, "basic_pbutton.svg"),
            (0, 0), 0, fzp=os.path.join(CORE, "pushbutton_4_horizontal.fzp"), schem_pos=(250, 240), pcb_pos=(250, 240))
-Y_BTN = rows[1] + 30
+Y_BTN = rows[1] + 20
 btn.place("connector2", (X_RES + 6, Y_BTN))
 btn.label_at = (btn.bbox()[0] - 2, btn.bbox()[3] + 2)
 bo = btn.pt("connector1")
@@ -171,10 +171,11 @@ chg = Part(sk, CHG, f"contrib/{CHG}.fzp", "Charger",
 C_BAT, C_BGND, C_OUT, C_OGND = "connector85", "connector84", "connector89", "connector88"
 chg.place(C_OUT, (-95.0, 14.0))
 bat = Part(sk, "SparkFun-Electromechanical-LIPO-OUTLINE-1100", "core/sparkfun-electromechanical-lipo-outline-1100.fzp",
-           "Battery", os.path.join(BB, "sparkfun-electromechanical_lipo-1100_breadboard.svg"), (0, 0), 0,
+           "Battery", os.path.join(BB, "sparkfun-electromechanical_lipo-1100_breadboard.svg"), (0, 0), 180,
            fzp=os.path.join(CORE, "sparkfun-electromechanical-lipo-outline-1100.fzp"),
            schem_pos=(-300, 200), pcb_pos=(-300, 200))
-bat.place("connector0", (chg.bbox()[0] - 14, chg.pt(C_BAT)[1] - 23))
+# battery above the charger, upside down so its leads hang down onto the JST
+bat.place("connector0", (chg.pt(C_BAT)[0] + 21, chg.pt(C_BAT)[1] - 22))
 sw = Part(sk, "1238DBDC00-toggle-switch", "core/basic-toggle-switch.fzp", "Power",
           os.path.join(BB, "basic_toggle_switch.svg"), (0, 0), 180,
           fzp=os.path.join(CORE, "basic-toggle-switch.fzp"), schem_pos=(-100, 200), pcb_pos=(-100, 200))

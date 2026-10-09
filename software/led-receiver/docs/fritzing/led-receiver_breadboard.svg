@@ -1,9 +1,9 @@
 <?xml version='1.0' encoding='UTF-8' standalone='no'?>
 <!-- Created with Fritzing (https://fritzing.org/) -->
-<svg xmlns="http://www.w3.org/2000/svg" baseProfile="tiny" height="3.79369in" version="1.2" viewBox="0 0 7468.77 3793.69" width="7.46877in" x="0in"  xmlns:svg="http://www.w3.org/2000/svg" y="0in">
+<svg xmlns="http://www.w3.org/2000/svg" baseProfile="tiny" height="5.48744in" version="1.2" viewBox="0 0 5673.34 5487.44" width="5.67334in" x="0in"  xmlns:svg="http://www.w3.org/2000/svg" y="0in">
  
  <g partID="50200">
-  <g transform="translate(3527.48,1417.8)">
+  <g transform="translate(1732.06,3356.03)">
    <g transform="matrix(-1,0,0,-1,0,0)">
     <g id="breadboard" >
      <g fill="#8C8C8C" height="16.47" id="connector0terminal" width="25.2" x="60.33"  y="351.05"/>
@@ -31,41 +31,45 @@
   </g>
  </g>
  <g partID="50190">
-  <g id="breadboard">
-   <path d="M1307.92,240.014c16.4861,0,28.0278,14.9583,28.0278,28.0694l0,2023.15c0,18.5694,-9.52778,28.0556,-28.0278,28.0556L39.3611,2319.29c-14.8333,0,-28.0278,-11.6944,-28.0278,-28.0556L11.3333,267.972c0,-15.2361,10.9861,-28.0278,28.0278,-28.0278L1307.92,240.014L1307.92,240.014z" fill="#D2D2D2" id="path4_1_"/>
-   <path d="M11.3472,730.694L11.3472,268.069c0,-15.2778,10.9861,-28.0972,28.0278,-28.0972l1268.54,0.0555556l0,0c16.4861,0,28.0278,14.9583,28.0278,28.0972l0,462.528L11.3472,730.653L11.3472,730.694z" fill="#FFC900" id="path4_2_"/>
-   <path d="M11.3472,590.069L11.3472,268.069c0,-15.2778,10.9861,-28.0972,28.0278,-28.0972l1268.54,0.0555556l0,0c16.4861,0,28.0278,14.9583,28.0278,28.0972l0,321.861L11.3472,589.986L11.3472,590.069z" enable-background="new    " fill="#1D1D1D" id="path4_3_" opacity="0.36"/>
-   <g id="path112_1_">
-    <path d="M766.819,239.486c0,-51.5,0,-188.181,209.333,-188.181c133.056,0,229.917,56.625,323.514,111.403c82.4028,48.2361,160.194,93.7361,255.389,93.7361l170.333,0l0,36.3472l-170.333,0c-105.014,0,-186.986,-47.9583,-273.792,-98.7083c-89.4861,-52.3889,-181.931,-106.486,-305.111,-106.486c-172.861,-0.0416667,-172.861,98.7917,-172.861,151.889L766.819,239.486z"/>
+  <g transform="translate(2527.26,2318.47)">
+   <g transform="matrix(-1,0,0,-1,0,0)">
+    <g id="breadboard">
+     <path d="M1307.92,240.014c16.4861,0,28.0278,14.9583,28.0278,28.0694l0,2023.15c0,18.5694,-9.52778,28.0556,-28.0278,28.0556L39.3611,2319.29c-14.8333,0,-28.0278,-11.6944,-28.0278,-28.0556L11.3333,267.972c0,-15.2361,10.9861,-28.0278,28.0278,-28.0278L1307.92,240.014L1307.92,240.014z" fill="#D2D2D2" id="path4_1_"/>
+     <path d="M11.3472,730.694L11.3472,268.069c0,-15.2778,10.9861,-28.0972,28.0278,-28.0972l1268.54,0.0555556l0,0c16.4861,0,28.0278,14.9583,28.0278,28.0972l0,462.528L11.3472,730.653L11.3472,730.694z" fill="#FFC900" id="path4_2_"/>
+     <path d="M11.3472,590.069L11.3472,268.069c0,-15.2778,10.9861,-28.0972,28.0278,-28.0972l1268.54,0.0555556l0,0c16.4861,0,28.0278,14.9583,28.0278,28.0972l0,321.861L11.3472,589.986L11.3472,590.069z" enable-background="new    " fill="#1D1D1D" id="path4_3_" opacity="0.36"/>
+     <g id="path112_1_">
+      <path d="M766.819,239.486c0,-51.5,0,-188.181,209.333,-188.181c133.056,0,229.917,56.625,323.514,111.403c82.4028,48.2361,160.194,93.7361,255.389,93.7361l170.333,0l0,36.3472l-170.333,0c-105.014,0,-186.986,-47.9583,-273.792,-98.7083c-89.4861,-52.3889,-181.931,-106.486,-305.111,-106.486c-172.861,-0.0416667,-172.861,98.7917,-172.861,151.889L766.819,239.486z"/>
+     </g>
+     <g id="path114_1_">
+      <path d="M596.514,239.083c0,-66.7639,68.25,-239.875,379.472,-239.875c135.264,0,224.722,44.8472,311.139,88.3194c80.9028,40.5833,157.264,78.9861,267.889,78.9861l170.208,0l0,36.3472l-170.208,0c-119.222,0,-203.056,-42.1111,-284.167,-82.8472C1188.19,78.5556,1102.71,35.5556,976,35.5556C695.958,35.5417,632.972,186.319,632.972,239.139l-36.4583,0L596.514,239.083z" fill="#FF0000"/>
+     </g>
+     <path d="M24.3889,310.556c0,-24.8611,22.9306,-56.4306,50.2778,-56.4306l125.667,0c-27.3333,0,-69.9028,31.6667,-69.9028,56.4306l0,1937.82c0,24.8472,42.5694,56.3056,69.9028,56.3056L74.6667,2304.68c-27.3472,0,-50.2778,-31.4583,-50.2778,-56.3056L24.3889,310.556L24.3889,310.556z" enable-background="new    " id="path22_1_" opacity="0.35"/>
+     <path d="M1321.28,2245.35c0,24.8472,-22.9167,56.4306,-50.3194,56.4306l-125.611,0c27.1944,0,69.8333,-31.5833,69.8333,-56.4306L1215.18,307.583c0,-24.8333,-42.6389,-56.3194,-69.8333,-56.3194l125.611,0c27.4028,0,50.3194,31.4861,50.3194,56.3194L1321.28,2245.35L1321.28,2245.35z" enable-background="new    " fill="#FFFFFF" id="path22_2_" opacity="0.35"/>
+     <g>
+      <g transform="matrix(1, 0, 0, 1, 819.562, 800.947)">
+       <text font-family="Noto Sans" font-size="168.144">-</text>
+      </g>
+      <g transform="matrix(-4.37114e-08, 1, -1, -4.37114e-08, 792.728, 925.982)">
+       <text font-family="Noto Sans" font-size="168.144">E603450 7B20</text>
+      </g>
+      <g transform="matrix(-4.37114e-08, 1, -1, -4.37114e-08, 590.96, 925.982)">
+       <text font-family="Noto Sans" font-size="168.144">E7B02-D60-1</text>
+      </g>
+      <g transform="matrix(-4.37114e-08, 1, -1, -4.37114e-08, 389.19, 702.457)">
+       <text font-family="Noto Sans" font-size="168.144">+</text>
+      </g>
+      <g transform="matrix(-4.37114e-08, 1, -1, -4.37114e-08, 389.19, 925.982)">
+       <text font-family="Noto Sans" font-size="168.144">1000mAh 3.7V</text>
+      </g>
+     </g>
+     <rect fill="none" height="36.4306" id="connector1pin" width="170.736" x="1554.5" y="256.403"/>
+     <rect fill="none" height="36.4028" id="connector0pin" width="170.736" x="1554.5" y="166.361"/>
+    </g>
    </g>
-   <g id="path114_1_">
-    <path d="M596.514,239.083c0,-66.7639,68.25,-239.875,379.472,-239.875c135.264,0,224.722,44.8472,311.139,88.3194c80.9028,40.5833,157.264,78.9861,267.889,78.9861l170.208,0l0,36.3472l-170.208,0c-119.222,0,-203.056,-42.1111,-284.167,-82.8472C1188.19,78.5556,1102.71,35.5556,976,35.5556C695.958,35.5417,632.972,186.319,632.972,239.139l-36.4583,0L596.514,239.083z" fill="#FF0000"/>
-   </g>
-   <path d="M24.3889,310.556c0,-24.8611,22.9306,-56.4306,50.2778,-56.4306l125.667,0c-27.3333,0,-69.9028,31.6667,-69.9028,56.4306l0,1937.82c0,24.8472,42.5694,56.3056,69.9028,56.3056L74.6667,2304.68c-27.3472,0,-50.2778,-31.4583,-50.2778,-56.3056L24.3889,310.556L24.3889,310.556z" enable-background="new    " id="path22_1_" opacity="0.35"/>
-   <path d="M1321.28,2245.35c0,24.8472,-22.9167,56.4306,-50.3194,56.4306l-125.611,0c27.1944,0,69.8333,-31.5833,69.8333,-56.4306L1215.18,307.583c0,-24.8333,-42.6389,-56.3194,-69.8333,-56.3194l125.611,0c27.4028,0,50.3194,31.4861,50.3194,56.3194L1321.28,2245.35L1321.28,2245.35z" enable-background="new    " fill="#FFFFFF" id="path22_2_" opacity="0.35"/>
-   <g>
-    <g transform="matrix(1, 0, 0, 1, 819.562, 800.947)">
-     <text font-family="Noto Sans" font-size="168.144">-</text>
-    </g>
-    <g transform="matrix(-4.37114e-08, 1, -1, -4.37114e-08, 792.728, 925.982)">
-     <text font-family="Noto Sans" font-size="168.144">E603450 7B20</text>
-    </g>
-    <g transform="matrix(-4.37114e-08, 1, -1, -4.37114e-08, 590.96, 925.982)">
-     <text font-family="Noto Sans" font-size="168.144">E7B02-D60-1</text>
-    </g>
-    <g transform="matrix(-4.37114e-08, 1, -1, -4.37114e-08, 389.19, 702.457)">
-     <text font-family="Noto Sans" font-size="168.144">+</text>
-    </g>
-    <g transform="matrix(-4.37114e-08, 1, -1, -4.37114e-08, 389.19, 925.982)">
-     <text font-family="Noto Sans" font-size="168.144">1000mAh 3.7V</text>
-    </g>
-   </g>
-   <rect fill="none" height="36.4306" id="connector1pin" width="170.736" x="1554.5" y="256.403"/>
-   <rect fill="none" height="36.4028" id="connector0pin" width="170.736" x="1554.5" y="166.361"/>
   </g>
  </g>
  <g partID="50180">
-  <g transform="translate(1795.42,407.721)">
+  <g transform="translate(0,2345.95)">
    <g id="breadboard">
     <g id="icon">
      <path d="m145,55.2834l950,0c55.2278,0,100,44.7709,100,100l0,555c-1.38056,53.8473,-46.1528,96.3806,-100,95.0001l-950,0c-55.2278,0,-100,-44.7709,-100,-100l0,-550c0,-55.2278,44.7708,-100,100,-100m89.4486,488.778c-0.0152778,7.06667,5.70139,12.807,12.7681,12.8222s12.8069,-5.70139,12.8222,-12.7681l0,-0.0555556c0.0152778,-7.06667,-5.70139,-12.807,-12.7681,-12.8222s-12.8069,5.70139,-12.8222,12.7681l0,0.0555556zm0,-227.556c-0.0152778,7.06667,5.70139,12.807,12.7681,12.8222s12.8069,-5.70139,12.8222,-12.7681l0,-0.0555556c0.0152778,-7.06667,-5.70139,-12.807,-12.7681,-12.8222s-12.8069,5.70139,-12.8222,12.7681l0,0.0555556zm15.8667,388.778c0,10.8722,8.81389,19.6847,19.6847,19.6847,10.8722,0,19.6847,-8.81389,19.6847,-19.6847s-8.81389,-19.6847,-19.6847,-19.6847,-19.6847,8.81389,-19.6847,19.6847zm100,0c0,10.8722,8.81389,19.6847,19.6847,19.6847,10.8722,0,19.6847,-8.81389,19.6847,-19.6847s-8.81389,-19.6847,-19.6847,-19.6847,-19.6847,8.81389,-19.6847,19.6847zm100,0c0,10.8722,8.81389,19.6847,19.6847,19.6847s19.6847,-8.81389,19.6847,-19.6847,-8.81389,-19.6847,-19.6847,-19.6847,-19.6847,8.81389,-19.6847,19.6847zm100,0c0,10.8722,8.81389,19.6847,19.6847,19.6847,10.8722,0,19.6847,-8.81389,19.6847,-19.6847s-8.81389,-19.6847,-19.6847,-19.6847,-19.6847,8.81389,-19.6847,19.6847zm100,0c0,10.8722,8.81389,19.6847,19.6847,19.6847s19.6847,-8.81389,19.6847,-19.6847,-8.81389,-19.6847,-19.6847,-19.6847,-19.6847,8.81389,-19.6847,19.6847zm100,0c0,10.8722,8.81389,19.6847,19.6847,19.6847,10.8722,0,19.6847,-8.81389,19.6847,-19.6847s-8.81389,-19.6847,-19.6847,-19.6847,-19.6847,8.81389,-19.6847,19.6847zm100,0c0,10.8722,8.81389,19.6847,19.6847,19.6847,10.8722,0,19.6847,-8.81389,19.6847,-19.6847s-8.81389,-19.6847,-19.6847,-19.6847,-19.6847,8.81389,-19.6847,19.6847zm100,0c0,10.8722,8.81389,19.6847,19.6847,19.6847,10.8722,0,19.6847,-8.81389,19.6847,-19.6847s-8.81389,-19.6847,-19.6847,-19.6847,-19.6847,8.81389,-19.6847,19.6847zm95.475,0c-0.0472222,27.1792,21.9472,49.2514,49.1264,49.2986s49.2514,-21.9472,49.2986,-49.1264l0,-0.173611c0.0472222,-27.1792,-21.9472,-49.2514,-49.1264,-49.2986s-49.2514,21.9472,-49.2986,49.1264l0,0.173611zm0,-550c-0.0472222,27.1792,21.9472,49.2514,49.1264,49.2986s49.2514,-21.9472,49.2986,-49.1264l0,-0.172222c0.0472222,-27.1792,-21.9472,-49.2514,-49.1264,-49.2986s-49.2514,21.9472,-49.2986,49.1264l0,0.172222zm-950,550c-0.0472222,27.1792,21.9486,49.25,49.1278,49.2973s49.25,-21.9486,49.2972,-49.1278l0,-0.169445c0.0458333,-27.1792,-21.95,-49.25,-49.1306,-49.2959s-49.2486,21.9514,-49.2944,49.1306l0,0.165278zm0,-550c-0.0472222,27.1792,21.9486,49.25,49.1278,49.2973s49.25,-21.9486,49.2972,-49.1278l0,-0.169445c0.0458333,-27.1792,-21.95,-49.25,-49.1306,-49.2959s-49.2486,21.9514,-49.2944,49.1306l0,0.165278zm929.528,204.139c0,10.8722,8.81389,19.6847,19.6847,19.6847,10.8722,0,19.6847,-8.81389,19.6847,-19.6847s-8.81389,-19.6847,-19.6847,-19.6847,-19.6847,8.81389,-19.6847,19.6847zm0,137.796c0,10.8722,8.81389,19.6847,19.6847,19.6847,10.8722,0,19.6847,-8.81389,19.6847,-19.6847,0,-10.8722,-8.81389,-19.6847,-19.6847,-19.6847s-19.6847,8.81389,-19.6847,19.6847zm-770.194,-237.014c-0.0125,6.52362,5.26528,11.8208,11.7889,11.8333s11.8208,-5.26528,11.8333,-11.7889l0,-0.0444445c0.0125,-6.52362,-5.26528,-11.8208,-11.7889,-11.8333s-11.8208,5.26528,-11.8333,11.7889l0,0.0444445zm0,340.153c-0.0125,6.52362,5.26528,11.8208,11.7889,11.8333s11.8208,-5.26528,11.8333,-11.7889l0,-0.0444445c0.0125,-6.52362,-5.26528,-11.8208,-11.7889,-11.8333s-11.8208,5.26528,-11.8333,11.7889l0,0.0444445zm-164.569,-340.153c-0.0138889,6.52362,5.26389,11.8222,11.7861,11.8347s11.8222,-5.26389,11.8347,-11.7861l0,-0.0486111c0.0138889,-6.52362,-5.2625,-11.8222,-11.7847,-11.8361,-6.52361,-0.0138889,-11.8222,5.2625,-11.8361,11.7847l0,0.0513889zm0,340.153c-0.0138889,6.52362,5.26389,11.8222,11.7861,11.8347,6.52361,0.0138889,11.8222,-5.26389,11.8347,-11.7861l0,-0.0486111c0.0138889,-6.52362,-5.2625,-11.8222,-11.7847,-11.8361s-11.8222,5.2625,-11.8361,11.7847l0,0.0513889z"/>
@@ -2453,7 +2457,7 @@
   </g>
  </g>
  <g partID="50170">
-  <g transform="translate(3236.22,2047.48)">
+  <g transform="translate(1440.8,3985.72)">
    <g transform="matrix(0,-1,1,0,0,0)">
     <g id="breadboard" >
      <rect fill="#303030" height="270" id="middle" width="400" x="0"  y="0"/>
@@ -2484,7 +2488,7 @@
   </g>
  </g>
  <g partID="50160">
-  <g transform="translate(5977.94,3043.64)">
+  <g transform="translate(4182.52,4737.39)">
    <g id="breadboard" >
     <g >
      <polygon fill="#8C8C8C" points="205.86,329.79,205.86,214.87,235.86,214.87,235.86,329.79" />
@@ -2515,7 +2519,7 @@
   </g>
  </g>
  <g partID="50150">
-  <g transform="translate(7235.43,1294.48)">
+  <g transform="translate(5440.01,3099.34)">
    <g transform="matrix(0,-1,-1,0,0,0)">
     <g id="breadboard" >
      <rect fill="none" height="10" id="connector0pin" width="29.89" x="47.93"  y="353.07"/>
@@ -2543,12 +2547,12 @@
    </g>
   </g>
  </g>
- <path d="M6829.78,1231.61L6487.89,1231.61" fill="none" opacity="1" stroke="#8c8c8c" stroke-linecap="round" stroke-linejoin="round" stroke-width="29.88"/>
- <path d="M6543.45,1231.61L6487.89,1231.61" fill="none" opacity="0.2" stroke="#00ff00" stroke-linecap="round" stroke-linejoin="round" stroke-width="29.88"/>
- <path d="M6829.78,1131.58L6487.89,1131.58" fill="none" opacity="1" stroke="#8c8c8c" stroke-linecap="round" stroke-linejoin="round" stroke-width="29.88"/>
- <path d="M6543.45,1131.58L6487.89,1131.58" fill="none" opacity="0.2" stroke="#00ff00" stroke-linecap="round" stroke-linejoin="round" stroke-width="29.88"/>
+ <path d="M5034.36,3036.47L4692.47,3036.47" fill="none" opacity="1" stroke="#8c8c8c" stroke-linecap="round" stroke-linejoin="round" stroke-width="29.88"/>
+ <path d="M4748.02,3036.47L4692.47,3036.47" fill="none" opacity="0.2" stroke="#00ff00" stroke-linecap="round" stroke-linejoin="round" stroke-width="29.88"/>
+ <path d="M5034.36,2936.44L4692.47,2936.44" fill="none" opacity="1" stroke="#8c8c8c" stroke-linecap="round" stroke-linejoin="round" stroke-width="29.88"/>
+ <path d="M4748.02,2936.44L4692.47,2936.44" fill="none" opacity="0.2" stroke="#00ff00" stroke-linecap="round" stroke-linejoin="round" stroke-width="29.88"/>
  <g partID="50140">
-  <g transform="translate(5917.78,1081.13)">
+  <g transform="translate(4122.36,2885.99)">
    <g id="breadboard" >
     <rect fill="none" height="10" id="connector0pin" width="10" x="5"  y="35.9"/>
     <rect fill="none" height="10" id="connector1pin" width="10" x="414.17"  y="35.9"/>
@@ -2569,12 +2573,12 @@
    </g>
   </g>
  </g>
- <path d="M5946.88,1131.58L5932.33,1131.58" fill="none" opacity="1" stroke="#8c8c8c" stroke-linecap="round" stroke-linejoin="round" stroke-width="29.1"/>
- <path d="M5946.88,1131.58L5932.33,1131.58" fill="none" opacity="0.2" stroke="#00ff00" stroke-linecap="round" stroke-linejoin="round" stroke-width="29.1"/>
- <path d="M6317.85,1131.58L6332.4,1131.58" fill="none" opacity="1" stroke="#8c8c8c" stroke-linecap="round" stroke-linejoin="round" stroke-width="29.1"/>
- <path d="M6317.85,1131.58L6332.4,1131.58" fill="none" opacity="0.2" stroke="#00ff00" stroke-linecap="round" stroke-linejoin="round" stroke-width="29.1"/>
+ <path d="M4151.46,2936.44L4136.91,2936.44" fill="none" opacity="1" stroke="#8c8c8c" stroke-linecap="round" stroke-linejoin="round" stroke-width="29.1"/>
+ <path d="M4151.46,2936.44L4136.91,2936.44" fill="none" opacity="0.2" stroke="#00ff00" stroke-linecap="round" stroke-linejoin="round" stroke-width="29.1"/>
+ <path d="M4522.43,2936.44L4536.98,2936.44" fill="none" opacity="1" stroke="#8c8c8c" stroke-linecap="round" stroke-linejoin="round" stroke-width="29.1"/>
+ <path d="M4522.43,2936.44L4536.98,2936.44" fill="none" opacity="0.2" stroke="#00ff00" stroke-linecap="round" stroke-linejoin="round" stroke-width="29.1"/>
  <g partID="50130">
-  <g transform="translate(7235.43,1561.14)">
+  <g transform="translate(5440.01,3366)">
    <g transform="matrix(0,-1,-1,0,0,0)">
     <g id="breadboard" >
      <rect fill="none" height="10" id="connector0pin" width="29.89" x="47.93"  y="353.07"/>
@@ -2602,12 +2606,12 @@
    </g>
   </g>
  </g>
- <path d="M6829.78,1498.27L6487.89,1498.27" fill="none" opacity="1" stroke="#8c8c8c" stroke-linecap="round" stroke-linejoin="round" stroke-width="29.88"/>
- <path d="M6543.45,1498.27L6487.89,1498.27" fill="none" opacity="0.2" stroke="#00ff00" stroke-linecap="round" stroke-linejoin="round" stroke-width="29.88"/>
- <path d="M6829.78,1398.24L6487.89,1398.24" fill="none" opacity="1" stroke="#8c8c8c" stroke-linecap="round" stroke-linejoin="round" stroke-width="29.88"/>
- <path d="M6543.45,1398.24L6487.89,1398.24" fill="none" opacity="0.2" stroke="#00ff00" stroke-linecap="round" stroke-linejoin="round" stroke-width="29.88"/>
+ <path d="M5034.36,3303.13L4692.47,3303.13" fill="none" opacity="1" stroke="#8c8c8c" stroke-linecap="round" stroke-linejoin="round" stroke-width="29.88"/>
+ <path d="M4748.02,3303.13L4692.47,3303.13" fill="none" opacity="0.2" stroke="#00ff00" stroke-linecap="round" stroke-linejoin="round" stroke-width="29.88"/>
+ <path d="M5034.36,3203.1L4692.47,3203.1" fill="none" opacity="1" stroke="#8c8c8c" stroke-linecap="round" stroke-linejoin="round" stroke-width="29.88"/>
+ <path d="M4748.02,3203.1L4692.47,3203.1" fill="none" opacity="0.2" stroke="#00ff00" stroke-linecap="round" stroke-linejoin="round" stroke-width="29.88"/>
  <g partID="50120">
-  <g transform="translate(5917.78,1347.79)">
+  <g transform="translate(4122.36,3152.65)">
    <g id="breadboard" >
     <rect fill="none" height="10" id="connector0pin" width="10" x="5"  y="35.9"/>
     <rect fill="none" height="10" id="connector1pin" width="10" x="414.17"  y="35.9"/>
@@ -2628,12 +2632,12 @@
    </g>
   </g>
  </g>
- <path d="M5946.88,1398.24L5932.33,1398.24" fill="none" opacity="1" stroke="#8c8c8c" stroke-linecap="round" stroke-linejoin="round" stroke-width="29.1"/>
- <path d="M5946.88,1398.24L5932.33,1398.24" fill="none" opacity="0.2" stroke="#00ff00" stroke-linecap="round" stroke-linejoin="round" stroke-width="29.1"/>
- <path d="M6317.85,1398.24L6332.4,1398.24" fill="none" opacity="1" stroke="#8c8c8c" stroke-linecap="round" stroke-linejoin="round" stroke-width="29.1"/>
- <path d="M6317.85,1398.24L6332.4,1398.24" fill="none" opacity="0.2" stroke="#00ff00" stroke-linecap="round" stroke-linejoin="round" stroke-width="29.1"/>
+ <path d="M4151.46,3203.1L4136.91,3203.1" fill="none" opacity="1" stroke="#8c8c8c" stroke-linecap="round" stroke-linejoin="round" stroke-width="29.1"/>
+ <path d="M4151.46,3203.1L4136.91,3203.1" fill="none" opacity="0.2" stroke="#00ff00" stroke-linecap="round" stroke-linejoin="round" stroke-width="29.1"/>
+ <path d="M4522.43,3203.1L4536.98,3203.1" fill="none" opacity="1" stroke="#8c8c8c" stroke-linecap="round" stroke-linejoin="round" stroke-width="29.1"/>
+ <path d="M4522.43,3203.1L4536.98,3203.1" fill="none" opacity="0.2" stroke="#00ff00" stroke-linecap="round" stroke-linejoin="round" stroke-width="29.1"/>
  <g partID="50110">
-  <g transform="translate(7235.43,1827.81)">
+  <g transform="translate(5440.01,3632.67)">
    <g transform="matrix(0,-1,-1,0,0,0)">
     <g id="breadboard" >
      <rect fill="none" height="10" id="connector0pin" width="29.89" x="47.93"  y="353.07"/>
@@ -2661,12 +2665,12 @@
    </g>
   </g>
  </g>
- <path d="M6829.78,1764.94L6487.89,1764.94" fill="none" opacity="1" stroke="#8c8c8c" stroke-linecap="round" stroke-linejoin="round" stroke-width="29.88"/>
- <path d="M6543.45,1764.94L6487.89,1764.94" fill="none" opacity="0.2" stroke="#00ff00" stroke-linecap="round" stroke-linejoin="round" stroke-width="29.88"/>
- <path d="M6829.78,1664.91L6487.89,1664.91" fill="none" opacity="1" stroke="#8c8c8c" stroke-linecap="round" stroke-linejoin="round" stroke-width="29.88"/>
- <path d="M6543.45,1664.91L6487.89,1664.91" fill="none" opacity="0.2" stroke="#00ff00" stroke-linecap="round" stroke-linejoin="round" stroke-width="29.88"/>
+ <path d="M5034.36,3569.8L4692.47,3569.8" fill="none" opacity="1" stroke="#8c8c8c" stroke-linecap="round" stroke-linejoin="round" stroke-width="29.88"/>
+ <path d="M4748.02,3569.8L4692.47,3569.8" fill="none" opacity="0.2" stroke="#00ff00" stroke-linecap="round" stroke-linejoin="round" stroke-width="29.88"/>
+ <path d="M5034.36,3469.77L4692.47,3469.77" fill="none" opacity="1" stroke="#8c8c8c" stroke-linecap="round" stroke-linejoin="round" stroke-width="29.88"/>
+ <path d="M4748.02,3469.77L4692.47,3469.77" fill="none" opacity="0.2" stroke="#00ff00" stroke-linecap="round" stroke-linejoin="round" stroke-width="29.88"/>
  <g partID="50100">
-  <g transform="translate(5917.78,1614.46)">
+  <g transform="translate(4122.36,3419.32)">
    <g id="breadboard" >
     <rect fill="none" height="10" id="connector0pin" width="10" x="5"  y="35.9"/>
     <rect fill="none" height="10" id="connector1pin" width="10" x="414.17"  y="35.9"/>
@@ -2687,12 +2691,12 @@
    </g>
   </g>
  </g>
- <path d="M5946.88,1664.91L5932.33,1664.91" fill="none" opacity="1" stroke="#8c8c8c" stroke-linecap="round" stroke-linejoin="round" stroke-width="29.1"/>
- <path d="M5946.88,1664.91L5932.33,1664.91" fill="none" opacity="0.2" stroke="#00ff00" stroke-linecap="round" stroke-linejoin="round" stroke-width="29.1"/>
- <path d="M6317.85,1664.91L6332.4,1664.91" fill="none" opacity="1" stroke="#8c8c8c" stroke-linecap="round" stroke-linejoin="round" stroke-width="29.1"/>
- <path d="M6317.85,1664.91L6332.4,1664.91" fill="none" opacity="0.2" stroke="#00ff00" stroke-linecap="round" stroke-linejoin="round" stroke-width="29.1"/>
+ <path d="M4151.46,3469.77L4136.91,3469.77" fill="none" opacity="1" stroke="#8c8c8c" stroke-linecap="round" stroke-linejoin="round" stroke-width="29.1"/>
+ <path d="M4151.46,3469.77L4136.91,3469.77" fill="none" opacity="0.2" stroke="#00ff00" stroke-linecap="round" stroke-linejoin="round" stroke-width="29.1"/>
+ <path d="M4522.43,3469.77L4536.98,3469.77" fill="none" opacity="1" stroke="#8c8c8c" stroke-linecap="round" stroke-linejoin="round" stroke-width="29.1"/>
+ <path d="M4522.43,3469.77L4536.98,3469.77" fill="none" opacity="0.2" stroke="#00ff00" stroke-linecap="round" stroke-linejoin="round" stroke-width="29.1"/>
  <g partID="50090">
-  <g transform="translate(7235.43,2094.48)">
+  <g transform="translate(5440.01,3899.34)">
    <g transform="matrix(0,-1,-1,0,0,0)">
     <g id="breadboard" >
      <rect fill="none" height="10" id="connector0pin" width="29.89" x="47.93"  y="353.07"/>
@@ -2720,12 +2724,12 @@
    </g>
   </g>
  </g>
- <path d="M6829.78,2031.61L6487.89,2031.61" fill="none" opacity="1" stroke="#8c8c8c" stroke-linecap="round" stroke-linejoin="round" stroke-width="29.88"/>
- <path d="M6543.45,2031.61L6487.89,2031.61" fill="none" opacity="0.2" stroke="#00ff00" stroke-linecap="round" stroke-linejoin="round" stroke-width="29.88"/>
- <path d="M6829.78,1931.58L6487.89,1931.58" fill="none" opacity="1" stroke="#8c8c8c" stroke-linecap="round" stroke-linejoin="round" stroke-width="29.88"/>
- <path d="M6543.45,1931.58L6487.89,1931.58" fill="none" opacity="0.2" stroke="#00ff00" stroke-linecap="round" stroke-linejoin="round" stroke-width="29.88"/>
+ <path d="M5034.36,3836.47L4692.47,3836.47" fill="none" opacity="1" stroke="#8c8c8c" stroke-linecap="round" stroke-linejoin="round" stroke-width="29.88"/>
+ <path d="M4748.02,3836.47L4692.47,3836.47" fill="none" opacity="0.2" stroke="#00ff00" stroke-linecap="round" stroke-linejoin="round" stroke-width="29.88"/>
+ <path d="M5034.36,3736.44L4692.47,3736.44" fill="none" opacity="1" stroke="#8c8c8c" stroke-linecap="round" stroke-linejoin="round" stroke-width="29.88"/>
+ <path d="M4748.02,3736.44L4692.47,3736.44" fill="none" opacity="0.2" stroke="#00ff00" stroke-linecap="round" stroke-linejoin="round" stroke-width="29.88"/>
  <g partID="50080">
-  <g transform="translate(5917.78,1881.13)">
+  <g transform="translate(4122.36,3685.99)">
    <g id="breadboard" >
     <rect fill="none" height="10" id="connector0pin" width="10" x="5"  y="35.9"/>
     <rect fill="none" height="10" id="connector1pin" width="10" x="414.17"  y="35.9"/>
@@ -2746,12 +2750,12 @@
    </g>
   </g>
  </g>
- <path d="M5946.88,1931.58L5932.33,1931.58" fill="none" opacity="1" stroke="#8c8c8c" stroke-linecap="round" stroke-linejoin="round" stroke-width="29.1"/>
- <path d="M5946.88,1931.58L5932.33,1931.58" fill="none" opacity="0.2" stroke="#00ff00" stroke-linecap="round" stroke-linejoin="round" stroke-width="29.1"/>
- <path d="M6317.85,1931.58L6332.4,1931.58" fill="none" opacity="1" stroke="#8c8c8c" stroke-linecap="round" stroke-linejoin="round" stroke-width="29.1"/>
- <path d="M6317.85,1931.58L6332.4,1931.58" fill="none" opacity="0.2" stroke="#00ff00" stroke-linecap="round" stroke-linejoin="round" stroke-width="29.1"/>
+ <path d="M4151.46,3736.44L4136.91,3736.44" fill="none" opacity="1" stroke="#8c8c8c" stroke-linecap="round" stroke-linejoin="round" stroke-width="29.1"/>
+ <path d="M4151.46,3736.44L4136.91,3736.44" fill="none" opacity="0.2" stroke="#00ff00" stroke-linecap="round" stroke-linejoin="round" stroke-width="29.1"/>
+ <path d="M4522.43,3736.44L4536.98,3736.44" fill="none" opacity="1" stroke="#8c8c8c" stroke-linecap="round" stroke-linejoin="round" stroke-width="29.1"/>
+ <path d="M4522.43,3736.44L4536.98,3736.44" fill="none" opacity="0.2" stroke="#00ff00" stroke-linecap="round" stroke-linejoin="round" stroke-width="29.1"/>
  <g partID="50070">
-  <g transform="translate(7235.43,2361.14)">
+  <g transform="translate(5440.01,4166)">
    <g transform="matrix(0,-1,-1,0,0,0)">
     <g id="breadboard" >
      <rect fill="none" height="10" id="connector0pin" width="29.89" x="47.93"  y="353.07"/>
@@ -2779,12 +2783,12 @@
    </g>
   </g>
  </g>
- <path d="M6829.78,2298.27L6487.89,2298.27" fill="none" opacity="1" stroke="#8c8c8c" stroke-linecap="round" stroke-linejoin="round" stroke-width="29.88"/>
- <path d="M6543.45,2298.27L6487.89,2298.27" fill="none" opacity="0.2" stroke="#00ff00" stroke-linecap="round" stroke-linejoin="round" stroke-width="29.88"/>
- <path d="M6829.78,2198.24L6487.89,2198.24" fill="none" opacity="1" stroke="#8c8c8c" stroke-linecap="round" stroke-linejoin="round" stroke-width="29.88"/>
- <path d="M6543.45,2198.24L6487.89,2198.24" fill="none" opacity="0.2" stroke="#00ff00" stroke-linecap="round" stroke-linejoin="round" stroke-width="29.88"/>
+ <path d="M5034.36,4103.13L4692.47,4103.13" fill="none" opacity="1" stroke="#8c8c8c" stroke-linecap="round" stroke-linejoin="round" stroke-width="29.88"/>
+ <path d="M4748.02,4103.13L4692.47,4103.13" fill="none" opacity="0.2" stroke="#00ff00" stroke-linecap="round" stroke-linejoin="round" stroke-width="29.88"/>
+ <path d="M5034.36,4003.1L4692.47,4003.1" fill="none" opacity="1" stroke="#8c8c8c" stroke-linecap="round" stroke-linejoin="round" stroke-width="29.88"/>
+ <path d="M4748.02,4003.1L4692.47,4003.1" fill="none" opacity="0.2" stroke="#00ff00" stroke-linecap="round" stroke-linejoin="round" stroke-width="29.88"/>
  <g partID="50060">
-  <g transform="translate(5917.78,2147.79)">
+  <g transform="translate(4122.36,3952.65)">
    <g id="breadboard" >
     <rect fill="none" height="10" id="connector0pin" width="10" x="5"  y="35.9"/>
     <rect fill="none" height="10" id="connector1pin" width="10" x="414.17"  y="35.9"/>
@@ -2805,12 +2809,12 @@
    </g>
   </g>
  </g>
- <path d="M5946.88,2198.24L5932.33,2198.24" fill="none" opacity="1" stroke="#8c8c8c" stroke-linecap="round" stroke-linejoin="round" stroke-width="29.1"/>
- <path d="M5946.88,2198.24L5932.33,2198.24" fill="none" opacity="0.2" stroke="#00ff00" stroke-linecap="round" stroke-linejoin="round" stroke-width="29.1"/>
- <path d="M6317.85,2198.24L6332.4,2198.24" fill="none" opacity="1" stroke="#8c8c8c" stroke-linecap="round" stroke-linejoin="round" stroke-width="29.1"/>
- <path d="M6317.85,2198.24L6332.4,2198.24" fill="none" opacity="0.2" stroke="#00ff00" stroke-linecap="round" stroke-linejoin="round" stroke-width="29.1"/>
+ <path d="M4151.46,4003.1L4136.91,4003.1" fill="none" opacity="1" stroke="#8c8c8c" stroke-linecap="round" stroke-linejoin="round" stroke-width="29.1"/>
+ <path d="M4151.46,4003.1L4136.91,4003.1" fill="none" opacity="0.2" stroke="#00ff00" stroke-linecap="round" stroke-linejoin="round" stroke-width="29.1"/>
+ <path d="M4522.43,4003.1L4536.98,4003.1" fill="none" opacity="1" stroke="#8c8c8c" stroke-linecap="round" stroke-linejoin="round" stroke-width="29.1"/>
+ <path d="M4522.43,4003.1L4536.98,4003.1" fill="none" opacity="0.2" stroke="#00ff00" stroke-linecap="round" stroke-linejoin="round" stroke-width="29.1"/>
  <g partID="50050">
-  <g transform="translate(7235.43,2627.81)">
+  <g transform="translate(5440.01,4432.67)">
    <g transform="matrix(0,-1,-1,0,0,0)">
     <g id="breadboard" >
      <rect fill="none" height="10" id="connector0pin" width="29.89" x="47.93"  y="353.07"/>
@@ -2838,12 +2842,12 @@
    </g>
   </g>
  </g>
- <path d="M6829.78,2564.94L6487.89,2564.94" fill="none" opacity="1" stroke="#8c8c8c" stroke-linecap="round" stroke-linejoin="round" stroke-width="29.88"/>
- <path d="M6543.45,2564.94L6487.89,2564.94" fill="none" opacity="0.2" stroke="#00ff00" stroke-linecap="round" stroke-linejoin="round" stroke-width="29.88"/>
- <path d="M6829.78,2464.91L6487.89,2464.91" fill="none" opacity="1" stroke="#8c8c8c" stroke-linecap="round" stroke-linejoin="round" stroke-width="29.88"/>
- <path d="M6543.45,2464.91L6487.89,2464.91" fill="none" opacity="0.2" stroke="#00ff00" stroke-linecap="round" stroke-linejoin="round" stroke-width="29.88"/>
+ <path d="M5034.36,4369.8L4692.47,4369.8" fill="none" opacity="1" stroke="#8c8c8c" stroke-linecap="round" stroke-linejoin="round" stroke-width="29.88"/>
+ <path d="M4748.02,4369.8L4692.47,4369.8" fill="none" opacity="0.2" stroke="#00ff00" stroke-linecap="round" stroke-linejoin="round" stroke-width="29.88"/>
+ <path d="M5034.36,4269.77L4692.47,4269.77" fill="none" opacity="1" stroke="#8c8c8c" stroke-linecap="round" stroke-linejoin="round" stroke-width="29.88"/>
+ <path d="M4748.02,4269.77L4692.47,4269.77" fill="none" opacity="0.2" stroke="#00ff00" stroke-linecap="round" stroke-linejoin="round" stroke-width="29.88"/>
  <g partID="50040">
-  <g transform="translate(5917.78,2414.46)">
+  <g transform="translate(4122.36,4219.32)">
    <g id="breadboard" >
     <rect fill="none" height="10" id="connector0pin" width="10" x="5"  y="35.9"/>
     <rect fill="none" height="10" id="connector1pin" width="10" x="414.17"  y="35.9"/>
@@ -2864,12 +2868,12 @@
    </g>
   </g>
  </g>
- <path d="M5946.88,2464.91L5932.33,2464.91" fill="none" opacity="1" stroke="#8c8c8c" stroke-linecap="round" stroke-linejoin="round" stroke-width="29.1"/>
- <path d="M5946.88,2464.91L5932.33,2464.91" fill="none" opacity="0.2" stroke="#00ff00" stroke-linecap="round" stroke-linejoin="round" stroke-width="29.1"/>
- <path d="M6317.85,2464.91L6332.4,2464.91" fill="none" opacity="1" stroke="#8c8c8c" stroke-linecap="round" stroke-linejoin="round" stroke-width="29.1"/>
- <path d="M6317.85,2464.91L6332.4,2464.91" fill="none" opacity="0.2" stroke="#00ff00" stroke-linecap="round" stroke-linejoin="round" stroke-width="29.1"/>
+ <path d="M4151.46,4269.77L4136.91,4269.77" fill="none" opacity="1" stroke="#8c8c8c" stroke-linecap="round" stroke-linejoin="round" stroke-width="29.1"/>
+ <path d="M4151.46,4269.77L4136.91,4269.77" fill="none" opacity="0.2" stroke="#00ff00" stroke-linecap="round" stroke-linejoin="round" stroke-width="29.1"/>
+ <path d="M4522.43,4269.77L4536.98,4269.77" fill="none" opacity="1" stroke="#8c8c8c" stroke-linecap="round" stroke-linejoin="round" stroke-width="29.1"/>
+ <path d="M4522.43,4269.77L4536.98,4269.77" fill="none" opacity="0.2" stroke="#00ff00" stroke-linecap="round" stroke-linejoin="round" stroke-width="29.1"/>
  <g partID="50030">
-  <g transform="translate(7235.43,2894.48)">
+  <g transform="translate(5440.01,4699.34)">
    <g transform="matrix(0,-1,-1,0,0,0)">
     <g id="breadboard" >
      <rect fill="none" height="10" id="connector0pin" width="29.89" x="47.93"  y="353.07"/>
@@ -2897,12 +2901,12 @@
    </g>
   </g>
  </g>
- <path d="M6829.78,2831.61L6487.89,2831.61" fill="none" opacity="1" stroke="#8c8c8c" stroke-linecap="round" stroke-linejoin="round" stroke-width="29.88"/>
- <path d="M6543.45,2831.61L6487.89,2831.61" fill="none" opacity="0.2" stroke="#00ff00" stroke-linecap="round" stroke-linejoin="round" stroke-width="29.88"/>
- <path d="M6829.78,2731.58L6487.89,2731.58" fill="none" opacity="1" stroke="#8c8c8c" stroke-linecap="round" stroke-linejoin="round" stroke-width="29.88"/>
- <path d="M6543.45,2731.58L6487.89,2731.58" fill="none" opacity="0.2" stroke="#00ff00" stroke-linecap="round" stroke-linejoin="round" stroke-width="29.88"/>
+ <path d="M5034.36,4636.47L4692.47,4636.47" fill="none" opacity="1" stroke="#8c8c8c" stroke-linecap="round" stroke-linejoin="round" stroke-width="29.88"/>
+ <path d="M4748.02,4636.47L4692.47,4636.47" fill="none" opacity="0.2" stroke="#00ff00" stroke-linecap="round" stroke-linejoin="round" stroke-width="29.88"/>
+ <path d="M5034.36,4536.44L4692.47,4536.44" fill="none" opacity="1" stroke="#8c8c8c" stroke-linecap="round" stroke-linejoin="round" stroke-width="29.88"/>
+ <path d="M4748.02,4536.44L4692.47,4536.44" fill="none" opacity="0.2" stroke="#00ff00" stroke-linecap="round" stroke-linejoin="round" stroke-width="29.88"/>
  <g partID="50020">
-  <g transform="translate(5917.78,2681.13)">
+  <g transform="translate(4122.36,4485.99)">
    <g id="breadboard" >
     <rect fill="none" height="10" id="connector0pin" width="10" x="5"  y="35.9"/>
     <rect fill="none" height="10" id="connector1pin" width="10" x="414.17"  y="35.9"/>
@@ -2923,12 +2927,12 @@
    </g>
   </g>
  </g>
- <path d="M5946.88,2731.58L5932.33,2731.58" fill="none" opacity="1" stroke="#8c8c8c" stroke-linecap="round" stroke-linejoin="round" stroke-width="29.1"/>
- <path d="M5946.88,2731.58L5932.33,2731.58" fill="none" opacity="0.2" stroke="#00ff00" stroke-linecap="round" stroke-linejoin="round" stroke-width="29.1"/>
- <path d="M6317.85,2731.58L6332.4,2731.58" fill="none" opacity="1" stroke="#8c8c8c" stroke-linecap="round" stroke-linejoin="round" stroke-width="29.1"/>
- <path d="M6317.85,2731.58L6332.4,2731.58" fill="none" opacity="0.2" stroke="#00ff00" stroke-linecap="round" stroke-linejoin="round" stroke-width="29.1"/>
+ <path d="M4151.46,4536.44L4136.91,4536.44" fill="none" opacity="1" stroke="#8c8c8c" stroke-linecap="round" stroke-linejoin="round" stroke-width="29.1"/>
+ <path d="M4151.46,4536.44L4136.91,4536.44" fill="none" opacity="0.2" stroke="#00ff00" stroke-linecap="round" stroke-linejoin="round" stroke-width="29.1"/>
+ <path d="M4522.43,4536.44L4536.98,4536.44" fill="none" opacity="1" stroke="#8c8c8c" stroke-linecap="round" stroke-linejoin="round" stroke-width="29.1"/>
+ <path d="M4522.43,4536.44L4536.98,4536.44" fill="none" opacity="0.2" stroke="#00ff00" stroke-linecap="round" stroke-linejoin="round" stroke-width="29.1"/>
  <g partID="50010">
-  <g transform="translate(5123.59,2968.02)">
+  <g transform="translate(3328.16,4906.26)">
    <g transform="matrix(-1,0,0,-1,0,0)">
     <g transform="matrix(1, 0, 0, 1, 53.1496, 265.356)">
      <g id="breadboard">
@@ -4145,347 +4149,343 @@
   </g>
  </g>
  <g partID="50210">
-  <line stroke="#000000" stroke-linecap="round" stroke-width="44.4444" x1="6487.89" x2="5799" y1="2564.94" y2="2564.94"/>
-  <line stroke="#404040" stroke-linecap="round" stroke-width="22.2222" x1="6487.89" x2="5799" y1="2564.94" y2="2564.94"/>
+  <line stroke="#000000" stroke-linecap="round" stroke-width="44.4444" x1="4692.47" x2="4003.58" y1="4369.8" y2="4369.8"/>
+  <line stroke="#404040" stroke-linecap="round" stroke-width="22.2222" x1="4692.47" x2="4003.58" y1="4369.8" y2="4369.8"/>
  </g>
  <g partID="50220">
-  <line stroke="#000000" stroke-linecap="round" stroke-width="44.4444" x1="6487.89" x2="5799" y1="2298.27" y2="2298.27"/>
-  <line stroke="#404040" stroke-linecap="round" stroke-width="22.2222" x1="6487.89" x2="5799" y1="2298.27" y2="2298.27"/>
+  <line stroke="#000000" stroke-linecap="round" stroke-width="44.4444" x1="4692.47" x2="4003.58" y1="4103.13" y2="4103.13"/>
+  <line stroke="#404040" stroke-linecap="round" stroke-width="22.2222" x1="4692.47" x2="4003.58" y1="4103.13" y2="4103.13"/>
  </g>
  <g partID="50230">
-  <line stroke="#000000" stroke-linecap="round" stroke-width="44.4444" x1="6487.89" x2="5799" y1="2031.61" y2="2031.61"/>
-  <line stroke="#404040" stroke-linecap="round" stroke-width="22.2222" x1="6487.89" x2="5799" y1="2031.61" y2="2031.61"/>
+  <line stroke="#000000" stroke-linecap="round" stroke-width="44.4444" x1="4692.47" x2="4003.58" y1="3836.47" y2="3836.47"/>
+  <line stroke="#404040" stroke-linecap="round" stroke-width="22.2222" x1="4692.47" x2="4003.58" y1="3836.47" y2="3836.47"/>
  </g>
  <g partID="50240">
-  <line stroke="#000000" stroke-linecap="round" stroke-width="44.4444" x1="6487.89" x2="5799" y1="1764.94" y2="1764.94"/>
-  <line stroke="#404040" stroke-linecap="round" stroke-width="22.2222" x1="6487.89" x2="5799" y1="1764.94" y2="1764.94"/>
+  <line stroke="#000000" stroke-linecap="round" stroke-width="44.4444" x1="4692.47" x2="4003.58" y1="3569.8" y2="3569.8"/>
+  <line stroke="#404040" stroke-linecap="round" stroke-width="22.2222" x1="4692.47" x2="4003.58" y1="3569.8" y2="3569.8"/>
  </g>
  <g partID="50250">
-  <line stroke="#000000" stroke-linecap="round" stroke-width="44.4444" x1="6487.89" x2="5799" y1="1498.27" y2="1498.27"/>
-  <line stroke="#404040" stroke-linecap="round" stroke-width="22.2222" x1="6487.89" x2="5799" y1="1498.27" y2="1498.27"/>
+  <line stroke="#000000" stroke-linecap="round" stroke-width="44.4444" x1="4692.47" x2="4003.58" y1="3303.13" y2="3303.13"/>
+  <line stroke="#404040" stroke-linecap="round" stroke-width="22.2222" x1="4692.47" x2="4003.58" y1="3303.13" y2="3303.13"/>
  </g>
  <g partID="50260">
-  <line stroke="#000000" stroke-linecap="round" stroke-width="44.4444" x1="6487.89" x2="5799" y1="1231.61" y2="1231.61"/>
-  <line stroke="#404040" stroke-linecap="round" stroke-width="22.2222" x1="6487.89" x2="5799" y1="1231.61" y2="1231.61"/>
+  <line stroke="#000000" stroke-linecap="round" stroke-width="44.4444" x1="4692.47" x2="4003.58" y1="3036.47" y2="3036.47"/>
+  <line stroke="#404040" stroke-linecap="round" stroke-width="22.2222" x1="4692.47" x2="4003.58" y1="3036.47" y2="3036.47"/>
  </g>
  <g partID="50270">
-  <line stroke="#000000" stroke-linecap="round" stroke-width="44.4444" x1="5052.28" x2="5799" y1="1498.24" y2="1498.27"/>
-  <line stroke="#404040" stroke-linecap="round" stroke-width="22.2222" x1="5052.28" x2="5799" y1="1498.24" y2="1498.27"/>
+  <line stroke="#000000" stroke-linecap="round" stroke-width="44.4444" x1="3256.85" x2="4003.58" y1="3436.47" y2="3436.47"/>
+  <line stroke="#404040" stroke-linecap="round" stroke-width="22.2222" x1="3256.85" x2="4003.58" y1="3436.47" y2="3436.47"/>
  </g>
  <g partID="50280">
-  <line stroke="#000000" stroke-linecap="round" stroke-width="44.4444" x1="6487.89" x2="6310.11" y1="2831.61" y2="2831.61"/>
-  <line stroke="#404040" stroke-linecap="round" stroke-width="22.2222" x1="6487.89" x2="6310.11" y1="2831.61" y2="2831.61"/>
+  <line stroke="#000000" stroke-linecap="round" stroke-width="44.4444" x1="4692.47" x2="4514.69" y1="4636.47" y2="4636.47"/>
+  <line stroke="#404040" stroke-linecap="round" stroke-width="22.2222" x1="4692.47" x2="4514.69" y1="4636.47" y2="4636.47"/>
  </g>
  <g partID="50290">
-  <line stroke="#000000" stroke-linecap="round" stroke-width="44.4444" x1="6310.11" x2="5799" y1="2831.61" y2="2831.61"/>
-  <line stroke="#404040" stroke-linecap="round" stroke-width="22.2222" x1="6310.11" x2="5799" y1="2831.61" y2="2831.61"/>
+  <line stroke="#000000" stroke-linecap="round" stroke-width="44.4444" x1="4514.69" x2="4003.58" y1="4636.47" y2="4636.47"/>
+  <line stroke="#404040" stroke-linecap="round" stroke-width="22.2222" x1="4514.69" x2="4003.58" y1="4636.47" y2="4636.47"/>
  </g>
  <g partID="50300">
-  <line stroke="#000000" stroke-linecap="round" stroke-width="44.4444" x1="6199" x2="6310.11" y1="3352.41" y2="3352.41"/>
-  <line stroke="#404040" stroke-linecap="round" stroke-width="22.2222" x1="6199" x2="6310.11" y1="3352.41" y2="3352.41"/>
+  <line stroke="#000000" stroke-linecap="round" stroke-width="44.4444" x1="4403.58" x2="4514.69" y1="5046.16" y2="5046.16"/>
+  <line stroke="#404040" stroke-linecap="round" stroke-width="22.2222" x1="4403.58" x2="4514.69" y1="5046.16" y2="5046.16"/>
  </g>
  <g partID="50310">
-  <line stroke="#000000" stroke-linecap="round" stroke-width="44.4444" x1="6310.11" x2="6310.11" y1="3352.41" y2="2831.61"/>
-  <line stroke="#404040" stroke-linecap="round" stroke-width="22.2222" x1="6310.11" x2="6310.11" y1="3352.41" y2="2831.61"/>
+  <line stroke="#000000" stroke-linecap="round" stroke-width="44.4444" x1="4514.69" x2="4514.69" y1="5046.16" y2="4636.47"/>
+  <line stroke="#404040" stroke-linecap="round" stroke-width="22.2222" x1="4514.69" x2="4514.69" y1="5046.16" y2="4636.47"/>
  </g>
  <g partID="50320">
-  <line stroke="#000000" stroke-linecap="round" stroke-width="44.4444" x1="3521.22" x2="3799" y1="1897.48" y2="1897.48"/>
-  <line stroke="#404040" stroke-linecap="round" stroke-width="22.2222" x1="3521.22" x2="3799" y1="1897.48" y2="1897.48"/>
+  <line stroke="#000000" stroke-linecap="round" stroke-width="44.4444" x1="1725.8" x2="2003.58" y1="3835.72" y2="3835.72"/>
+  <line stroke="#404040" stroke-linecap="round" stroke-width="22.2222" x1="1725.8" x2="2003.58" y1="3835.72" y2="3835.72"/>
  </g>
  <g partID="50330">
-  <line stroke="#000000" stroke-linecap="round" stroke-width="44.4444" x1="3799" x2="3799" y1="1897.48" y2="2197.43"/>
-  <line stroke="#404040" stroke-linecap="round" stroke-width="22.2222" x1="3799" x2="3799" y1="1897.48" y2="2197.43"/>
+  <line stroke="#000000" stroke-linecap="round" stroke-width="44.4444" x1="2003.58" x2="2003.58" y1="3835.72" y2="4135.67"/>
+  <line stroke="#404040" stroke-linecap="round" stroke-width="22.2222" x1="2003.58" x2="2003.58" y1="3835.72" y2="4135.67"/>
  </g>
  <g partID="50340">
-  <line stroke="#000000" stroke-linecap="round" stroke-width="44.4444" x1="3799" x2="4085.31" y1="2197.43" y2="2197.43"/>
-  <line stroke="#404040" stroke-linecap="round" stroke-width="22.2222" x1="3799" x2="4085.31" y1="2197.43" y2="2197.43"/>
+  <line stroke="#000000" stroke-linecap="round" stroke-width="44.4444" x1="2003.58" x2="2289.88" y1="4135.67" y2="4135.67"/>
+  <line stroke="#404040" stroke-linecap="round" stroke-width="22.2222" x1="2003.58" x2="2289.88" y1="4135.67" y2="4135.67"/>
  </g>
  <g partID="50350">
-  <line stroke="#000000" stroke-linecap="round" stroke-width="44.4444" x1="1639.87" x2="2331.38" y1="274.619" y2="274.619"/>
-  <line stroke="#404040" stroke-linecap="round" stroke-width="22.2222" x1="1639.87" x2="2331.38" y1="274.619" y2="274.619"/>
+  <line stroke="#000000" stroke-linecap="round" stroke-width="44.4444" x1="887.389" x2="535.951" y1="2043.85" y2="2043.85"/>
+  <line stroke="#404040" stroke-linecap="round" stroke-width="22.2222" x1="887.389" x2="535.951" y1="2043.85" y2="2043.85"/>
  </g>
  <g partID="50360">
-  <line stroke="#000000" stroke-linecap="round" stroke-width="44.4444" x1="2331.38" x2="2331.38" y1="274.619" y2="440.119"/>
-  <line stroke="#404040" stroke-linecap="round" stroke-width="22.2222" x1="2331.38" x2="2331.38" y1="274.619" y2="440.119"/>
+  <line stroke="#000000" stroke-linecap="round" stroke-width="44.4444" x1="535.951" x2="535.951" y1="2043.85" y2="2378.35"/>
+  <line stroke="#404040" stroke-linecap="round" stroke-width="22.2222" x1="535.951" x2="535.951" y1="2043.85" y2="2378.35"/>
  </g>
  <g partID="50370">
-  <line stroke="#000000" stroke-linecap="round" stroke-width="44.4444" x1="2965.65" x2="3076.78" y1="765.167" y2="765.167"/>
-  <line stroke="#404040" stroke-linecap="round" stroke-width="22.2222" x1="2965.65" x2="3076.78" y1="765.167" y2="765.167"/>
+  <line stroke="#000000" stroke-linecap="round" stroke-width="44.4444" x1="1170.23" x2="1281.35" y1="2703.4" y2="2703.4"/>
+  <line stroke="#404040" stroke-linecap="round" stroke-width="22.2222" x1="1170.23" x2="1281.35" y1="2703.4" y2="2703.4"/>
  </g>
  <g partID="50380">
-  <line stroke="#000000" stroke-linecap="round" stroke-width="44.4444" x1="3076.78" x2="3076.78" y1="765.167" y2="414.07"/>
-  <line stroke="#404040" stroke-linecap="round" stroke-width="22.2222" x1="3076.78" x2="3076.78" y1="765.167" y2="414.07"/>
+  <line stroke="#000000" stroke-linecap="round" stroke-width="44.4444" x1="1281.35" x2="1281.35" y1="2703.4" y2="2352.3"/>
+  <line stroke="#404040" stroke-linecap="round" stroke-width="22.2222" x1="1281.35" x2="1281.35" y1="2703.4" y2="2352.3"/>
  </g>
  <g partID="50390">
-  <line stroke="#000000" stroke-linecap="round" stroke-width="44.4444" x1="3076.78" x2="5799" y1="414.07" y2="414.07"/>
-  <line stroke="#404040" stroke-linecap="round" stroke-width="22.2222" x1="3076.78" x2="5799" y1="414.07" y2="414.07"/>
+  <line stroke="#000000" stroke-linecap="round" stroke-width="44.4444" x1="1281.35" x2="4003.58" y1="2352.3" y2="2352.3"/>
+  <line stroke="#404040" stroke-linecap="round" stroke-width="22.2222" x1="1281.35" x2="4003.58" y1="2352.3" y2="2352.3"/>
  </g>
  <g partID="50400">
-  <line stroke="#000000" stroke-linecap="round" stroke-width="44.4444" x1="5799" x2="5799" y1="414.07" y2="1231.61"/>
-  <line stroke="#404040" stroke-linecap="round" stroke-width="22.2222" x1="5799" x2="5799" y1="414.07" y2="1231.61"/>
+  <line stroke="#000000" stroke-linecap="round" stroke-width="44.4444" x1="4003.58" x2="4003.58" y1="2352.3" y2="3036.47"/>
+  <line stroke="#404040" stroke-linecap="round" stroke-width="22.2222" x1="4003.58" x2="4003.58" y1="2352.3" y2="3036.47"/>
  </g>
  <g partID="50410">
-  <line stroke="#000000" stroke-linecap="round" stroke-width="44.4444" x1="5799" x2="5799" y1="1231.61" y2="1498.27"/>
-  <line stroke="#404040" stroke-linecap="round" stroke-width="22.2222" x1="5799" x2="5799" y1="1231.61" y2="1498.27"/>
+  <line stroke="#000000" stroke-linecap="round" stroke-width="44.4444" x1="4003.58" x2="4003.58" y1="3036.47" y2="3303.13"/>
+  <line stroke="#404040" stroke-linecap="round" stroke-width="22.2222" x1="4003.58" x2="4003.58" y1="3036.47" y2="3303.13"/>
  </g>
  <g partID="50420">
-  <line stroke="#000000" stroke-linecap="round" stroke-width="44.4444" x1="5799" x2="5799" y1="1498.27" y2="1764.94"/>
-  <line stroke="#404040" stroke-linecap="round" stroke-width="22.2222" x1="5799" x2="5799" y1="1498.27" y2="1764.94"/>
+  <line stroke="#000000" stroke-linecap="round" stroke-width="44.4444" x1="4003.58" x2="4003.58" y1="3303.13" y2="3436.47"/>
+  <line stroke="#404040" stroke-linecap="round" stroke-width="22.2222" x1="4003.58" x2="4003.58" y1="3303.13" y2="3436.47"/>
  </g>
  <g partID="50430">
-  <line stroke="#000000" stroke-linecap="round" stroke-width="44.4444" x1="5799" x2="5799" y1="1764.94" y2="2031.61"/>
-  <line stroke="#404040" stroke-linecap="round" stroke-width="22.2222" x1="5799" x2="5799" y1="1764.94" y2="2031.61"/>
+  <line stroke="#000000" stroke-linecap="round" stroke-width="44.4444" x1="4003.58" x2="4003.58" y1="3436.47" y2="3569.8"/>
+  <line stroke="#404040" stroke-linecap="round" stroke-width="22.2222" x1="4003.58" x2="4003.58" y1="3436.47" y2="3569.8"/>
  </g>
  <g partID="50440">
-  <line stroke="#000000" stroke-linecap="round" stroke-width="44.4444" x1="5799" x2="5799" y1="2031.61" y2="2298.27"/>
-  <line stroke="#404040" stroke-linecap="round" stroke-width="22.2222" x1="5799" x2="5799" y1="2031.61" y2="2298.27"/>
+  <line stroke="#000000" stroke-linecap="round" stroke-width="44.4444" x1="4003.58" x2="4003.58" y1="3569.8" y2="3836.47"/>
+  <line stroke="#404040" stroke-linecap="round" stroke-width="22.2222" x1="4003.58" x2="4003.58" y1="3569.8" y2="3836.47"/>
  </g>
  <g partID="50450">
-  <line stroke="#000000" stroke-linecap="round" stroke-width="44.4444" x1="5799" x2="5799" y1="2298.27" y2="2564.94"/>
-  <line stroke="#404040" stroke-linecap="round" stroke-width="22.2222" x1="5799" x2="5799" y1="2298.27" y2="2564.94"/>
+  <line stroke="#000000" stroke-linecap="round" stroke-width="44.4444" x1="4003.58" x2="4003.58" y1="3836.47" y2="4103.13"/>
+  <line stroke="#404040" stroke-linecap="round" stroke-width="22.2222" x1="4003.58" x2="4003.58" y1="3836.47" y2="4103.13"/>
  </g>
  <g partID="50460">
-  <line stroke="#000000" stroke-linecap="round" stroke-width="44.4444" x1="5799" x2="5799" y1="2564.94" y2="2831.61"/>
-  <line stroke="#404040" stroke-linecap="round" stroke-width="22.2222" x1="5799" x2="5799" y1="2564.94" y2="2831.61"/>
+  <line stroke="#000000" stroke-linecap="round" stroke-width="44.4444" x1="4003.58" x2="4003.58" y1="4103.13" y2="4369.8"/>
+  <line stroke="#404040" stroke-linecap="round" stroke-width="22.2222" x1="4003.58" x2="4003.58" y1="4103.13" y2="4369.8"/>
  </g>
  <g partID="50470">
-  <line stroke="#1b5bb3" stroke-linecap="round" stroke-width="44.4444" x1="5052.28" x2="5232.33" y1="2098.18" y2="2098.18"/>
-  <line stroke="#418dd9" stroke-linecap="round" stroke-width="22.2222" x1="5052.28" x2="5232.33" y1="2098.18" y2="2098.18"/>
+  <line stroke="#000000" stroke-linecap="round" stroke-width="44.4444" x1="4003.58" x2="4003.58" y1="4369.8" y2="4636.47"/>
+  <line stroke="#404040" stroke-linecap="round" stroke-width="22.2222" x1="4003.58" x2="4003.58" y1="4369.8" y2="4636.47"/>
  </g>
  <g partID="50480">
-  <line stroke="#1b5bb3" stroke-linecap="round" stroke-width="44.4444" x1="5232.33" x2="5232.33" y1="2098.18" y2="2731.58"/>
-  <line stroke="#418dd9" stroke-linecap="round" stroke-width="22.2222" x1="5232.33" x2="5232.33" y1="2098.18" y2="2731.58"/>
+  <line stroke="#1b5bb3" stroke-linecap="round" stroke-width="44.4444" x1="3256.85" x2="3436.91" y1="4036.41" y2="4036.41"/>
+  <line stroke="#418dd9" stroke-linecap="round" stroke-width="22.2222" x1="3256.85" x2="3436.91" y1="4036.41" y2="4036.41"/>
  </g>
  <g partID="50490">
-  <line stroke="#1b5bb3" stroke-linecap="round" stroke-width="44.4444" x1="5232.33" x2="5932.33" y1="2731.58" y2="2731.58"/>
-  <line stroke="#418dd9" stroke-linecap="round" stroke-width="22.2222" x1="5232.33" x2="5932.33" y1="2731.58" y2="2731.58"/>
+  <line stroke="#1b5bb3" stroke-linecap="round" stroke-width="44.4444" x1="3436.91" x2="3436.91" y1="4036.41" y2="4536.44"/>
+  <line stroke="#418dd9" stroke-linecap="round" stroke-width="22.2222" x1="3436.91" x2="3436.91" y1="4036.41" y2="4536.44"/>
  </g>
  <g partID="50500">
-  <line stroke="#1b5bb3" stroke-linecap="round" stroke-width="44.4444" x1="6332.4" x2="6487.89" y1="2731.58" y2="2731.58"/>
-  <line stroke="#418dd9" stroke-linecap="round" stroke-width="22.2222" x1="6332.4" x2="6487.89" y1="2731.58" y2="2731.58"/>
+  <line stroke="#1b5bb3" stroke-linecap="round" stroke-width="44.4444" x1="3436.91" x2="4136.91" y1="4536.44" y2="4536.44"/>
+  <line stroke="#418dd9" stroke-linecap="round" stroke-width="22.2222" x1="3436.91" x2="4136.91" y1="4536.44" y2="4536.44"/>
  </g>
  <g partID="50510">
-  <line stroke="#1b5bb3" stroke-linecap="round" stroke-width="44.4444" x1="5052.28" x2="5310.11" y1="1998.19" y2="1998.19"/>
-  <line stroke="#418dd9" stroke-linecap="round" stroke-width="22.2222" x1="5052.28" x2="5310.11" y1="1998.19" y2="1998.19"/>
+  <line stroke="#1b5bb3" stroke-linecap="round" stroke-width="44.4444" x1="4536.98" x2="4692.47" y1="4536.44" y2="4536.44"/>
+  <line stroke="#418dd9" stroke-linecap="round" stroke-width="22.2222" x1="4536.98" x2="4692.47" y1="4536.44" y2="4536.44"/>
  </g>
  <g partID="50520">
-  <line stroke="#1b5bb3" stroke-linecap="round" stroke-width="44.4444" x1="5310.11" x2="5310.11" y1="1998.19" y2="2464.91"/>
-  <line stroke="#418dd9" stroke-linecap="round" stroke-width="22.2222" x1="5310.11" x2="5310.11" y1="1998.19" y2="2464.91"/>
+  <line stroke="#1b5bb3" stroke-linecap="round" stroke-width="44.4444" x1="3256.85" x2="3514.69" y1="3936.42" y2="3936.42"/>
+  <line stroke="#418dd9" stroke-linecap="round" stroke-width="22.2222" x1="3256.85" x2="3514.69" y1="3936.42" y2="3936.42"/>
  </g>
  <g partID="50530">
-  <line stroke="#1b5bb3" stroke-linecap="round" stroke-width="44.4444" x1="5310.11" x2="5932.33" y1="2464.91" y2="2464.91"/>
-  <line stroke="#418dd9" stroke-linecap="round" stroke-width="22.2222" x1="5310.11" x2="5932.33" y1="2464.91" y2="2464.91"/>
+  <line stroke="#1b5bb3" stroke-linecap="round" stroke-width="44.4444" x1="3514.69" x2="3514.69" y1="3936.42" y2="4269.77"/>
+  <line stroke="#418dd9" stroke-linecap="round" stroke-width="22.2222" x1="3514.69" x2="3514.69" y1="3936.42" y2="4269.77"/>
  </g>
  <g partID="50540">
-  <line stroke="#1b5bb3" stroke-linecap="round" stroke-width="44.4444" x1="6332.4" x2="6487.89" y1="2464.91" y2="2464.91"/>
-  <line stroke="#418dd9" stroke-linecap="round" stroke-width="22.2222" x1="6332.4" x2="6487.89" y1="2464.91" y2="2464.91"/>
+  <line stroke="#1b5bb3" stroke-linecap="round" stroke-width="44.4444" x1="3514.69" x2="4136.91" y1="4269.77" y2="4269.77"/>
+  <line stroke="#418dd9" stroke-linecap="round" stroke-width="22.2222" x1="3514.69" x2="4136.91" y1="4269.77" y2="4269.77"/>
  </g>
  <g partID="50550">
-  <line stroke="#1b5bb3" stroke-linecap="round" stroke-width="44.4444" x1="5052.28" x2="5387.89" y1="1898.2" y2="1898.2"/>
-  <line stroke="#418dd9" stroke-linecap="round" stroke-width="22.2222" x1="5052.28" x2="5387.89" y1="1898.2" y2="1898.2"/>
+  <line stroke="#1b5bb3" stroke-linecap="round" stroke-width="44.4444" x1="4536.98" x2="4692.47" y1="4269.77" y2="4269.77"/>
+  <line stroke="#418dd9" stroke-linecap="round" stroke-width="22.2222" x1="4536.98" x2="4692.47" y1="4269.77" y2="4269.77"/>
  </g>
  <g partID="50560">
-  <line stroke="#1b5bb3" stroke-linecap="round" stroke-width="44.4444" x1="5387.89" x2="5387.89" y1="1898.2" y2="2198.24"/>
-  <line stroke="#418dd9" stroke-linecap="round" stroke-width="22.2222" x1="5387.89" x2="5387.89" y1="1898.2" y2="2198.24"/>
+  <line stroke="#1b5bb3" stroke-linecap="round" stroke-width="44.4444" x1="3256.85" x2="3592.47" y1="3836.43" y2="3836.43"/>
+  <line stroke="#418dd9" stroke-linecap="round" stroke-width="22.2222" x1="3256.85" x2="3592.47" y1="3836.43" y2="3836.43"/>
  </g>
  <g partID="50570">
-  <line stroke="#1b5bb3" stroke-linecap="round" stroke-width="44.4444" x1="5387.89" x2="5932.33" y1="2198.24" y2="2198.24"/>
-  <line stroke="#418dd9" stroke-linecap="round" stroke-width="22.2222" x1="5387.89" x2="5932.33" y1="2198.24" y2="2198.24"/>
+  <line stroke="#1b5bb3" stroke-linecap="round" stroke-width="44.4444" x1="3592.47" x2="3592.47" y1="3836.43" y2="4003.1"/>
+  <line stroke="#418dd9" stroke-linecap="round" stroke-width="22.2222" x1="3592.47" x2="3592.47" y1="3836.43" y2="4003.1"/>
  </g>
  <g partID="50580">
-  <line stroke="#1b5bb3" stroke-linecap="round" stroke-width="44.4444" x1="6332.4" x2="6487.89" y1="2198.24" y2="2198.24"/>
-  <line stroke="#418dd9" stroke-linecap="round" stroke-width="22.2222" x1="6332.4" x2="6487.89" y1="2198.24" y2="2198.24"/>
+  <line stroke="#1b5bb3" stroke-linecap="round" stroke-width="44.4444" x1="3592.47" x2="4136.91" y1="4003.1" y2="4003.1"/>
+  <line stroke="#418dd9" stroke-linecap="round" stroke-width="22.2222" x1="3592.47" x2="4136.91" y1="4003.1" y2="4003.1"/>
  </g>
  <g partID="50590">
-  <line stroke="#1b5bb3" stroke-linecap="round" stroke-width="44.4444" x1="5052.28" x2="5465.67" y1="1798.2" y2="1798.2"/>
-  <line stroke="#418dd9" stroke-linecap="round" stroke-width="22.2222" x1="5052.28" x2="5465.67" y1="1798.2" y2="1798.2"/>
+  <line stroke="#1b5bb3" stroke-linecap="round" stroke-width="44.4444" x1="4536.98" x2="4692.47" y1="4003.1" y2="4003.1"/>
+  <line stroke="#418dd9" stroke-linecap="round" stroke-width="22.2222" x1="4536.98" x2="4692.47" y1="4003.1" y2="4003.1"/>
  </g>
  <g partID="50600">
-  <line stroke="#1b5bb3" stroke-linecap="round" stroke-width="44.4444" x1="5465.67" x2="5465.67" y1="1798.2" y2="1931.58"/>
-  <line stroke="#418dd9" stroke-linecap="round" stroke-width="22.2222" x1="5465.67" x2="5465.67" y1="1798.2" y2="1931.58"/>
+  <line stroke="#1b5bb3" stroke-linecap="round" stroke-width="44.4444" x1="3256.85" x2="4136.91" y1="3736.44" y2="3736.44"/>
+  <line stroke="#418dd9" stroke-linecap="round" stroke-width="22.2222" x1="3256.85" x2="4136.91" y1="3736.44" y2="3736.44"/>
  </g>
  <g partID="50610">
-  <line stroke="#1b5bb3" stroke-linecap="round" stroke-width="44.4444" x1="5465.67" x2="5932.33" y1="1931.58" y2="1931.58"/>
-  <line stroke="#418dd9" stroke-linecap="round" stroke-width="22.2222" x1="5465.67" x2="5932.33" y1="1931.58" y2="1931.58"/>
+  <line stroke="#1b5bb3" stroke-linecap="round" stroke-width="44.4444" x1="4536.98" x2="4692.47" y1="3736.44" y2="3736.44"/>
+  <line stroke="#418dd9" stroke-linecap="round" stroke-width="22.2222" x1="4536.98" x2="4692.47" y1="3736.44" y2="3736.44"/>
  </g>
  <g partID="50620">
-  <line stroke="#1b5bb3" stroke-linecap="round" stroke-width="44.4444" x1="6332.4" x2="6487.89" y1="1931.58" y2="1931.58"/>
-  <line stroke="#418dd9" stroke-linecap="round" stroke-width="22.2222" x1="6332.4" x2="6487.89" y1="1931.58" y2="1931.58"/>
+  <line stroke="#1b5bb3" stroke-linecap="round" stroke-width="44.4444" x1="3256.85" x2="3592.47" y1="3636.45" y2="3636.45"/>
+  <line stroke="#418dd9" stroke-linecap="round" stroke-width="22.2222" x1="3256.85" x2="3592.47" y1="3636.45" y2="3636.45"/>
  </g>
  <g partID="50630">
-  <line stroke="#1b5bb3" stroke-linecap="round" stroke-width="44.4444" x1="5052.28" x2="5387.89" y1="1698.22" y2="1698.22"/>
-  <line stroke="#418dd9" stroke-linecap="round" stroke-width="22.2222" x1="5052.28" x2="5387.89" y1="1698.22" y2="1698.22"/>
+  <line stroke="#1b5bb3" stroke-linecap="round" stroke-width="44.4444" x1="3592.47" x2="3592.47" y1="3636.45" y2="3469.77"/>
+  <line stroke="#418dd9" stroke-linecap="round" stroke-width="22.2222" x1="3592.47" x2="3592.47" y1="3636.45" y2="3469.77"/>
  </g>
  <g partID="50640">
-  <line stroke="#1b5bb3" stroke-linecap="round" stroke-width="44.4444" x1="5387.89" x2="5387.89" y1="1698.22" y2="1664.91"/>
-  <line stroke="#418dd9" stroke-linecap="round" stroke-width="22.2222" x1="5387.89" x2="5387.89" y1="1698.22" y2="1664.91"/>
+  <line stroke="#1b5bb3" stroke-linecap="round" stroke-width="44.4444" x1="3592.47" x2="4136.91" y1="3469.77" y2="3469.77"/>
+  <line stroke="#418dd9" stroke-linecap="round" stroke-width="22.2222" x1="3592.47" x2="4136.91" y1="3469.77" y2="3469.77"/>
  </g>
  <g partID="50650">
-  <line stroke="#1b5bb3" stroke-linecap="round" stroke-width="44.4444" x1="5387.89" x2="5932.33" y1="1664.91" y2="1664.91"/>
-  <line stroke="#418dd9" stroke-linecap="round" stroke-width="22.2222" x1="5387.89" x2="5932.33" y1="1664.91" y2="1664.91"/>
+  <line stroke="#1b5bb3" stroke-linecap="round" stroke-width="44.4444" x1="4536.98" x2="4692.47" y1="3469.77" y2="3469.77"/>
+  <line stroke="#418dd9" stroke-linecap="round" stroke-width="22.2222" x1="4536.98" x2="4692.47" y1="3469.77" y2="3469.77"/>
  </g>
  <g partID="50660">
-  <line stroke="#1b5bb3" stroke-linecap="round" stroke-width="44.4444" x1="6332.4" x2="6487.89" y1="1664.91" y2="1664.91"/>
-  <line stroke="#418dd9" stroke-linecap="round" stroke-width="22.2222" x1="6332.4" x2="6487.89" y1="1664.91" y2="1664.91"/>
+  <line stroke="#1b5bb3" stroke-linecap="round" stroke-width="44.4444" x1="3256.85" x2="3514.69" y1="3536.46" y2="3536.46"/>
+  <line stroke="#418dd9" stroke-linecap="round" stroke-width="22.2222" x1="3256.85" x2="3514.69" y1="3536.46" y2="3536.46"/>
  </g>
  <g partID="50670">
-  <line stroke="#1b5bb3" stroke-linecap="round" stroke-width="44.4444" x1="5052.28" x2="5310.11" y1="1598.23" y2="1598.23"/>
-  <line stroke="#418dd9" stroke-linecap="round" stroke-width="22.2222" x1="5052.28" x2="5310.11" y1="1598.23" y2="1598.23"/>
+  <line stroke="#1b5bb3" stroke-linecap="round" stroke-width="44.4444" x1="3514.69" x2="3514.69" y1="3536.46" y2="3203.11"/>
+  <line stroke="#418dd9" stroke-linecap="round" stroke-width="22.2222" x1="3514.69" x2="3514.69" y1="3536.46" y2="3203.11"/>
  </g>
  <g partID="50680">
-  <line stroke="#1b5bb3" stroke-linecap="round" stroke-width="44.4444" x1="5310.11" x2="5310.11" y1="1598.23" y2="1398.25"/>
-  <line stroke="#418dd9" stroke-linecap="round" stroke-width="22.2222" x1="5310.11" x2="5310.11" y1="1598.23" y2="1398.25"/>
+  <line stroke="#1b5bb3" stroke-linecap="round" stroke-width="44.4444" x1="3514.69" x2="4136.91" y1="3203.1" y2="3203.1"/>
+  <line stroke="#418dd9" stroke-linecap="round" stroke-width="22.2222" x1="3514.69" x2="4136.91" y1="3203.1" y2="3203.1"/>
  </g>
  <g partID="50690">
-  <line stroke="#1b5bb3" stroke-linecap="round" stroke-width="44.4444" x1="5310.11" x2="5932.33" y1="1398.24" y2="1398.24"/>
-  <line stroke="#418dd9" stroke-linecap="round" stroke-width="22.2222" x1="5310.11" x2="5932.33" y1="1398.24" y2="1398.24"/>
+  <line stroke="#1b5bb3" stroke-linecap="round" stroke-width="44.4444" x1="4536.98" x2="4692.47" y1="3203.1" y2="3203.1"/>
+  <line stroke="#418dd9" stroke-linecap="round" stroke-width="22.2222" x1="4536.98" x2="4692.47" y1="3203.1" y2="3203.1"/>
  </g>
  <g partID="50700">
-  <line stroke="#1b5bb3" stroke-linecap="round" stroke-width="44.4444" x1="6332.4" x2="6487.89" y1="1398.24" y2="1398.24"/>
-  <line stroke="#418dd9" stroke-linecap="round" stroke-width="22.2222" x1="6332.4" x2="6487.89" y1="1398.24" y2="1398.24"/>
+  <line stroke="#1b5bb3" stroke-linecap="round" stroke-width="44.4444" x1="3256.85" x2="3436.91" y1="3336.48" y2="3336.48"/>
+  <line stroke="#418dd9" stroke-linecap="round" stroke-width="22.2222" x1="3256.85" x2="3436.91" y1="3336.48" y2="3336.48"/>
  </g>
  <g partID="50710">
-  <line stroke="#1b5bb3" stroke-linecap="round" stroke-width="44.4444" x1="5052.28" x2="5232.33" y1="1398.24" y2="1398.24"/>
-  <line stroke="#418dd9" stroke-linecap="round" stroke-width="22.2222" x1="5052.28" x2="5232.33" y1="1398.24" y2="1398.24"/>
+  <line stroke="#1b5bb3" stroke-linecap="round" stroke-width="44.4444" x1="3436.91" x2="3436.91" y1="3336.48" y2="2936.44"/>
+  <line stroke="#418dd9" stroke-linecap="round" stroke-width="22.2222" x1="3436.91" x2="3436.91" y1="3336.48" y2="2936.44"/>
  </g>
  <g partID="50720">
-  <line stroke="#1b5bb3" stroke-linecap="round" stroke-width="44.4444" x1="5232.33" x2="5232.33" y1="1398.24" y2="1131.58"/>
-  <line stroke="#418dd9" stroke-linecap="round" stroke-width="22.2222" x1="5232.33" x2="5232.33" y1="1398.24" y2="1131.58"/>
+  <line stroke="#1b5bb3" stroke-linecap="round" stroke-width="44.4444" x1="3436.91" x2="4136.91" y1="2936.44" y2="2936.44"/>
+  <line stroke="#418dd9" stroke-linecap="round" stroke-width="22.2222" x1="3436.91" x2="4136.91" y1="2936.44" y2="2936.44"/>
  </g>
  <g partID="50730">
-  <line stroke="#1b5bb3" stroke-linecap="round" stroke-width="44.4444" x1="5232.33" x2="5932.33" y1="1131.58" y2="1131.58"/>
-  <line stroke="#418dd9" stroke-linecap="round" stroke-width="22.2222" x1="5232.33" x2="5932.33" y1="1131.58" y2="1131.58"/>
+  <line stroke="#1b5bb3" stroke-linecap="round" stroke-width="44.4444" x1="4536.98" x2="4692.47" y1="2936.44" y2="2936.44"/>
+  <line stroke="#418dd9" stroke-linecap="round" stroke-width="22.2222" x1="4536.98" x2="4692.47" y1="2936.44" y2="2936.44"/>
  </g>
  <g partID="50740">
-  <line stroke="#1b5bb3" stroke-linecap="round" stroke-width="44.4444" x1="6332.4" x2="6487.89" y1="1131.58" y2="1131.58"/>
-  <line stroke="#418dd9" stroke-linecap="round" stroke-width="22.2222" x1="6332.4" x2="6487.89" y1="1131.58" y2="1131.58"/>
+  <line stroke="#7a3a73" stroke-linecap="round" stroke-width="44.4444" x1="3256.85" x2="3359.13" y1="4136.4" y2="4136.4"/>
+  <line stroke="#ab58a2" stroke-linecap="round" stroke-width="22.2222" x1="3256.85" x2="3359.13" y1="4136.4" y2="4136.4"/>
  </g>
  <g partID="50750">
-  <line stroke="#7a3a73" stroke-linecap="round" stroke-width="44.4444" x1="5052.28" x2="5154.56" y1="2198.17" y2="2198.17"/>
-  <line stroke="#ab58a2" stroke-linecap="round" stroke-width="22.2222" x1="5052.28" x2="5154.56" y1="2198.17" y2="2198.17"/>
+  <line stroke="#7a3a73" stroke-linecap="round" stroke-width="44.4444" x1="3359.13" x2="3359.13" y1="4136.4" y2="4758.66"/>
+  <line stroke="#ab58a2" stroke-linecap="round" stroke-width="22.2222" x1="3359.13" x2="3359.13" y1="4136.4" y2="4758.66"/>
  </g>
  <g partID="50760">
-  <line stroke="#7a3a73" stroke-linecap="round" stroke-width="44.4444" x1="5154.56" x2="5154.56" y1="2198.17" y2="3064.91"/>
-  <line stroke="#ab58a2" stroke-linecap="round" stroke-width="22.2222" x1="5154.56" x2="5154.56" y1="2198.17" y2="3064.91"/>
+  <line stroke="#7a3a73" stroke-linecap="round" stroke-width="44.4444" x1="3359.13" x2="4203.58" y1="4758.66" y2="4758.66"/>
+  <line stroke="#ab58a2" stroke-linecap="round" stroke-width="22.2222" x1="3359.13" x2="4203.58" y1="4758.66" y2="4758.66"/>
  </g>
  <g partID="50770">
-  <line stroke="#7a3a73" stroke-linecap="round" stroke-width="44.4444" x1="5154.56" x2="5999" y1="3064.91" y2="3064.91"/>
-  <line stroke="#ab58a2" stroke-linecap="round" stroke-width="22.2222" x1="5154.56" x2="5999" y1="3064.91" y2="3064.91"/>
+  <line stroke="#00a527" stroke-linecap="round" stroke-width="44.4444" x1="1725.8" x2="2289.88" y1="3635.72" y2="3635.72"/>
+  <line stroke="#25cc35" stroke-linecap="round" stroke-width="22.2222" x1="1725.8" x2="2289.88" y1="3635.72" y2="3635.72"/>
  </g>
  <g partID="50780">
-  <line stroke="#00a527" stroke-linecap="round" stroke-width="44.4444" x1="3521.22" x2="4085.31" y1="1697.48" y2="1697.48"/>
-  <line stroke="#25cc35" stroke-linecap="round" stroke-width="22.2222" x1="3521.22" x2="4085.31" y1="1697.48" y2="1697.48"/>
+  <line stroke="#d6d63a" stroke-linecap="round" stroke-width="44.4444" x1="2289.88" x2="1725.8" y1="3735.7" y2="3735.72"/>
+  <line stroke="#fff800" stroke-linecap="round" stroke-width="22.2222" x1="2289.88" x2="1725.8" y1="3735.7" y2="3735.72"/>
  </g>
  <g partID="50790">
-  <line stroke="#d6d63a" stroke-linecap="round" stroke-width="44.4444" x1="4085.31" x2="3521.22" y1="1797.47" y2="1797.48"/>
-  <line stroke="#fff800" stroke-linecap="round" stroke-width="22.2222" x1="4085.31" x2="3521.22" y1="1797.47" y2="1797.48"/>
+  <line stroke="#8c0000" stroke-linecap="round" stroke-width="44.4444" x1="1725.8" x2="1870.24" y1="3935.72" y2="3935.72"/>
+  <line stroke="#cc1414" stroke-linecap="round" stroke-width="22.2222" x1="1725.8" x2="1870.24" y1="3935.72" y2="3935.72"/>
  </g>
  <g partID="50800">
-  <line stroke="#8c0000" stroke-linecap="round" stroke-width="44.4444" x1="3521.22" x2="3665.67" y1="1997.48" y2="1997.48"/>
-  <line stroke="#cc1414" stroke-linecap="round" stroke-width="22.2222" x1="3521.22" x2="3665.67" y1="1997.48" y2="1997.48"/>
+  <line stroke="#8c0000" stroke-linecap="round" stroke-width="44.4444" x1="1870.24" x2="1870.24" y1="3935.72" y2="4972.92"/>
+  <line stroke="#cc1414" stroke-linecap="round" stroke-width="22.2222" x1="1870.24" x2="1870.24" y1="3935.72" y2="4972.92"/>
  </g>
  <g partID="50810">
-  <line stroke="#8c0000" stroke-linecap="round" stroke-width="44.4444" x1="3665.67" x2="3665.67" y1="1997.48" y2="3034.69"/>
-  <line stroke="#cc1414" stroke-linecap="round" stroke-width="22.2222" x1="3665.67" x2="3665.67" y1="1997.48" y2="3034.69"/>
+  <line stroke="#8c0000" stroke-linecap="round" stroke-width="44.4444" x1="1870.24" x2="3256.85" y1="4972.92" y2="4972.92"/>
+  <line stroke="#cc1414" stroke-linecap="round" stroke-width="22.2222" x1="1870.24" x2="3256.85" y1="4972.92" y2="4972.92"/>
  </g>
  <g partID="50820">
-  <line stroke="#8c0000" stroke-linecap="round" stroke-width="44.4444" x1="3665.67" x2="5052.28" y1="3034.69" y2="3034.69"/>
-  <line stroke="#cc1414" stroke-linecap="round" stroke-width="22.2222" x1="3665.67" x2="5052.28" y1="3034.69" y2="3034.69"/>
+  <line stroke="#8c0000" stroke-linecap="round" stroke-width="44.4444" x1="3256.85" x2="3256.85" y1="4972.92" y2="4736.34"/>
+  <line stroke="#cc1414" stroke-linecap="round" stroke-width="22.2222" x1="3256.85" x2="3256.85" y1="4972.92" y2="4736.34"/>
  </g>
  <g partID="50830">
-  <line stroke="#8c0000" stroke-linecap="round" stroke-width="44.4444" x1="5052.28" x2="5052.28" y1="3034.69" y2="2798.11"/>
-  <line stroke="#cc1414" stroke-linecap="round" stroke-width="22.2222" x1="5052.28" x2="5052.28" y1="3034.69" y2="2798.11"/>
+  <line stroke="#8c0000" stroke-linecap="round" stroke-width="44.4444" x1="887.389" x2="654.056" y1="2133.91" y2="2133.91"/>
+  <line stroke="#cc1414" stroke-linecap="round" stroke-width="22.2222" x1="887.389" x2="654.056" y1="2133.91" y2="2133.91"/>
  </g>
  <g partID="50840">
-  <line stroke="#8c0000" stroke-linecap="round" stroke-width="44.4444" x1="1639.87" x2="2449.48" y1="184.563" y2="184.563"/>
-  <line stroke="#cc1414" stroke-linecap="round" stroke-width="22.2222" x1="1639.87" x2="2449.48" y1="184.563" y2="184.563"/>
+  <line stroke="#8c0000" stroke-linecap="round" stroke-width="44.4444" x1="654.056" x2="654.056" y1="2133.91" y2="2378.35"/>
+  <line stroke="#cc1414" stroke-linecap="round" stroke-width="22.2222" x1="654.056" x2="654.056" y1="2133.91" y2="2378.35"/>
  </g>
  <g partID="50850">
-  <line stroke="#8c0000" stroke-linecap="round" stroke-width="44.4444" x1="2449.48" x2="2449.48" y1="184.563" y2="440.119"/>
-  <line stroke="#cc1414" stroke-linecap="round" stroke-width="22.2222" x1="2449.48" x2="2449.48" y1="184.563" y2="440.119"/>
+  <line stroke="#8c0000" stroke-linecap="round" stroke-width="44.4444" x1="1170.24" x2="1559.13" y1="2841.19" y2="2841.19"/>
+  <line stroke="#cc1414" stroke-linecap="round" stroke-width="22.2222" x1="1170.24" x2="1559.13" y1="2841.19" y2="2841.19"/>
  </g>
  <g partID="50860">
-  <line stroke="#8c0000" stroke-linecap="round" stroke-width="44.4444" x1="2965.67" x2="3354.56" y1="902.959" y2="902.959"/>
-  <line stroke="#cc1414" stroke-linecap="round" stroke-width="22.2222" x1="2965.67" x2="3354.56" y1="902.959" y2="902.959"/>
+  <line stroke="#8c0000" stroke-linecap="round" stroke-width="44.4444" x1="1559.13" x2="1559.13" y1="2841.19" y2="2996.75"/>
+  <line stroke="#cc1414" stroke-linecap="round" stroke-width="22.2222" x1="1559.13" x2="1559.13" y1="2841.19" y2="2996.75"/>
  </g>
  <g partID="50870">
-  <line stroke="#8c0000" stroke-linecap="round" stroke-width="44.4444" x1="3354.56" x2="3354.56" y1="902.959" y2="1058.51"/>
-  <line stroke="#cc1414" stroke-linecap="round" stroke-width="22.2222" x1="3354.56" x2="3354.56" y1="902.959" y2="1058.51"/>
+  <line stroke="#8c0000" stroke-linecap="round" stroke-width="44.4444" x1="1659.13" x2="1659.13" y1="2996.75" y2="2518.97"/>
+  <line stroke="#cc1414" stroke-linecap="round" stroke-width="22.2222" x1="1659.13" x2="1659.13" y1="2996.75" y2="2518.97"/>
  </g>
  <g partID="50880">
-  <line stroke="#8c0000" stroke-linecap="round" stroke-width="44.4444" x1="3454.55" x2="3454.55" y1="1058.51" y2="580.737"/>
-  <line stroke="#cc1414" stroke-linecap="round" stroke-width="22.2222" x1="3454.55" x2="3454.55" y1="1058.51" y2="580.737"/>
+  <line stroke="#8c0000" stroke-linecap="round" stroke-width="44.4444" x1="1659.13" x2="3392.47" y1="2518.97" y2="2518.97"/>
+  <line stroke="#cc1414" stroke-linecap="round" stroke-width="22.2222" x1="1659.13" x2="3392.47" y1="2518.97" y2="2518.97"/>
  </g>
  <g partID="50890">
-  <line stroke="#8c0000" stroke-linecap="round" stroke-width="44.4444" x1="3454.55" x2="5187.89" y1="580.737" y2="580.737"/>
-  <line stroke="#cc1414" stroke-linecap="round" stroke-width="22.2222" x1="3454.55" x2="5187.89" y1="580.737" y2="580.737"/>
+  <line stroke="#8c0000" stroke-linecap="round" stroke-width="44.4444" x1="3392.47" x2="3392.47" y1="2518.97" y2="2936.52"/>
+  <line stroke="#cc1414" stroke-linecap="round" stroke-width="22.2222" x1="3392.47" x2="3392.47" y1="2518.97" y2="2936.52"/>
  </g>
  <g partID="50900">
-  <line stroke="#8c0000" stroke-linecap="round" stroke-width="44.4444" x1="5187.89" x2="5187.89" y1="580.737" y2="998.284"/>
-  <line stroke="#cc1414" stroke-linecap="round" stroke-width="22.2222" x1="5187.89" x2="5187.89" y1="580.737" y2="998.284"/>
- </g>
- <g partID="50910">
-  <line stroke="#8c0000" stroke-linecap="round" stroke-width="44.4444" x1="5187.89" x2="5052.28" y1="998.284" y2="998.284"/>
-  <line stroke="#cc1414" stroke-linecap="round" stroke-width="22.2222" x1="5187.89" x2="5052.28" y1="998.284" y2="998.284"/>
+  <line stroke="#8c0000" stroke-linecap="round" stroke-width="44.4444" x1="3392.47" x2="3256.85" y1="2936.52" y2="2936.52"/>
+  <line stroke="#cc1414" stroke-linecap="round" stroke-width="22.2222" x1="3392.47" x2="3256.85" y1="2936.52" y2="2936.52"/>
  </g>
  <g id="partLabel" partID="50130">
-  <g transform="translate(7268.77,1398.25)">
+  <g transform="translate(5473.34,3203.1)">
    <g fill="#000000" fill-opacity="1" font-family="'DroidSans'" font-size="69.444" font-style="normal" font-weight="normal" id="breadboardLabel" stroke="none">
     <text x="0" y="69.444">LED6</text>
    </g>
   </g>
  </g>
  <g id="partLabel" partID="50150">
-  <g transform="translate(7268.77,1131.58)">
+  <g transform="translate(5473.34,2936.44)">
    <g fill="#000000" fill-opacity="1" font-family="'DroidSans'" font-size="69.444" font-style="normal" font-weight="normal" id="breadboardLabel" stroke="none">
     <text x="0" y="69.444">LED7</text>
    </g>
   </g>
  </g>
  <g id="partLabel" partID="50110">
-  <g transform="translate(7268.77,1664.91)">
+  <g transform="translate(5473.34,3469.77)">
    <g fill="#000000" fill-opacity="1" font-family="'DroidSans'" font-size="69.444" font-style="normal" font-weight="normal" id="breadboardLabel" stroke="none">
     <text x="0" y="69.444">LED5</text>
    </g>
   </g>
  </g>
  <g id="partLabel" partID="50160">
-  <g transform="translate(5955.72,3395.88)">
+  <g transform="translate(4160.3,5089.64)">
    <g fill="#000000" fill-opacity="1" font-family="'DroidSans'" font-size="69.444" font-style="normal" font-weight="normal" id="breadboardLabel" stroke="none">
     <text x="0" y="69.444">SW1</text>
    </g>
   </g>
  </g>
  <g id="partLabel" partID="50090">
-  <g transform="translate(7268.77,1931.58)">
+  <g transform="translate(5473.34,3736.44)">
    <g fill="#000000" fill-opacity="1" font-family="'DroidSans'" font-size="69.444" font-style="normal" font-weight="normal" id="breadboardLabel" stroke="none">
     <text x="0" y="69.444">LED4</text>
    </g>
   </g>
  </g>
  <g id="partLabel" partID="50070">
-  <g transform="translate(7268.77,2198.25)">
+  <g transform="translate(5473.34,4003.1)">
    <g fill="#000000" fill-opacity="1" font-family="'DroidSans'" font-size="69.444" font-style="normal" font-weight="normal" id="breadboardLabel" stroke="none">
     <text x="0" y="69.444">LED3</text>
    </g>
   </g>
  </g>
  <g id="partLabel" partID="50050">
-  <g transform="translate(7268.77,2464.91)">
+  <g transform="translate(5473.34,4269.77)">
    <g fill="#000000" fill-opacity="1" font-family="'DroidSans'" font-size="69.444" font-style="normal" font-weight="normal" id="breadboardLabel" stroke="none">
     <text x="0" y="69.444">LED2</text>
    </g>
   </g>
  </g>
  <g id="partLabel" partID="50030">
-  <g transform="translate(7268.77,2731.58)">
+  <g transform="translate(5473.34,4536.44)">
    <g fill="#000000" fill-opacity="1" font-family="'DroidSans'" font-size="69.444" font-style="normal" font-weight="normal" id="breadboardLabel" stroke="none">
     <text x="0" y="69.444">LED1</text>
    </g>
   </g>
  </g>
  <g id="partLabel" partID="50200">
-  <g transform="translate(3135.28,1440.03)">
+  <g transform="translate(1339.85,3378.26)">
    <g fill="#000000" fill-opacity="1" font-family="'DroidSans'" font-size="69.444" font-style="normal" font-weight="normal" id="breadboardLabel" stroke="none">
     <text x="0" y="69.444">Power</text>
    </g>
