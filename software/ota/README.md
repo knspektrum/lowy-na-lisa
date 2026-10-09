@@ -1,0 +1,51 @@
+# Aktualizacje przez Bluetooth
+
+Odbiorniki ESP32 i nadajniki można aktualizować i sprawdzać bez kabla, ze strony `software/web-flasher` otwartej w Chrome/Chromium (komputer albo Android). Strona pokazuje całą flotę: które urządzenia są włączone, na jakim kanale (id) i z jakim programem.
+
+## Jak to działa
+- Każde urządzenie przez cały czas pracy nadaje przez Bluetooth LE (raz na sekundę) swoją nazwę `lisek-R-xxxx` (odbiornik) albo `lisek-T-xxxx` (nadajnik), id, stan i wersję programu
+- Wersja to skrót commita (`5a431fb`), z `+` gdy program zbudowano z niezacommitowanych zmian
+- Bluetooth dokłada ok. 1-3 mA do kilkudziesięciu mA, które i tak pobiera ESP32; wyłączone urządzenie nic nie pobiera
+- Urządzenie przyjmuje tylko program podpisany kluczem projektu (ECDSA P-256) i zbudowany dla jego typu; inne pliki odrzuca przed zapisem
+- Nowy program po restarcie czeka na potwierdzenie: strona łączy się ponownie i potwierdza, a program musi wcześniej sprawdzić, że moduł radiowy odpowiada
+- Brak potwierdzenia w ciągu 5 minut, awaria albo restart przed potwierdzeniem: bootloader wraca do poprzedniej wersji
+
+## Pierwsze wgranie (USB, raz na urządzenie)
+
+Aktualizacje wymagają tablicy partycji z dwoma miejscami na program po 1.9 MB, którą da się wgrać tylko kablem:
+
+```bash
+software/ota/build.sh
+software/ota/usb-flash.sh receiver /dev/ttyUSB0 /dev/ttyUSB1
+software/ota/usb-flash.sh transmitter /dev/ttyUSB2
+```
+
+`usb-flash.sh` wgrywa na wszystkie podane porty naraz.
+
+## Aktualizacja
+
+1. Zbuduj i podpisz programy: `software/ota/build.sh` (wynik w `software/web-flasher/firmware/`)
+2. Otwórz stronę z `localhost` (Web Bluetooth działa tylko przez https albo z `localhost`):
+   ```bash
+   python3 -m http.server 8765 --bind 127.0.0.1 --directory software/web-flasher
+   ```
+   i wejdź na http://localhost:8765. Programy wczytują się same; stronę można też otworzyć skądkolwiek i wczytać pliki `.lsk` ręcznie
+3. **Skanuj okolicę** pokazuje wszystkie włączone urządzenia (na Linuksie wymaga `chrome://flags/#enable-experimental-web-platform-features`); **Dodaj urządzenie** dodaje jedno przez okno wyboru
+4. Przy każdym nowym urządzeniu raz kliknij **Zezwól**, potem **Aktualizuj** albo **Aktualizuj wszystkie włączone**
+5. Nie zamykaj strony, dopóki stan nie pokaże „zaktualizowano”: bez potwierdzenia urządzenie wróci do poprzedniej wersji
+
+Strona pamięta wszystkie widziane urządzenia, więc wyłączone zostają na liście jako „wyłączone” z czasem ostatniego sygnału.
+
+## Klucz
+
+- `software/ota/sign.py keygen` tworzy klucz raz: prywatny w `~/.config/lowy-na-lisa/signing-key.pem` (poza repozytorium, zrób kopię), publiczny w `software/libraries/LisekOta/src/lisek_pubkey.h`
+- Bez klucza prywatnego nie da się wgrać nowego programu przez Bluetooth, tylko przez USB
+- Nowy klucz wymaga ponownego wgrania wszystkich urządzeń przez USB
+
+## Pliki
+
+- `build.sh` - buduje oba programy, podpisuje je i zapisuje `firmware/manifest.json`
+- `usb-flash.sh` - pierwsze wgranie przez USB, na wiele urządzeń naraz
+- `sign.py` - klucz i podpisywanie (format nagłówka jak `struct Header` w `LisekOta.cpp`)
+- `software/libraries/LisekOta/` - biblioteka Arduino używana przez oba programy
+- `software/web-flasher/index.html` - strona floty i aktualizacji

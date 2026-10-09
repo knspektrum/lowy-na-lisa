@@ -22,6 +22,7 @@
 // original D13,D12,D14,D27,D26,D25,D33 wiring), each with a series resistor
 // to GND (active-HIGH).
 #include <Arduino.h>
+#include <LisekOta.h>  // updates and version readout over Bluetooth, software/libraries
 
 #define MODULE_RX 16  // ESP32 RX2 <- LoRa-E5 TX
 #define MODULE_TX 17  // ESP32 TX2 -> LoRa-E5 RX
@@ -37,6 +38,10 @@
 
 const int LED_PINS[] = { 33, 25, 26, 27, 14, 12, 13 };  // reversed order
 const int NUM_LEDS = sizeof(LED_PINS) / sizeof(LED_PINS[0]);
+
+// No packet from the selected transmitter for this long = no signal, LEDs off
+// (it sends every 100 ms).
+#define NO_SIGNAL_MS 1000
 
 #define BUTTON_PIN 32  // external button to GND, matches receiver.ino's SW1 (GPIO0 on CubeCell)
 
@@ -129,6 +134,7 @@ bool tune_and_receive(uint8_t id) {
   command("AT+TEST=RXLRPKT");
   if (!waitFor("+TEST: RXLRPKT", 300)) return false;
   transmitter_id = id;
+  LisekOta::setId(id);
   return true;
 }
 
@@ -197,6 +203,8 @@ bool havePending = false;
 void setup() {
   Serial.begin(115200);
   Serial.println("Hej liski!");
+  LisekOta::begin("receiver");
+  Serial.println("firmware " LISEK_VERSION);
 
   pinMode(BUTTON_PIN, INPUT_PULLUP);
   for (int i = 0; i < NUM_LEDS; i++) pinMode(LED_PINS[i], OUTPUT);
@@ -221,14 +229,18 @@ void setup() {
     Serial.println("radio init failed, retrying in 2s...");
     delay(2000);
   }
+  LisekOta::markHealthy();
   Serial.println("into RX mode");
 }
 
 // While non-zero, the LEDs show the newly selected id until this millis() time
 // (receiver.ino's 500 ms id flash, without blocking presses or the radio).
 uint32_t id_flash_until = 0;
+// millis() of the last packet from the selected transmitter, 0 = none shown.
+uint32_t last_packet_ms = 0;
 
 void change_transmitter_id_to(uint8_t id) {
+  last_packet_ms = 0;  // the old transmitter's strength no longer applies
   // Feedback first: the id shows on the LEDs the moment the button goes down.
   display_bits_on_leds(to_first_led_bits(id));
   id_flash_until = millis() + 500;
@@ -260,6 +272,18 @@ void loop() {
   if (id_flash_until && (int32_t)(millis() - id_flash_until) >= 0) {
     id_flash_until = 0;
     display_bits_on_leds(0);
+  }
+
+  // Signal lost: don't keep showing the last strength.
+  if (last_packet_ms && millis() - last_packet_ms >= NO_SIGNAL_MS) {
+    last_packet_ms = 0;
+    if (!id_flash_until) display_bits_on_leds(0);
+  }
+
+  // A firmware update over Bluetooth fills the LEDs as it arrives.
+  if (LisekOta::updating()) {
+    uint32_t total, done = LisekOta::progress(&total);
+    display_strength_on_leds(total ? 1 + done * 6 / total : 0);
   }
 
   // A digit over USB serial does the same thing.
@@ -304,7 +328,8 @@ void loop() {
               memcpy(rxpacket, payload, size);
               rxpacket[size] = '\0';
 
-              if (!id_flash_until) display_strength_on_leds((110 + pendingRssi) / (110 / 7));
+              last_packet_ms = millis();
+              if (!id_flash_until && !LisekOta::updating()) display_strength_on_leds((110 + pendingRssi) / (110 / 7));
               Serial.printf("received packet \"%s\" with rssi=%d snr=%d length=%d packet_tx_id=%d\r\n", rxpacket,
                             pendingRssi, pendingSnr, size, rxpacket[1]);
             }

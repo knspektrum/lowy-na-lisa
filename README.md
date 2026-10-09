@@ -29,6 +29,7 @@ Gra terenowa dla dzieci oparta na LoRa - polega na znalezieniu ukrytych nadajnik
 - [Odbiornik na PCB (CubeCell)](#pcb) - docelowa wersja na własnej płytce
 - [Nadajnik ESP32](software/fox-transmitter/README.md) - "lis": WeMos D1 R32 + HM-TRLR-D-TTL-868, zasilanie 5x AA
 - [Odbiornik ESP32](software/led-receiver/README.md) - ESP32 + Seeed LoRa-E5 + 7 diod, zasilanie LiPo
+- [Flota i aktualizacje](software/ota/README.md) - strona w Chrome: które urządzenia ESP32 są włączone, na jakim kanale i programie; podpisane aktualizacje przez Bluetooth
 
 <details>
 <summary><b>Odbiornik na PCB (CubeCell)</b> - schemat i plot</summary>

@@ -37,18 +37,23 @@ Każda dioda: pin → rezystor → anoda, katoda → GND. Antena do RFIO modułu
 - Krótkie naciśnięcie przycisku: następny nadajnik (po 6 wraca do 1); zapala się na 0.5 s tyle górnych diod, ile wynosi id
 - Cyfra 1-6 w monitorze portu szeregowego (115200 baud) robi to samo
 - Liczba zapalonych diod (od LED1) = siła sygnału: (110 + RSSI) / 15
+- Brak pakietu od wybranego nadajnika przez 1 s: diody gasną (nadajnik wysyła co 100 ms)
+- Aktualizacja przez Bluetooth: diody zapalają się kolejno w miarę wgrywania
 
 Kanały i ustawianie nadajników: [software/fox-transmitter](../fox-transmitter/README.md).
 
 ## Programowanie
 
+Pierwszy raz przez USB, potem przez Bluetooth ze strony floty: [software/ota](../ota/README.md).
+
 ```bash
-arduino-cli compile --upload --fqbn esp32:esp32:esp32 --board-options UploadSpeed=115200 -p /dev/ttyUSB0 software/led-receiver
+software/ota/build.sh
+software/ota/usb-flash.sh receiver /dev/ttyUSB0
 ```
 
 ## Pliki
 
-- `led-receiver.ino` - program odbiornika
+- `led-receiver.ino` - program odbiornika (aktualizacje przez Bluetooth: biblioteka `software/libraries/LisekOta`)
 - `docs/fritzing/` - schemat połączeń we Fritzingu (`led-receiver.fzz`), generowany przez `make_fzz.py` (wartości rezystorów: `R_RED_YELLOW`, `R_GREEN`), eksport `build.sh`
 - Płytka ESP32 we Fritzingu: część `ESP32-38PinWide-fixed` autorstwa Thomasa Plunketta ([forum Fritzing](https://forum.fritzing.org/t/esp32-wroom-32u/12978)), z poprawionym opisem pinu CMD obok V5; LoRa-E5 jest narysowany jako ogólny układ SIP (piny od góry: TX, RX, GND, VCC), ładowarka jako Adafruit bq25185 + 5V boost
 - Wspólne skrypty Fritzinga: `software/fritzing-lib/` (`make_fzz.py` sprawdza, czy przewody się nie krzyżują ani nie nakładają; masa może przechodzić pod przewodami diod)

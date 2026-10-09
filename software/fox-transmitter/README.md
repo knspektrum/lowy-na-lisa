@@ -60,9 +60,10 @@ CH_4  |  ○  |  ○  |  ○  |  ○  |  ○  |  ○
 ## Programowanie
 
 1. Ustaw zworki CH_1-CH_4 dla wybranego id (tabela wyżej).
-2. Podłącz D1 R32 przez USB i wgraj program:
+2. Podłącz D1 R32 przez USB i wgraj program (następne wersje można wgrywać przez Bluetooth, [software/ota](../ota/README.md)):
    ```bash
-   arduino-cli compile --upload --fqbn esp32:esp32:d1_uno32 -p /dev/ttyUSB0 software/fox-transmitter
+   software/ota/build.sh
+   software/ota/usb-flash.sh transmitter /dev/ttyUSB0
    ```
 3. Otwórz monitor portu szeregowego (115200 baud) i wpisz cyfrę id (1-6). Nadajnik odpowiada `updated transmitter id id=N sync_word=CAFE...BABE`.
 4. Wpisz `w`, żeby zapisać ustawienia w module (`saved to flash`). Po każdym starcie program odczytuje sync word z modułu i używa zapisanego id.
@@ -70,6 +71,6 @@ CH_4  |  ○  |  ○  |  ○  |  ○  |  ○  |  ○
 
 ## Pliki
 
-- `fox-transmitter.ino` - program nadajnika
+- `fox-transmitter.ino` - program nadajnika (aktualizacje przez Bluetooth: biblioteka `software/libraries/LisekOta`)
 - `docs/fritzing/` - schemat połączeń we Fritzingu (`fox-transmitter.fzz`), generowany przez `make_fzz.py`, eksport `build.sh`
 - Płytka WeMos D1 R32 we Fritzingu: część autorstwa Petera Van Eppa ([forum Fritzing](https://forum.fritzing.org/t/looking-for-wemos-d1-r32-esp32-uno/14487)); moduł HM-TRLR-D jest narysowany jako ogólny układ SIP z pinami w tej samej kolejności co na module, gniazdo SMA to część "SMA Antenna Connector" Petera Van Eppa ([forum Fritzing](https://forum.fritzing.org/t/sma-female-connector-part/4688)), baterie jako 5 ogniw AA z biblioteki Fritzinga połączonych szeregowo

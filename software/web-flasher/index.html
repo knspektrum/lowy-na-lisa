@@ -1,0 +1,393 @@
+<!doctype html>
+<html lang="pl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Łowy na Lisa - flota</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath d='M1 8h4l1.5-5 3 10 1.5-5h4' fill='none' stroke='%23ef4444' stroke-width='2'/%3E%3C/svg%3E">
+<style>
+  /* KN Spektrum house style (management-dash): red primary, zinc neutrals, 0.5rem radius */
+  :root {
+    --background: #f9f9f9; --foreground: #111; --card: #fff; --primary: #ef4444; --primary-fg: #fff;
+    --muted: #f4f4f5; --muted-fg: #71717a; --border: #e4e4e7; --radius: 0.5rem;
+    --ok-bg: #dcfce7; --ok-fg: #166534; --bad-bg: #fee2e2; --bad-fg: #991b1b; --warn-bg: #fef3c7; --warn-fg: #92400e;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --background: #111; --foreground: #fafafa; --card: #141414; --muted: #27272a; --muted-fg: #a1a1aa; --border: #313136;
+      --ok-bg: #14532d; --ok-fg: #bbf7d0; --bad-bg: #7f1d1d; --bad-fg: #fecaca; --warn-bg: #78350f; --warn-fg: #fde68a;
+    }
+  }
+  * { box-sizing: border-box; }
+  body { background: var(--background); color: var(--foreground); margin: 0;
+    font: 14px/1.5 ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji"; }
+  header { background: #000; padding: 12px 16px; }
+  header img { height: 32px; width: auto; display: block; }
+  main { max-width: 1100px; margin: 0 auto; padding: 24px 16px; }
+  h1 { font-size: 24px; font-weight: 700; margin: 0; }
+  .sub { color: var(--muted-fg); font-size: 14px; margin: 2px 0 20px; }
+  .muted { color: var(--muted-fg); }
+  .card { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); padding: 16px;
+    box-shadow: 0 1px 2px rgba(0,0,0,.05); margin-bottom: 16px; }
+  .stats { display: grid; gap: 16px; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); margin-bottom: 16px; }
+  .stats .card { margin: 0; }
+  .stat-label { font-size: 13px; color: var(--muted-fg); }
+  .stat-value { font-size: 24px; font-weight: 700; }
+  button { font: inherit; font-size: 14px; font-weight: 500; padding: 7px 14px; border-radius: calc(var(--radius) - 2px);
+    border: 1px solid var(--border); background: var(--card); color: var(--foreground); cursor: pointer; }
+  button:hover:not(:disabled) { background: var(--muted); }
+  button.primary { background: var(--primary); border-color: var(--primary); color: var(--primary-fg); }
+  button.primary:hover:not(:disabled) { background: #dc2626; }
+  button.small { padding: 3px 10px; font-size: 13px; }
+  button:disabled { opacity: .5; cursor: default; }
+  .bar { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; margin-bottom: 16px; }
+  .badge { display: inline-flex; align-items: center; border-radius: 999px; padding: 2px 10px; font-size: 12px; font-weight: 600;
+    border: 1px solid var(--border); color: var(--muted-fg); white-space: nowrap; }
+  .badge.ok { background: var(--ok-bg); color: var(--ok-fg); border-color: transparent; }
+  .badge.bad { background: var(--bad-bg); color: var(--bad-fg); border-color: transparent; }
+  .badge.warn { background: var(--warn-bg); color: var(--warn-fg); border-color: transparent; }
+  table { border-collapse: collapse; width: 100%; }
+  th, td { text-align: left; padding: 10px 8px; border-bottom: 1px solid var(--border); vertical-align: middle; }
+  tr:last-child td { border-bottom: 0; }
+  th { font-weight: 500; font-size: 13px; color: var(--muted-fg); }
+  .mono { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 13px; }
+  progress { width: 110px; vertical-align: middle; accent-color: var(--primary); }
+  code { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 13px; }
+  #unsupported { display: none; border-color: var(--primary); }
+  td.actions { white-space: nowrap; text-align: right; }
+  .table-card { padding: 4px 8px; }
+  /* phones: each device becomes a stacked block */
+  @media (max-width: 700px) {
+    thead { display: none; }
+    tr { display: block; border-bottom: 1px solid var(--border); padding: 8px 0; }
+    tr:last-child { border-bottom: 0; }
+    td { display: flex; justify-content: space-between; gap: 12px; border: 0; padding: 3px 4px; }
+    td::before { content: attr(data-l); color: var(--muted-fg); font-size: 13px; }
+    td.actions { justify-content: flex-end; }
+    td.actions::before { content: none; }
+  }
+</style>
+</head>
+<body>
+<header><img src="spektrum-logo.png" alt="KN Spektrum"></header>
+<main>
+<h1>Łowy na Lisa - flota</h1>
+<p class="sub">Sprawdź, które lisy i odbiorniki są włączone, na jakim kanale i z jakim programem, i zaktualizuj je przez Bluetooth</p>
+
+<div class="card" id="unsupported">
+  Ta przeglądarka nie obsługuje Web Bluetooth. Użyj Chrome/Chromium i włącz
+  <code>chrome://flags/#enable-experimental-web-platform-features</code> (skanowanie wszystkich urządzeń naraz),
+  potem uruchom przeglądarkę ponownie. Strona musi być otwarta przez https albo z <code>localhost</code>.
+</div>
+
+<div class="stats">
+  <div class="card"><div class="stat-label">Włączone</div><div class="stat-value" id="stOn">0</div><div class="muted" id="stOnSub">z 0 znanych</div></div>
+  <div class="card"><div class="stat-label">Nadajniki (lisy)</div><div class="stat-value" id="stTx">0</div><div class="muted" id="stTxSub">włączone</div></div>
+  <div class="card"><div class="stat-label">Odbiorniki</div><div class="stat-value" id="stRx">0</div><div class="muted" id="stRxSub">włączone</div></div>
+  <div class="card"><div class="stat-label">Najnowszy program</div><div class="stat-value" id="stCur">-</div><div class="muted mono" id="images">nie wczytano</div></div>
+</div>
+
+<div class="bar">
+  <button class="primary" id="scan">Skanuj okolicę</button>
+  <button id="add">Dodaj urządzenie</button>
+  <button class="primary" id="flashAll">Aktualizuj wszystkie włączone</button>
+  <button id="loadFiles">Wczytaj program (.lsk)</button>
+  <input type="file" id="files" accept=".lsk" multiple hidden>
+  <label class="muted"><input type="checkbox" id="force"> także tę samą wersję</label>
+</div>
+
+<div class="card table-card">
+<table>
+  <thead><tr><th>Urządzenie</th><th>Typ</th><th>Kanał</th><th>Program</th><th>Stan</th><th>Sygnał</th><th></th></tr></thead>
+  <tbody id="rows"><tr id="empty"><td colspan="7" class="muted">Brak urządzeń. Kliknij „Skanuj okolicę” albo „Dodaj urządzenie”.</td></tr></tbody>
+</table>
+</div>
+
+<p class="muted">Lista pamięta wszystkie urządzenia, które ta przeglądarka kiedykolwiek widziała, więc wyłączone zostają na niej
+z czasem ostatniego sygnału. Nowy program po restarcie musi się zgłosić i potwierdzić, że radio działa; inaczej po 5 minutach
+(albo po awarii) urządzenie wraca do poprzedniej wersji. Nie zamykaj strony, dopóki stan nie pokaże „Zaktualizowano”.</p>
+</main>
+
+<script>
+const SVC = "4c49534b-0001-4f54-8000-00805f9b34fb";
+const INFO = "4c49534b-0002-4f54-8000-00805f9b34fb";
+const CTRL = "4c49534b-0003-4f54-8000-00805f9b34fb";
+const DATA = "4c49534b-0004-4f54-8000-00805f9b34fb";
+const COMPANY = 0xffff;
+const ONLINE_MS = 15000;  // devices advertise about once a second
+const ROLES = { R: "receiver", T: "transmitter" };
+const ROLE_NAMES = { receiver: "odbiornik", transmitter: "nadajnik" };
+const ROLE_PLURAL = { receiver: "odbiorniki", transmitter: "nadajniki" };
+const STATES = { o: "ok", p: "pending", u: "updating", i: "installed" };
+const STORE = "lisek-fleet-v1";
+
+const $ = id => document.getElementById(id);
+const sleep = ms => new Promise(r => setTimeout(r, ms));
+const td = new TextDecoder(), te = new TextEncoder();
+const esc = s => String(s ?? "").replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" })[c]);
+const bt = navigator.bluetooth;
+if (!bt || !bt.requestLEScan) $("unsupported").style.display = "block";
+
+const images = {};       // role -> { role, version, size, bytes }
+const fleet = new Map(); // name -> device record
+const permitted = new Set(); // BluetoothDevice ids this page may connect to
+
+// --- persistence: remember every device ever seen (per browser) ---
+function save() {
+  try {
+    localStorage.setItem(STORE, JSON.stringify([...fleet.values()].map(d =>
+      ({ name: d.name, role: d.role, id: d.id, version: d.version, lastSeen: d.lastSeen }))));
+  } catch (_) {}
+}
+function load() {
+  try {
+    for (const d of JSON.parse(localStorage.getItem(STORE) || "[]")) fleet.set(d.name, { ...d, live: false });
+  } catch (_) {}
+}
+function record(name) {
+  if (!fleet.has(name)) fleet.set(name, { name, live: false });
+  return fleet.get(name);
+}
+
+// --- firmware images ---
+function parseImage(buf) {
+  const b = new Uint8Array(buf);
+  const str = (o, n) => td.decode(b.slice(o, o + n)).replace(/\0.*$/s, "");
+  if (str(0, 4) !== "LSK1") throw new Error("to nie jest podpisany program (.lsk)");
+  return { role: str(4, 12), version: str(16, 40), size: new DataView(buf).getUint32(56, true), bytes: b };
+}
+function addImage(buf) {
+  const img = parseImage(buf);
+  images[img.role] = img;
+  $("images").innerHTML = Object.values(images)
+    .map(i => `${ROLE_NAMES[i.role] || esc(i.role)} ${esc(i.version)}`).join("<br>");
+  renderAll();
+}
+$("loadFiles").onclick = () => $("files").click();
+$("files").onchange = async e => {
+  for (const f of e.target.files) {
+    try { addImage(await f.arrayBuffer()); } catch (err) { alert(`${f.name}: ${err.message}`); }
+  }
+};
+(async () => {  // served next to firmware/ (software/ota/build.sh output): load it straight away
+  try {
+    const m = await (await fetch("firmware/manifest.json", { cache: "no-store" })).json();
+    for (const role of Object.keys(m)) addImage(await (await fetch(`firmware/${role}.lsk`, { cache: "no-store" })).arrayBuffer());
+  } catch (_) {}
+})();
+
+// --- advertisements: who is on, and what they run ---
+function onAdvert(e) {
+  const name = e.name || e.device.name;
+  if (!name || !name.startsWith("lisek-")) return;
+  const d = record(name);
+  d.dev = d.dev || e.device;
+  d.live = true;
+  d.lastSeen = Date.now();
+  d.rssi = e.rssi;
+  const m = e.manufacturerData && e.manufacturerData.get(COMPANY);
+  if (m) {
+    const s = td.decode(m.buffer.slice(m.byteOffset, m.byteOffset + m.byteLength));
+    d.role = ROLES[s[0]] || d.role;
+    d.state = STATES[s[1]] || s[1];
+    d.id = +s[2];
+    d.healthy = s[3] === "h";
+    d.version = s.slice(4);
+  }
+  save();
+  render(d);
+}
+async function watch(dev) {
+  permitted.add(dev.id);
+  dev.addEventListener("advertisementreceived", onAdvert);
+  try { await dev.watchAdvertisements(); } catch (_) {}
+}
+$("scan").onclick = async () => {
+  try {
+    await bt.requestLEScan({ filters: [{ services: [SVC] }], keepRepeatedDevices: true });
+    bt.addEventListener("advertisementreceived", onAdvert);
+    $("scan").textContent = "Skanowanie...";
+    $("scan").disabled = true;
+  } catch (e) { alert("Skanowanie niedostępne: " + e.message); }
+};
+$("add").onclick = async () => {
+  let dev;
+  try { dev = await bt.requestDevice({ filters: [{ services: [SVC] }] }); } catch (_) { return; }
+  const d = record(dev.name);
+  d.dev = dev;
+  await watch(dev);
+  try { await connect(d); } catch (_) {}
+  render(d);
+};
+(async () => {  // devices allowed earlier: watch them without asking again
+  if (!bt || !bt.getDevices) return;
+  for (const dev of await bt.getDevices()) {
+    const d = record(dev.name);
+    d.dev = dev;
+    watch(dev);
+  }
+  renderAll();
+})();
+
+// --- table ---
+function ago(t) {
+  if (!t) return "nigdy";
+  const s = Math.round((Date.now() - t) / 1000);
+  return s < 60 ? `${s} s temu` : s < 3600 ? `${Math.round(s / 60)} min temu` : new Date(t).toLocaleString("pl");
+}
+const STATE_LABELS = { ok: "Działa", pending: "Czeka na potwierdzenie", updating: "Odbiera program", installed: "Wgrany, restart" };
+function isOn(d) { return d.live && d.lastSeen && Date.now() - d.lastSeen < ONLINE_MS; }
+function badge(cls, text) { return `<span class="badge ${cls}">${esc(text)}</span>`; }
+function render(d) {
+  if ($("empty")) $("empty").remove();
+  if (!d.row) {
+    d.row = document.createElement("tr");
+    $("rows").appendChild(d.row);
+  }
+  const on = isOn(d);
+  const img = images[d.role];
+  const outdated = img && d.version && img.version !== d.version;
+  let state;
+  if (d.msg) state = badge(d.cls || "", d.msg);
+  else if (!on) state = badge("", "Wyłączone");
+  else if (d.healthy === false) state = badge("warn", "Radio nie odpowiada");
+  else state = badge(d.state === "ok" ? "ok" : "warn", STATE_LABELS[d.state] || d.state || "?");
+  d.row.innerHTML = `<td data-l="Urządzenie"><span class="mono">${esc(d.name)}</span></td>
+    <td data-l="Typ">${ROLE_NAMES[d.role] || ""}</td>
+    <td data-l="Kanał">${d.id ? `id ${d.id}` : ""}</td>
+    <td data-l="Program"><span><span class="mono">${esc(d.version || "?")}</span>${outdated ? ` ${badge("warn", "→ " + img.version)}` : img && d.version ? ` ${badge("ok", "aktualny")}` : ""}</span></td>
+    <td data-l="Stan"><span>${state}${d.progress != null ? ` <progress max="1" value="${d.progress}"></progress>` : ""}</span></td>
+    <td data-l="Sygnał">${on ? (d.rssi != null ? `${d.rssi} dBm` : "teraz") : `<span class="muted">${ago(d.lastSeen)}</span>`}</td>
+    <td class="actions">${d.dev && permitted.has(d.dev.id) ? "" : `<button class="small" data-a="allow">Zezwól</button> `}<button class="small" data-a="flash" ${img && on && !d.busy ? "" : "disabled"}>Aktualizuj</button> <button class="small" data-a="forget" ${d.busy ? "disabled" : ""}>Usuń</button></td>`;
+  d.row.querySelectorAll("button").forEach(b => b.onclick = () => action(d, b.dataset.a));
+}
+function renderAll() { fleet.forEach(render); summary(); }
+function summary() {
+  const all = [...fleet.values()];
+  const on = all.filter(isOn);
+  $("stOn").textContent = on.length;
+  $("stOnSub").textContent = `z ${all.length} znanych`;
+  for (const [r, el] of [["transmitter", "stTx"], ["receiver", "stRx"]]) {
+    const n = all.filter(d => d.role === r);
+    $(el).textContent = `${n.filter(isOn).length}/${n.length}`;
+  }
+  const withImg = all.filter(d => images[d.role]);
+  $("stCur").textContent = withImg.length ? `${withImg.filter(d => images[d.role].version === d.version).length}/${withImg.length}` : "-";
+}
+setInterval(renderAll, 2000);
+
+async function action(d, a) {
+  if (a === "forget") {
+    fleet.delete(d.name);
+    d.row.remove();
+    save();
+    summary();
+  } else if (a === "allow") {
+    try {  // must be the first await: it needs the click
+      const dev = await bt.requestDevice({ filters: [{ name: d.name }], optionalServices: [SVC] });
+      d.dev = dev;
+      await watch(dev);
+      render(d);
+    } catch (_) {}
+  } else if (a === "flash") {
+    flash(d);
+  }
+}
+$("flashAll").onclick = () => fleet.forEach(d => {
+  const img = images[d.role];
+  const on = d.live && Date.now() - d.lastSeen < ONLINE_MS;
+  if (img && on && !d.busy && d.dev && permitted.has(d.dev.id) && ($("force").checked || img.version !== d.version)) flash(d);
+});
+
+// --- GATT: version readout and updates ---
+async function connect(d) {
+  d.gatt = await d.dev.gatt.connect();
+  const svc = await d.gatt.getPrimaryService(SVC);
+  d.infoCh = await svc.getCharacteristic(INFO);
+  d.ctrl = await svc.getCharacteristic(CTRL);
+  d.data = await svc.getCharacteristic(DATA);
+  d.ctrl.addEventListener("characteristicvaluechanged", e => d.onNote && d.onNote(td.decode(e.target.value)));
+  await d.ctrl.startNotifications();
+  await readInfo(d);
+}
+async function readInfo(d) {
+  const i = JSON.parse(td.decode(await d.infoCh.readValue()));
+  Object.assign(d, { role: i.role, version: i.version, state: i.state, healthy: i.healthy, id: i.id, mtu: i.mtu });
+  d.live = true;
+  d.lastSeen = Date.now();
+  save();
+  render(d);
+}
+async function reconnect(d, ms) {
+  const end = Date.now() + ms;
+  while (Date.now() < end) {
+    try { await connect(d); return; } catch (_) { await sleep(2000); }
+  }
+  throw new Error("urządzenie nie wróciło po restarcie");
+}
+// Next notification starting with `want`; "error:..." rejects.
+function note(d, want, ms) {
+  return new Promise((resolve, reject) => {
+    const t = setTimeout(() => { d.onNote = null; reject(new Error("brak odpowiedzi")); }, ms);
+    d.onNote = s => {
+      if (s.startsWith("error:")) { clearTimeout(t); d.onNote = null; reject(new Error(s.slice(6))); }
+      else if (s.startsWith(want)) { clearTimeout(t); d.onNote = null; resolve(s); }
+    };
+  });
+}
+
+async function flash(d) {
+  const img = images[d.role];
+  if (!img || d.busy || !d.dev) return;
+  d.busy = true; d.progress = 0;
+  const step = m => { d.msg = m; d.cls = "warn"; render(d); };
+  try {
+    step("Łączenie...");
+    if (!d.gatt || !d.gatt.connected) await connect(d); else await readInfo(d);
+    if (images[d.role] !== img) throw new Error("program jest dla innego typu urządzenia");
+    step("Wysyłanie...");
+    let p = note(d, "ready", 5000);
+    await d.ctrl.writeValueWithResponse(te.encode("begin"));
+    await p;
+    const chunk = Math.max(20, Math.min(512, (d.mtu || 23) - 3));
+    const done = note(d, "done", 600000);
+    let failed = null;
+    done.catch(e => { failed = e; });
+    for (let o = 0; o < img.bytes.length && !failed; o += chunk) {
+      await d.data.writeValueWithResponse(img.bytes.slice(o, o + chunk));
+      if ((o / chunk) % 16 === 0) { d.progress = o / img.bytes.length; render(d); }
+    }
+    await done;
+    d.progress = null;
+    step("Restart...");
+    await sleep(3000);
+    await reconnect(d, 60000);
+    // The new program only stays once confirmed; it needs a moment to bring its radio up.
+    const end = Date.now() + 90000;
+    while (d.state === "pending") {
+      step("Potwierdzanie...");
+      try {
+        p = note(d, "confirmed", 5000);
+        await d.ctrl.writeValueWithResponse(te.encode("confirm"));
+        await p;
+      } catch (e) {
+        if (Date.now() > end) throw new Error(`nie potwierdzono (${e.message}), urządzenie wróci do poprzedniej wersji`);
+        await sleep(3000);
+      }
+      await readInfo(d);
+    }
+    if (d.version !== img.version) throw new Error(`urządzenie wróciło do ${d.version}`);
+    d.msg = "Zaktualizowano"; d.cls = "ok";
+  } catch (e) {
+    d.msg = "Błąd: " + e.message; d.cls = "bad";
+  } finally {
+    d.busy = false; d.progress = null; d.onNote = null;
+    render(d);
+  }
+}
+
+load();
+renderAll();
+</script>
+</body>
+</html>

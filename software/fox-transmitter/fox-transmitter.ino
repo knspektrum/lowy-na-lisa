@@ -4,6 +4,7 @@
 // source. Sync word CAFE<id>x4BABE matches sync_word[] in receiver.ino.
 //   USB serial '0'-'9': set transmitter id      'w': save config to module flash
 #include <Arduino.h>
+#include <LisekOta.h>  // updates and version readout over Bluetooth, software/libraries
 
 #define CONFIG_PIN 14  // LOW = AT/config mode, HIGH = transparent mode
 #define MODULE_RX 16
@@ -88,6 +89,7 @@ void update_transmitter_id(int id) {
     return;
   }
   transmitter_id = id;
+  LisekOta::setId(id);
   Serial.printf("updated transmitter id id=%d sync_word=%s\r\n", id, buf);
   if (id < 1 || id > 6) Serial.println("note: receiver.ino only tunes ids 1-6");
 }
@@ -107,6 +109,8 @@ void setup() {
   Serial.begin(115200);
   pinMode(CONFIG_PIN, OUTPUT);
   Serial.println("\r\n=== fox transmitter (reconstructed) ===");
+  LisekOta::begin("transmitter");
+  Serial.println("firmware " LISEK_VERSION);
 
   enterConfig();
   unsigned long baud = 0;
@@ -150,6 +154,8 @@ void setup() {
     update_transmitter_id(1);
   }
   Serial.printf("transmitter_id=%d\r\n", transmitter_id);
+  LisekOta::setId(transmitter_id);
+  LisekOta::markHealthy();
 }
 
 void loop() {
