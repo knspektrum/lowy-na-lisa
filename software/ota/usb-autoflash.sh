@@ -10,5 +10,4 @@ if [ "$have" != "$want" ] || [ ! -f build/receiver/led-receiver.ino.bin ] || [ !
   echo "building firmware $want (have: ${have:-none})"
   ./build.sh
 fi
-exec nix shell nixpkgs#esptool nixpkgs#arduino-cli 'nixpkgs#python3.withPackages(p:[p.pyserial])' \
-  -c python3 -I -u usb_autoflash.py "$@"
+exec nix-shell -p 'python3.withPackages(p:[p.pyserial])' --run "python3 -I -u usb_autoflash.py $*"

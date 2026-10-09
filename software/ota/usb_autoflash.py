@@ -59,7 +59,7 @@ def usb_id(port):
 
 
 def read_mac(port):
-    out = subprocess.run(["esptool", "--port", port, "read-mac"], capture_output=True, text=True, timeout=60).stdout
+    out = subprocess.run(["nix", "run", "nixpkgs#esptool", "--", "--port", port, "read-mac"], capture_output=True, text=True, timeout=60).stdout
     m = re.search(r"MAC:\s+([0-9a-f:]{17})", out)
     return m.group(1) if m else None
 
