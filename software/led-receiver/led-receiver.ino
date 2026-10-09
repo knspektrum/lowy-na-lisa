@@ -206,10 +206,18 @@ bool set_transmitter_id(uint8_t id) {
     r = sendAT("AT", 500);
     atOk = (r == "+AT: OK");
   }
-  if (!atOk) return false;
+  if (!atOk) {
+    // Silence means no power or a broken TX/RX wire; garbage means a wrong baud rate.
+    Serial.printf("radio: no \"+AT: OK\" from LoRa-E5 after 15 tries, last reply \"%s\" (%u chars)\r\n", r.c_str(),
+                  r.length());
+    return false;
+  }
 
   r = sendAT("AT+MODE=TEST");
-  if (r.indexOf("+MODE: TEST") < 0) return false;
+  if (r.indexOf("+MODE: TEST") < 0) {
+    Serial.printf("radio: AT+MODE=TEST answered \"%s\"\r\n", r.c_str());
+    return false;
+  }
 
   return tune_and_receive(id);
 }

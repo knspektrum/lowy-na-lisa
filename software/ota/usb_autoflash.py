@@ -107,7 +107,9 @@ def handle(port):
         return log(port, f"FAILED: {name} runs {version} but its {role} radio module did not answer: {tail}")
     save_registry({"mac": mac, "name": name, "role": role, "usb": usb,
                    "registered": (known or {}).get("registered") or datetime.date.today().isoformat()})
-    log(port, f"OK {name}: {role} {version}, radio answers, registered")
+    resets = (re.findall(r"reset history \(newest first, B = brownout\): (\S*)", out) or ["?"])[-1]
+    log(port, f"OK {name}: {role} {version}, radio answers, registered; resets newest first: {resets}"
+              + ("  <- BROWNOUTS: power supply sags" if "B" in resets else ""))
 
 
 def main():

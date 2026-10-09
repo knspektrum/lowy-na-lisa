@@ -8,6 +8,7 @@
 #include <esp_timer.h>
 #include <mbedtls/pk.h>
 #include <mbedtls/sha256.h>
+#include <Preferences.h>
 
 #include "lisek_pubkey.h"
 
@@ -48,6 +49,10 @@ static volatile uint8_t g_id = 0;
 static volatile uint8_t g_user = 0;  // sketch value 0..15, advertised (setUserBits)
 static bool (*g_setting)(const String &, const String &) = nullptr;
 static char g_name[16];
+// Why the last boots happened, newest first, one letter each (kept in NVS so a
+// board that resets on battery can be diagnosed later over USB or BLE):
+// P power-on, B brownout, S software, W watchdog, X panic, E external, D deep sleep, ? other
+static char g_resets[17] = "";
 
 enum State { IDLE, HEADER, IMAGE, DONE, FAILED };
 static volatile State g_state = IDLE;
@@ -209,7 +214,9 @@ static String info_json() {
   j += run ? run->label : "?";
   j += "\",\"mtu\":";
   j += g_mtu;
-  j += ",\"uptime\":";
+  j += ",\"resets\":\"";
+  j += g_resets;
+  j += "\",\"uptime\":";
   j += (uint32_t)(esp_timer_get_time() / 1000000);
   if (g_pending) {
     j += ",\"rollback_in\":";
@@ -259,8 +266,33 @@ class ServerCb : public BLEServerCallbacks {
   }
 };
 
+static char reset_letter(esp_reset_reason_t r) {
+  switch (r) {
+    case ESP_RST_POWERON: return 'P';
+    case ESP_RST_BROWNOUT: return 'B';
+    case ESP_RST_SW: return 'S';
+    case ESP_RST_INT_WDT: case ESP_RST_TASK_WDT: case ESP_RST_WDT: return 'W';
+    case ESP_RST_PANIC: return 'X';
+    case ESP_RST_EXT: return 'E';
+    case ESP_RST_DEEPSLEEP: return 'D';
+    default: return '?';
+  }
+}
+
+static void record_reset() {
+  Preferences prefs;
+  prefs.begin("lisek", false);
+  String old = prefs.getString("resets", "");
+  String now = String(reset_letter(esp_reset_reason())) + old.substring(0, sizeof g_resets - 2);
+  prefs.putString("resets", now);
+  prefs.end();
+  strlcpy(g_resets, now.c_str(), sizeof g_resets);
+  Serial.printf("lisek: reset history (newest first, B = brownout): %s\r\n", g_resets);
+}
+
 void begin(const char *role) {
   g_role = role;
+  record_reset();
 
   esp_timer_create_args_t reboot_args = {};
   reboot_args.callback = [](void *) { esp_restart(); };
