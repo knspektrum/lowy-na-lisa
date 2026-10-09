@@ -439,6 +439,11 @@ async function watch(dev) {
   d.dev = dev;
   dev.addEventListener("advertisementreceived", onAdvert);
   try { await dev.watchAdvertisements(); d.polled = false; } catch (_) { d.polled = true; }
+  // without advertisement watching, check it right away instead of at the next 30 s poll
+  if (d.polled && !d.busy) {
+    try { await connect(d); d.dev.gatt.disconnect(); } catch (_) {}
+    render(d);
+  }
 }
 // Without watchAdvertisements (no flag, Linux, ChromeOS): connect, read, disconnect.
 setInterval(async () => {
@@ -571,15 +576,15 @@ function render(d) {
   const btn = (a, ic, label, enabled) =>
     `<button class="icon-btn" data-a="${a}" title="${label}" aria-label="${label}" ${enabled ? "" : "disabled"}>${icon(ic)}</button>`;
   const btns = [];
-  if (!talk && on) btns.push(btn("allow", "link", "Połącz", true));
+  if (!talk) btns.push(btn("allow", "link", "Połącz", true));
   if (!d.registered) btns.push(btn("forget", "x", "Usuń z listy", !d.busy));
   // labelled actions under the card: what can be done is visible, not hidden in icons
-  const ready = on && talk && !d.busy;
+  const ready = talk && !d.busy;  // paired: the action connects on demand, even if not seen lately
   const acts = [`<button class="act" data-a="settings" ${ready ? "" : "disabled"}>${icon("gear")}Ustawienia</button>`];
   if (img) acts.push(outdated
     ? `<button class="act primary" data-a="flash" ${ready ? "" : "disabled"}>${icon("upload")}Aktualizuj do ${esc(img.version)}</button>`
     : `<button class="act" data-a="reflash" ${ready && d.version ? "" : "disabled"} title="Ma już najnowszy program">${icon("upload")}Wgraj ponownie</button>`);
-  if (!ready && !d.busy) acts.push(`<span class="muted small-text">${!on ? "Włącz urządzenie, żeby nim sterować" : !talk ? "Kliknij „Połącz”" : ""}</span>`);
+  if (!talk && !d.busy) acts.push(`<button class="act" data-a="allow">${icon("link")}Połącz</button>`);
   d.row.className = "card dev" + (d.role === "transmitter" ? " tx" : d.role === "receiver" ? " rx" : "") + (on ? "" : " off");
   d.row.innerHTML = `
     <div class="dev-head">
@@ -668,7 +673,13 @@ async function action(d, a) {
   } else if (a === "reflash") {
     if (confirm(`${title(d)} ma już program ${d.version}. Wgrać go ponownie?`)) flash(d);
   } else if (a === "settings") {
-    openSettings(d);
+    try {
+      if (!d.gatt || !d.gatt.connected) { d.msg = "Łączenie…"; d.cls = "warn"; render(d); await connect(d); }
+      d.msg = null; render(d);
+      openSettings(d);
+    } catch (e) {
+      d.msg = "Nie połączono: włącz urządzenie i spróbuj ponownie"; d.cls = "bad"; render(d);
+    }
   }
 }
 $("flashAll").onclick = () => flashable().forEach(flash);
