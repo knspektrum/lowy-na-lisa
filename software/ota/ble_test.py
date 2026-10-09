@@ -73,6 +73,7 @@ async def connect_once(name):
         pass
     d = Dev(c)
     await d.start()
+    await d.info()  # the first read right after a reboot can fail; retried by connect()
     return d
 
 
