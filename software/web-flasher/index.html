@@ -408,6 +408,13 @@ try {  // what this browser's Bluetooth bridge offers (iOS apps differ), to find
   const bridges = window.webkit && window.webkit.messageHandlers ? Object.keys(window.webkit.messageHandlers) : [];
   const globals = Object.keys(window).filter(k => /ble|blue|scan|webble|bluefy/i.test(k));
   dbg("bt-api", { bt: b ? [...names].join(",") : "none", bridges: bridges.join(","), globals: globals.join(",") });
+  for (const g of globals) {  // what native bridges offer (looking for a scanning API)
+    const o = window[g], m = new Set();
+    if (!o || (typeof o !== "object" && typeof o !== "function")) continue;
+    for (let x = o; x && x !== Object.prototype && x !== Function.prototype; x = Object.getPrototypeOf(x))
+      Object.getOwnPropertyNames(x).forEach(n => m.add(n + (typeof o[n] === "function" ? "()" : "")));
+    if (/bridge/i.test(g)) dbg("bt-bridge", { name: g, type: typeof o, members: [...m].join(",").slice(0, 900) });
+  }
 } catch (e) { dbg("bt-api-fail", errInfo(e)); }
 // Some iOS in-app browsers draw the page under the status bar but report a zero
 // safe area: measure, and fall back to the status bar height on a full-screen iPhone view.
@@ -418,8 +425,11 @@ try {
   const inset = probe.getBoundingClientRect().height;
   probe.remove();
   const fullScreen = Math.abs(innerHeight - screen.height) < 2;
-  if (!inset && /iPhone|iPad/.test(navigator.userAgent) && fullScreen) document.documentElement.style.setProperty("--top-inset", "50px");
-  dbg("layout", { inset, innerH: innerHeight, screenH: screen.height, fullScreen });
+  // iOS in-app browsers (no "Safari" in the UA: Bluetooth Browser, Bluefy...) draw
+  // the page under the status bar without reporting a safe area: leave room for it.
+  const inApp = /iPhone|iPad/.test(navigator.userAgent) && !/Safari\//.test(navigator.userAgent);
+  if (!inset && (inApp || (/iPhone|iPad/.test(navigator.userAgent) && fullScreen))) document.documentElement.style.setProperty("--top-inset", "54px");
+  dbg("layout", { inset, innerH: innerHeight, screenH: screen.height, fullScreen, inApp });
 } catch (_) {}
 dbg("start", { ua: navigator.userAgent, bt: !!navigator.bluetooth, getDevices: !!(navigator.bluetooth && navigator.bluetooth.getDevices),
   scan: !!(navigator.bluetooth && navigator.bluetooth.requestLEScan), secure: isSecureContext, page: location.href });
