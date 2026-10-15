@@ -18,7 +18,7 @@
     info() {
       return JSON.stringify({ role: this.role, version: this.version, state: this.state, user: this.user, healthy: this.healthy,
         partition: "app0", mtu: 517, uptime: 42, hide_after: 10, id: this.devId,
-        caps: this.fast ? "z,log,anyway" : "", cfg: this.role === "receiver" && this.fast ? { scale: "auto", sens: 3, smooth: 1 } : {} });
+        caps: this.fast ? "z,log,anyway" : "", cfg: this.role === "receiver" && this.fast ? (this.cfgv || { scale: "auto", sens: 3, smooth: 1 }) : {} });
     }
     notify(s) { later(() => this.ctrl.dispatch(s)); }
     command(cmd) {
@@ -43,6 +43,10 @@
           if (+v > ((this.user & 1) ? 8 : 7)) return this.notify("error:rejected");
           this.user = (this.user & 1) | ((+v - 1) << 1);
         } else if (this.role === "transmitter" && k === "hide") this.user = [0, 10, 30, 60].indexOf(+v);
+        else if (this.role === "receiver" && this.fast && ["scale", "sens", "smooth"].includes(k)) {
+          this.cfgv = this.cfgv || { scale: "auto", sens: 3, smooth: 1 };
+          this.cfgv[k] = k === "scale" ? v : +v;
+        }
         else return this.notify("error:rejected");
         this.notify("set-ok");
       } else this.notify("error:unknown command");

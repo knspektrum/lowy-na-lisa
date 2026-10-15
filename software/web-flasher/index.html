@@ -224,6 +224,7 @@
 <div class="tools">
   <label class="search"><svg class="i"><use href="#i-search"/></svg>
     <input id="q" type="search" placeholder="Szukaj: nazwa, kanał, wersja" aria-label="Szukaj urządzenia" autocomplete="off"></label>
+  <button id="profiles">Profile</button>
   <button id="flashAll" disabled><svg class="i"><use href="#i-upload"/></svg><span>Wszystkie aktualne</span></button>
 </div>
 
@@ -324,6 +325,34 @@
     <div class="dialog-actions">
       <button value="cancel" formnovalidate>Anuluj</button>
       <button class="primary" value="save">Zapisz</button>
+    </div>
+  </form>
+</dialog>
+
+<dialog id="profDialog" aria-labelledby="profTitle">
+  <form method="dialog" id="profForm">
+    <h2 id="profTitle">Profile ustawień</h2>
+    <div class="field">
+      <label for="profPick">Profil</label>
+      <select id="profPick"></select>
+    </div>
+    <div class="field"><label for="profName">Nazwa</label><input id="profName" autocomplete="off"
+      style="font:inherit;min-height:44px;width:100%;padding:6px 10px;border-radius:var(--radius);border:1px solid var(--border);background:var(--card);color:var(--foreground)"></div>
+    <h2 style="font-size:15px;margin-top:18px">Odbiorniki</h2>
+    <div class="field"><label for="pLeds">Diody</label>
+      <select id="pLeds"><option value="unary">Zwykłe (do 7 kanałów)</option><option value="binary">Binarne (do 9 kanałów)</option></select></div>
+    <div class="field"><label for="pChannels">Liczba kanałów</label><select id="pChannels"></select></div>
+    <div class="field"><label for="pScale">Skala</label><select id="pScale"></select></div>
+    <div class="field"><label for="pSens">Czułość</label><select id="pSens"></select></div>
+    <div class="field"><label for="pSmooth">Wygładzanie</label><select id="pSmooth"></select></div>
+    <h2 style="font-size:15px;margin-top:18px">Lisy (nadajniki)</h2>
+    <div class="field"><label for="pHide">Ukryj Bluetooth po włączeniu</label><select id="pHide"></select></div>
+    <p class="muted small-text" id="profTargets"></p>
+    <div class="dialog-actions" style="flex-wrap:wrap">
+      <button type="button" id="profDelete">Usuń profil</button>
+      <button type="button" id="profSave">Zapisz profil</button>
+      <button type="button" class="primary" id="profApply">Zastosuj do widocznych</button>
+      <button value="cancel" formnovalidate>Zamknij</button>
     </div>
   </form>
 </dialog>
@@ -691,7 +720,7 @@ function render(d) {
   // labelled actions under the card: what can be done is visible, not hidden in icons
   const ready = talk && !d.busy;  // paired: the action connects on demand, even if not seen lately
   const acts = [`<button class="act" data-a="settings" ${ready ? "" : "disabled"}>${icon("gear")}Ustawienia</button>`];
-  if ((d.caps || []).includes("log")) acts.push(`<button class="act" data-a="log" ${ready ? "" : "disabled"}>Dziennik</button>`);
+  acts.push(`<button class="act" data-a="log" ${ready ? "" : "disabled"}>Dziennik</button>`);
   if (img) acts.push(outdated
     ? `<button class="act primary" data-a="flash" ${ready ? "" : "disabled"}>${icon("upload")}Aktualizuj do ${esc(img.version)}</button>`
     : `<button class="act" data-a="reflash" ${ready && d.version ? "" : "disabled"} title="Ma już najnowszy program">${icon("upload")}Wgraj ponownie</button>`);
@@ -796,6 +825,114 @@ async function action(d, a) {
   }
 }
 $("flashAll").onclick = () => flashable().forEach(flash);
+
+// --- profiles: named sets of all settings, applied to every visible device ---
+const PROFILE_STORE = "lisek-profiles-v1";
+const BUILTIN_PROFILES = {
+  "Domyślny": { leds: "unary", channels: 7, scale: "auto", sens: 3, smooth: 1, hide: 0 },
+  "Gra (lisy ukryte po 30 min)": { leds: "unary", channels: 7, scale: "auto", sens: 3, smooth: 1, hide: 30 },
+  "Antena kierunkowa": { leds: "unary", channels: 7, scale: "relative", sens: 3, smooth: 2, hide: 0 },
+};
+function customProfiles() {
+  try { return JSON.parse(localStorage.getItem(PROFILE_STORE) || "{}"); } catch (_) { return {}; }
+}
+function allProfiles() { return Object.assign({}, BUILTIN_PROFILES, customProfiles()); }
+function fillSelect(id, opts, value) {
+  $(id).innerHTML = opts.map(([v, l]) => `<option value="${esc(v)}">${esc(l)}</option>`).join("");
+  $(id).value = String(value);
+}
+function profileFromForm() {
+  return { leds: $("pLeds").value, channels: +$("pChannels").value, scale: $("pScale").value,
+    sens: +$("pSens").value, smooth: +$("pSmooth").value, hide: +$("pHide").value };
+}
+function showProfile(name) {
+  const p = allProfiles()[name] || BUILTIN_PROFILES["Domyślny"];
+  $("profName").value = name;
+  $("pLeds").value = p.leds;
+  const maxCh = p.leds === "binary" ? 9 : 7;
+  fillSelect("pChannels", Array.from({ length: maxCh }, (_, i) => [i + 1, String(i + 1)]), Math.min(p.channels, maxCh));
+  $("pScale").value = p.scale; $("pSens").value = String(p.sens); $("pSmooth").value = String(p.smooth); $("pHide").value = String(p.hide);
+  $("profDelete").disabled = !!BUILTIN_PROFILES[name];
+}
+function profileTargets() {
+  return [...fleet.values()].filter(d => d.row && !d.row.hidden && isOn(d) && canTalk(d) && !d.busy && (d.role === "receiver" || d.role === "transmitter"));
+}
+$("profiles").onclick = () => {
+  fillSelect("profPick", Object.keys(allProfiles()).map(n => [n, n]), Object.keys(allProfiles())[0]);
+  fillSelect("pScale", Object.entries(SCALE_LABELS), "auto");
+  fillSelect("pSens", [1, 2, 3, 4, 5].map(n => [n, `${n}: od ${-110 + (n - 3) * 10} dBm`]), 3);
+  fillSelect("pSmooth", [[0, "wyłączone"], [1, "lekkie (3 pakiety)"], [2, "mocne (5 pakietów)"]], 1);
+  fillSelect("pHide", [[0, "nigdy"], [10, "po 10 min"], [30, "po 30 min"], [60, "po 60 min"]], 0);
+  showProfile($("profPick").value);
+  const t = profileTargets();
+  $("profTargets").textContent = t.length
+    ? `Widoczne i połączone: ${t.length} (${t.filter(d => d.role === "receiver").length} odbiorników, ${t.filter(d => d.role === "transmitter").length} lisów). Filtry i wyszukiwanie zmieniają tę listę.`
+    : "Żadne widoczne urządzenie nie jest połączone. Dodaj urządzenia albo zmień filtr.";
+  $("profApply").textContent = `Zastosuj do widocznych (${t.length})`;
+  $("profApply").disabled = !t.length;
+  $("profDialog").showModal();
+};
+$("profPick").onchange = () => showProfile($("profPick").value);
+$("pLeds").onchange = () => {
+  const maxCh = $("pLeds").value === "binary" ? 9 : 7, cur = +$("pChannels").value;
+  fillSelect("pChannels", Array.from({ length: maxCh }, (_, i) => [i + 1, String(i + 1)]), Math.min(cur, maxCh));
+};
+$("profSave").onclick = () => {
+  const name = $("profName").value.trim();
+  if (!name) return toast("Podaj nazwę profilu");
+  if (BUILTIN_PROFILES[name]) return toast("To jest profil wbudowany: zapisz pod inną nazwą");
+  const all = customProfiles();
+  all[name] = profileFromForm();
+  try { localStorage.setItem(PROFILE_STORE, JSON.stringify(all)); } catch (_) {}
+  fillSelect("profPick", Object.keys(allProfiles()).map(n => [n, n]), name);
+  showProfile(name);
+  toast(`Zapisano profil „${name}”`);
+};
+$("profDelete").onclick = () => {
+  const name = $("profPick").value, all = customProfiles();
+  if (!all[name] || !confirm(`Usunąć profil „${name}”?`)) return;
+  delete all[name];
+  try { localStorage.setItem(PROFILE_STORE, JSON.stringify(all)); } catch (_) {}
+  fillSelect("profPick", Object.keys(allProfiles()).map(n => [n, n]), Object.keys(allProfiles())[0]);
+  showProfile($("profPick").value);
+};
+$("profApply").onclick = async () => {
+  const p = profileFromForm(), targets = profileTargets();
+  if (!targets.length || !confirm(`Zastosować profil „${$("profName").value}” do ${targets.length} urządzeń?`)) return;
+  $("profDialog").close();
+  dbg("profile-apply", Object.assign({ n: targets.length }, p));
+  const results = await Promise.all(targets.map(d => applyProfile(d, p)));
+  const ok = results.filter(Boolean).length;
+  toast(ok === targets.length ? `Profil zastosowany do ${ok} urządzeń` : `Profil: ${ok} z ${targets.length} urządzeń, reszta z błędem (szczegóły na kartach)`);
+};
+async function applyProfile(d, p) {
+  d.busy = true; d.msg = "Ustawianie profilu…"; d.cls = "warn"; render(d);
+  try {
+    if (!d.gatt || !d.gatt.connected) await connect(d); else await readInfo(d);
+    let partial = false;
+    if (d.role === "receiver") {
+      // LED mode first: more than 7 channels need binary LEDs
+      if ((p.leds === "binary") !== !!d.binary) await command(d, `set leds=${p.leds}`, "set-ok");
+      const ch = Math.min(p.channels, p.leds === "binary" ? 9 : 7);
+      if (ch !== d.channels) await command(d, `set channels=${ch}`, "set-ok");
+      if (d.cfg) {
+        if (p.scale !== d.cfg.scale) await command(d, `set scale=${p.scale}`, "set-ok");
+        if (p.sens !== d.cfg.sens) await command(d, `set sens=${p.sens}`, "set-ok");
+        if (p.smooth !== d.cfg.smooth) await command(d, `set smooth=${p.smooth}`, "set-ok");
+      } else partial = true;  // firmware without scale/sensitivity/smoothing
+    } else if (p.hide !== d.hide) await command(d, `set hide=${p.hide}`, "set-ok");
+    await readInfo(d);
+    d.msg = partial ? "Profil: część ustawień (zaktualizuj program)" : "Profil ustawiony"; d.cls = partial ? "warn" : "ok";
+    dbg("profile-device", { dev: d.name, partial });
+    return true;
+  } catch (e) {
+    d.msg = "Profil: błąd: " + e.message; d.cls = "bad";
+    dbg("profile-device-fail", Object.assign({ dev: d.name }, errInfo(e)));
+    return false;
+  } finally {
+    d.busy = false; render(d);
+  }
+}
 
 // --- GATT ---
 const hookedChars = new WeakSet();
@@ -1001,6 +1138,11 @@ async function showDeviceLog(d) {
   let text = "";
   try {
     if (!d.gatt || !d.gatt.connected) await connect(d);
+    if (!(d.caps || []).includes("log")) {
+      $("logText").textContent = `Program ${d.version || "?"} na tym urządzeniu nie ma jeszcze dziennika.\n` +
+        `Zaktualizuj je (przycisk Aktualizuj), a dziennik pojawi się tutaj.`;
+      return;
+    }
     for (let guard = 0; guard < 200; guard++) {
       const n = await command(d, `log ${text.length}`, "log", 5000);
       if (n === "log-end") break;
