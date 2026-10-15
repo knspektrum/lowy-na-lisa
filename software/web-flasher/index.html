@@ -764,8 +764,14 @@ async function readInfo(d) {
 }
 async function reconnect(d, ms) {
   const end = Date.now() + ms;
+  let tries = 0;
   while (Date.now() < end) {
-    try { await connect(d); return; } catch (_) { await sleep(2000); }
+    // After the device rebooted, iOS Web Bluetooth apps (Bluefy, Bluetooth
+    // Browser) still treat the old link as connected and every GATT call on it
+    // times out: drop it first so each try is a fresh connection and discovery.
+    try { if (d.dev.gatt.connected) d.dev.gatt.disconnect(); } catch (_) {}
+    await sleep(tries++ ? 3000 : 1000);
+    try { await connect(d); return; } catch (e) { dbg("reconnect-retry", Object.assign({ dev: d.name, tries }, errInfo(e))); }
   }
   throw new Error("urządzenie nie wróciło po restarcie");
 }
@@ -948,7 +954,7 @@ async function flash(d) {
     d.progress = null;
     step("Restart…");
     await sleep(3000);
-    await reconnect(d, 60000);
+    await reconnect(d, 150000);
     // Prove the new program's update path before keeping it: 4 KiB of random
     // data through the same characteristic as firmware, hashed by the device.
     if (d.state === "pending") {
