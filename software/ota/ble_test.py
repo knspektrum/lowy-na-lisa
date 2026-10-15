@@ -122,6 +122,14 @@ async def main():
         d = await connect(name)
         info = await d.info()
         print("after reboot:", info)
+        if info.get("state") == "pending":  # data-path self-test, required before confirm
+            import hashlib, os
+            buf = os.urandom(4096)
+            print(await d.cmd(f"test {len(buf)}", "test-ready"))
+            for o in range(0, len(buf), 509):
+                await d.c.write_gatt_char(DATA, buf[o:o + 509], response=True)
+            got = (await d.wait("test-ok:", 20))[8:]
+            print("data test", "ok" if got == hashlib.sha256(buf).hexdigest() else f"MISMATCH {got}")
         if "--no-confirm" in sys.argv:
             print("not confirming; the device should roll back within 5 minutes")
         else:

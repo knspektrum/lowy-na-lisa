@@ -55,7 +55,19 @@ static char g_name[16];
 // P power-on, B brownout, S software, W watchdog, X panic, E external, D deep sleep, ? other
 static char g_resets[17] = "";
 
-enum State { IDLE, HEADER, IMAGE, DONE, FAILED };
+enum State { IDLE, HEADER, IMAGE, DONE, FAILED, TEST };
+
+// Data-path self-test ("test N" then N bytes on DATA, answered "test-ok:<sha256 hex>").
+// A freshly installed image can only be confirmed after it passed this test in
+// this boot, so an image whose update path is broken is never kept.
+static bool g_data_ok = false;
+static uint32_t g_test_len = 0, g_test_got = 0;
+
+// Crash-loop guard. Survives panics and watchdog resets (not power-off).
+static const uint32_t CRASH_MAGIC = 0x4c534b31;
+static const uint32_t STABLE_MS = 60 * 1000;  // a boot this long counts as healthy
+RTC_NOINIT_ATTR static uint32_t g_crash_magic, g_crash_count, g_crash_switched;
+static bool g_safe = false;
 static volatile State g_state = IDLE;
 static uint8_t g_hdr_buf[HDR_LEN];
 static size_t g_hdr_len = 0;
@@ -101,6 +113,20 @@ static bool header_ok(const Header &h, String &why) {
 }
 
 static void on_data(const uint8_t *p, size_t n) {
+  if (g_state == TEST) {
+    n = min((uint32_t)n, g_test_len - g_test_got);
+    mbedtls_sha256_update(&g_sha, p, n);
+    g_test_got += n;
+    if (g_test_got < g_test_len) return;
+    uint8_t digest[32];
+    mbedtls_sha256_finish(&g_sha, digest);
+    mbedtls_sha256_free(&g_sha);
+    char hex[65];
+    for (int i = 0; i < 32; i++) snprintf(hex + 2 * i, 3, "%02x", digest[i]);
+    g_state = IDLE;
+    g_data_ok = true;
+    return notify(String("test-ok:") + hex);
+  }
   if (g_state == HEADER) {
     size_t take = min(n, HDR_LEN - g_hdr_len);
     memcpy(g_hdr_buf + g_hdr_len, p, take);
@@ -157,9 +183,19 @@ static void on_command(const String &cmd) {
     if (g_state == IMAGE) Update.abort();
     g_state = IDLE;
     notify("aborted");
+  } else if (cmd.startsWith("test ")) {
+    long len = cmd.substring(5).toInt();
+    if (len <= 0 || len > 65536 || g_state == IMAGE) return notify("error:bad test");
+    mbedtls_sha256_init(&g_sha);
+    mbedtls_sha256_starts(&g_sha, 0);
+    g_test_len = len;
+    g_test_got = 0;
+    g_state = TEST;
+    notify("test-ready");
   } else if (cmd == "confirm") {
     if (!g_pending) return notify("confirmed");
     if (!g_healthy) return notify("error:not healthy yet");
+    if (!g_data_ok) return notify("error:data test missing");
     if (esp_ota_mark_app_valid_cancel_rollback() != ESP_OK) return notify("error:confirm failed");
     g_pending = false;
     esp_timer_stop(g_deadline_timer);
@@ -179,7 +215,7 @@ static void on_command(const String &cmd) {
 }
 
 static const char *state_name() {
-  return g_state == IMAGE ? "updating" : g_state == DONE ? "installed" : g_pending ? "pending" : "ok";
+  return g_state == IMAGE ? "updating" : g_state == DONE ? "installed" : g_pending ? "pending" : g_safe ? "safe" : "ok";
 }
 
 // Scan response: name, then manufacturer data (company 0xFFFF, for testing and
@@ -256,8 +292,9 @@ class ServerCb : public BLEServerCallbacks {
   }
   void onDisconnect(BLEServer *) override {
     g_connected = false;
-    if (g_state == HEADER || g_state == IMAGE) {
+    if (g_state == HEADER || g_state == IMAGE || g_state == TEST) {
       if (g_state == IMAGE) Update.abort();
+      if (g_state == TEST) mbedtls_sha256_free(&g_sha);
       g_state = IDLE;
     }
     if (!g_hidden) BLEDevice::startAdvertising();
@@ -291,8 +328,37 @@ static void record_reset() {
   Serial.printf("lisek: reset history (newest first, B = brownout): %s\r\n", g_resets);
 }
 
+// Called first in begin(). Three crash resets in a row (panic or watchdog),
+// each before STABLE_MS of uptime, mean the running image crash-loops: boot the
+// other app slot if it holds a valid image; if that was already tried, stay in
+// a Bluetooth-only safe mode (begin() never returns) so an update can still
+// be installed. A freshly installed image is not handled here: the bootloader
+// already rolls it back when it resets before confirmation.
+static void crash_guard() {
+  if (g_crash_magic != CRASH_MAGIC) g_crash_magic = CRASH_MAGIC, g_crash_count = 0, g_crash_switched = 0;
+  esp_reset_reason_t r = esp_reset_reason();
+  bool crash = r == ESP_RST_PANIC || r == ESP_RST_INT_WDT || r == ESP_RST_TASK_WDT || r == ESP_RST_WDT;
+  g_crash_count = crash ? g_crash_count + 1 : 0;
+  if (!crash) g_crash_switched = 0;
+  if (g_crash_count < 3) return;
+  g_crash_count = 0;
+  const esp_partition_t *other = esp_ota_get_next_update_partition(nullptr);
+  esp_app_desc_t desc;
+  esp_ota_img_states_t st;
+  bool usable = other && esp_ota_get_partition_description(other, &desc) == ESP_OK &&
+                !(esp_ota_get_state_partition(other, &st) == ESP_OK && (st == ESP_OTA_IMG_INVALID || st == ESP_OTA_IMG_ABORTED));
+  if (!g_crash_switched && usable && esp_ota_set_boot_partition(other) == ESP_OK) {
+    Serial.printf("lisek: crash loop, booting the previous image in %s\r\n", other->label);
+    g_crash_switched = 1;
+    esp_restart();
+  }
+  Serial.println("lisek: crash loop, staying in Bluetooth-only safe mode");
+  g_safe = true;
+}
+
 void begin(const char *role) {
   g_role = role;
+  crash_guard();
   record_reset();
 
   esp_timer_create_args_t reboot_args = {};
@@ -358,6 +424,20 @@ void begin(const char *role) {
   hide_args.name = "lisek-hide";
   esp_timer_create(&hide_args, &g_hide_timer);
   esp_timer_start_periodic(g_hide_timer, 1000 * 1000);
+
+  // A boot that stays up STABLE_MS is not part of a crash loop.
+  esp_timer_create_args_t stable_args = {};
+  stable_args.callback = [](void *) { g_crash_count = 0, g_crash_switched = 0; };
+  stable_args.name = "lisek-stable";
+  esp_timer_handle_t stable_timer;
+  esp_timer_create(&stable_args, &stable_timer);
+  esp_timer_start_once(stable_timer, (uint64_t)STABLE_MS * 1000);
+
+  if (g_safe) {  // never return to the sketch: only Bluetooth updates run
+    g_healthy = true;  // nothing of the sketch runs, so a new image can be installed and confirmed
+    refresh_adv();
+    for (;;) delay(1000);
+  }
 }
 
 void hideAfter(uint32_t minutes) {

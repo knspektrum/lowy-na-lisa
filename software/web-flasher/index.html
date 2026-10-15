@@ -348,7 +348,7 @@ const POLLED_ONLINE_MS = 75000;
 const STORE = "lisek-fleet-v1";
 const ROLES = { R: "receiver", T: "transmitter" };
 const ROLE_NAMES = { receiver: "Odbiornik", transmitter: "Lis (nadajnik)" };
-const STATES = { o: "ok", p: "pending", u: "updating", i: "installed" };
+const STATES = { o: "ok", p: "pending", u: "updating", i: "installed", s: "safe" };
 const STATE_LABELS = { ok: "Działa", pending: "Czeka na potwierdzenie", updating: "Odbiera program", installed: "Wgrany, restart" };
 
 const $ = id => document.getElementById(id);
@@ -848,6 +848,56 @@ $("settings").onclose = async () => {
 };
 
 // --- update ---
+// SHA-256 as hex; WebCrypto when the page is a secure context, else a small
+// pure-JS fallback (so the update self-test never depends on crypto.subtle).
+async function sha256hex(buf) {
+  if (globalThis.crypto && crypto.subtle) {
+    return [...new Uint8Array(await crypto.subtle.digest("SHA-256", buf))].map(b => b.toString(16).padStart(2, "0")).join("");
+  }
+  const K = [], H = [0x6a09e667, 0xbb67ae85, 0x3c6ef372, 0xa54ff53a, 0x510e527f, 0x9b05688c, 0x1f83d9ab, 0x5be0cd19];
+  for (let n = 2, c = 0; c < 64; n++) {
+    let p = true;
+    for (let i = 2; i * i <= n; i++) if (n % i === 0) { p = false; break; }
+    if (p) K[c++] = (Math.cbrt(n) % 1) * 2 ** 32 | 0;
+  }
+  const len = buf.length, total = ((len + 9 + 63) >> 6) << 6, m = new Uint8Array(total);
+  m.set(buf); m[len] = 0x80;
+  new DataView(m.buffer).setUint32(total - 4, len * 8);
+  const w = new Int32Array(64), r = (x, k) => (x >>> k) | (x << (32 - k));
+  for (let o = 0; o < total; o += 64) {
+    for (let i = 0; i < 16; i++) w[i] = new DataView(m.buffer).getInt32(o + i * 4);
+    for (let i = 16; i < 64; i++) {
+      const s0 = r(w[i - 15], 7) ^ r(w[i - 15], 18) ^ (w[i - 15] >>> 3), s1 = r(w[i - 2], 17) ^ r(w[i - 2], 19) ^ (w[i - 2] >>> 10);
+      w[i] = (w[i - 16] + s0 + w[i - 7] + s1) | 0;
+    }
+    let [a, b, c, dd, e, f, g, h] = H;
+    for (let i = 0; i < 64; i++) {
+      const t1 = (h + (r(e, 6) ^ r(e, 11) ^ r(e, 25)) + ((e & f) ^ (~e & g)) + K[i] + w[i]) | 0;
+      const t2 = ((r(a, 2) ^ r(a, 13) ^ r(a, 22)) + ((a & b) ^ (a & c) ^ (b & c))) | 0;
+      h = g; g = f; f = e; e = (dd + t1) | 0; dd = c; c = b; b = a; a = (t1 + t2) | 0;
+    }
+    [a, b, c, dd, e, f, g, h].forEach((v, i) => H[i] = (H[i] + v) | 0);
+  }
+  return H.map(v => (v >>> 0).toString(16).padStart(8, "0")).join("");
+}
+
+async function dataTest(d) {
+  const buf = new Uint8Array(4096);
+  if (globalThis.crypto && crypto.getRandomValues) crypto.getRandomValues(buf); else buf.forEach((_, i) => buf[i] = Math.random() * 256);
+  try { await command(d, `test ${buf.length}`, "test-ready"); }
+  catch (e) {
+    if (/unknown command/.test(e.message)) { dbg("data-test-skip", { dev: d.name }); return; }  // firmware before the test
+    throw e;
+  }
+  const want = await sha256hex(buf);
+  const done = note(d, "test-ok:", 20000);
+  const chunk = Math.max(20, Math.min(512, (d.mtu || 23) - 3));
+  for (let o = 0; o < buf.length; o += chunk) await d.data.writeValueWithResponse(buf.slice(o, o + chunk));
+  const got = (await done).slice(8);
+  dbg("data-test", { dev: d.name, ok: got === want });
+  if (got !== want) throw new Error("test aktualizacji nie przeszedł, urządzenie wróci do poprzedniej wersji");
+}
+
 async function flash(d) {
   const img = images[d.role];
   if (!img || d.busy || !d.dev || !permitted.has(d.dev.id)) return;
@@ -896,6 +946,12 @@ async function flash(d) {
     step("Restart…");
     await sleep(3000);
     await reconnect(d, 60000);
+    // Prove the new program's update path before keeping it: 4 KiB of random
+    // data through the same characteristic as firmware, hashed by the device.
+    if (d.state === "pending") {
+      step("Test aktualizacji…");
+      await dataTest(d);
+    }
     // The new program only stays once confirmed; it needs a moment to bring its radio up.
     const end = Date.now() + 90000;
     while (d.state === "pending") {

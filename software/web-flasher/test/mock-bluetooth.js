@@ -23,7 +23,12 @@
     command(cmd) {
       this.log.push(cmd);
       if (cmd === "begin") { this.rx = []; this.got = 0; this.hdr = null; this.notify("ready"); }
-      else if (cmd === "confirm") { if (this.state === "pending") this.state = "ok"; this.notify("confirmed"); }
+      else if (cmd.startsWith("test ") && this.fast) { this.testLen = +cmd.slice(5); this.testBuf = []; this.notify("test-ready"); }
+      else if (cmd === "confirm") {
+        if (this.state === "pending" && this.fast && !this.tested) return this.notify("error:data test missing");
+        if (this.state === "pending") this.state = "ok";
+        this.notify("confirmed");
+      }
       else if (cmd.startsWith("set ")) {
         const [k, v] = cmd.slice(4).split("=");
         if (this.role === "receiver" && k === "leds") this.user = (this.user & ~1) | (v === "binary" ? 1 : 0);
@@ -36,6 +41,15 @@
       } else this.notify("error:unknown command");
     }
     data(bytes) {
+      if (this.testLen) {
+        this.testBuf.push(...bytes);
+        if (this.testBuf.length >= this.testLen) {
+          const buf = new Uint8Array(this.testBuf.slice(0, this.testLen));
+          this.testLen = 0;
+          sha256hex(buf).then(h => { this.tested = true; this.notify("test-ok:" + h); });  // the page's own sha256hex
+        }
+        return;
+      }
       this.rx.push(...bytes);
       if (!this.hdr && this.rx.length >= 168) {
         const h = new Uint8Array(this.rx.slice(0, 168));
@@ -55,7 +69,7 @@
           this.gatt.connected = false;
           this.on = false;
           this.dispatchEvent(new Event("gattserverdisconnected"));
-          later(() => { this.on = true; this.version = this.hdr.version; this.state = "pending"; }, 1500);
+          later(() => { this.on = true; this.version = this.hdr.version; this.state = "pending"; this.tested = false; }, 1500);
         }, 300);
       }
     }
