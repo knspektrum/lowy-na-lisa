@@ -17,14 +17,21 @@
     }
     info() {
       return JSON.stringify({ role: this.role, version: this.version, state: this.state, user: this.user, healthy: this.healthy,
-        partition: "app0", mtu: 517, uptime: 42, hide_after: 10, id: this.devId });
+        partition: "app0", mtu: 517, uptime: 42, hide_after: 10, id: this.devId,
+        caps: this.fast ? "z,log,anyway" : "", cfg: this.role === "receiver" && this.fast ? { scale: "auto", sens: 3, smooth: 1 } : {} });
     }
     notify(s) { later(() => this.ctrl.dispatch(s)); }
     command(cmd) {
       this.log.push(cmd);
       if (cmd === "begin") { this.rx = []; this.got = 0; this.hdr = null; this.notify("ready"); }
       else if (cmd.startsWith("test ") && this.fast) { this.testLen = +cmd.slice(5); this.testBuf = []; this.notify("test-ready"); }
+      else if (cmd.startsWith("log") && this.fast) {
+        const text = `[12] lisek: firmware ${this.version}\r\n[950] radio up\r\n`.repeat(20), off = +cmd.slice(4) || 0;
+        this.notify(off >= text.length ? "log-end" : `log:${off}:${text.slice(off, off + 160)}`);
+      }
+      else if (cmd === "confirm-anyway" && this.fast) { if (this.state === "pending" && this.tested) this.state = "ok"; this.notify("confirmed"); }
       else if (cmd === "confirm") {
+        if (this.state === "pending" && this.noRadio) return this.notify("error:not healthy yet");
         if (this.state === "pending" && this.fast && !this.tested) return this.notify("error:data test missing");
         if (this.state === "pending") this.state = "ok";
         this.notify("confirmed");
@@ -54,16 +61,40 @@
       if (!this.hdr && this.rx.length >= 168) {
         const h = new Uint8Array(this.rx.slice(0, 168));
         const role = td.decode(h.slice(4, 16)).replace(/\0.*$/s, "");
-        if (td.decode(h.slice(0, 4)) !== "LSK1") return this.notify("error:not a signed image");
+        const magic = td.decode(h.slice(0, 4));
+        if (magic !== "LSK1" && !(magic === "LSK2" && this.fast)) return this.notify("error:not a signed image");
         if (role !== this.role) return this.notify("error:image is for another device type");
         this.hdr = { version: td.decode(h.slice(16, 56)).replace(/\0.*$/s, ""), size: new DataView(h.buffer).getUint32(56, true) };
+        if (td.decode(h.slice(0, 4)) === "LSK2") {
+          const ds = new DecompressionStream("deflate");
+          this.zw = ds.writable.getWriter();
+          this.zout = 0;
+          const rd = ds.readable.getReader();
+          (async () => { for (;;) { const { value, done } = await rd.read(); if (done) break; this.zout += value.length; } })();
+          this.zw.write(new Uint8Array(this.rx.slice(168)));
+        }
         this.notify("header-ok");
       }
       if (!this.hdr) return;
+      if (this.zw) {
+        if (this.rx.length - bytes.length >= 168) this.zw.write(new Uint8Array(bytes));
+        const got = this.rx.length - 168;
+        if (Math.floor(got / 8192) > Math.floor((got - bytes.length) / 8192)) this.notify(`progress:${got}/${this.hdr.size}`);
+        if (!this.zwait) this.zwait = setInterval(() => {
+          if (this.zout < this.hdr.size) return;
+          clearInterval(this.zwait); this.zwait = null; this.zw = null;
+          this.notify(`progress:${this.rx.length - 168}/${this.hdr.size}`);
+          this.finish();
+        }, 20);
+        return;
+      }
       const got = this.rx.length - 168, step = this.fast ? 8192 : 32768;
       if (Math.floor(got / step) > Math.floor(this.got / step) || got === this.hdr.size) this.notify(`progress:${got}/${this.hdr.size}`);
       this.got = got;
-      if (got === this.hdr.size) {
+      if (got === this.hdr.size) this.finish();
+    }
+    finish() {
+      {
         this.notify("done");
         later(() => {  // reboot into the new image, pending confirmation
           this.gatt.connected = false;

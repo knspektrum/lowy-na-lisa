@@ -53,6 +53,11 @@ void hideAfter(uint32_t minutes);
 // reported in the info JSON as "cfg". Safe to call from any task.
 void setInfoExtra(const String &json);
 
+// printf to Serial and to the device log (last 4 KB, readable over BLE with
+// "log <offset>", shown by the panel's Dziennik button).
+void logf(const char *fmt, ...) __attribute__((format(printf, 1, 2)));
+void logln(const String &line);
+
 // True while an update is being received (the sketch can show it on LEDs).
 bool updating();
 

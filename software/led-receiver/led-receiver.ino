@@ -366,12 +366,12 @@ void fast_link() {
     return;
   }
   String r = sendAT("AT+UART=BR, " + String(MODULE_BAUD));
-  Serial.printf("radio: LoRa-E5 at %d baud, switching to %d: \"%s\"\r\n", MODULE_BAUD_DEFAULT, MODULE_BAUD, r.c_str());
+  LisekOta::logf("radio: LoRa-E5 at %d baud, switching to %d: \"%s\"\r\n", MODULE_BAUD_DEFAULT, MODULE_BAUD, r.c_str());
   sendAT("AT+RESET");  // the new rate takes effect after a reset
   delay(1500);
   Serial1.updateBaudRate(MODULE_BAUD);
   while (Serial1.available()) Serial1.read();
-  Serial.printf("radio: LoRa-E5 answers at %d: %s\r\n", MODULE_BAUD, module_answers(5) ? "yes" : "no");
+  LisekOta::logf("radio: LoRa-E5 answers at %d: %s\r\n", MODULE_BAUD, module_answers(5) ? "yes" : "no");
 }
 
 // Full radio init: enters AT+TEST P2P mode at the frequency for `id` and
@@ -395,14 +395,14 @@ bool set_transmitter_id(uint8_t id) {
   }
   if (!atOk) {
     // Silence means no power or a broken TX/RX wire; garbage means a wrong baud rate.
-    Serial.printf("radio: no \"+AT: OK\" from LoRa-E5 after 15 tries, last reply \"%s\" (%u chars)\r\n", r.c_str(),
+    LisekOta::logf("radio: no \"+AT: OK\" from LoRa-E5 after 15 tries, last reply \"%s\" (%u chars)\r\n", r.c_str(),
                   r.length());
     return false;
   }
 
   r = sendAT("AT+MODE=TEST");
   if (r.indexOf("+MODE: TEST") < 0) {
-    Serial.printf("radio: AT+MODE=TEST answered \"%s\"\r\n", r.c_str());
+    LisekOta::logf("radio: AT+MODE=TEST answered \"%s\"\r\n", r.c_str());
     return false;
   }
 
@@ -449,7 +449,7 @@ void setup() {
   // which matters on battery: Bluetooth on top of 240 MHz browned the boards out.
   setCpuFrequencyMhz(80);
   Serial.begin(115200);
-  Serial.println("Hej liski!");
+  LisekOta::logln("Hej liski!");
   LisekOta::begin("receiver");
   id_change_done = xSemaphoreCreateBinary();
   Preferences prefs;
@@ -463,7 +463,7 @@ void setup() {
   transmitter_id = constrain(prefs.getUChar("id", 1), 1, min((int)channels, binary_leds ? 9 : 7));
   prefs.end();
   advertise_settings();
-  Serial.println("firmware " LISEK_VERSION);
+  LisekOta::logln("firmware " LISEK_VERSION);
 
   pinMode(BUTTON_PIN, INPUT_PULLUP);
   for (int i = 0; i < NUM_LEDS; i++) pinMode(LED_PINS[i], OUTPUT);
@@ -487,13 +487,13 @@ void setup() {
   fast_link();
 
   while (!set_transmitter_id(transmitter_id)) {
-    Serial.println("radio init failed, retrying in 2s...");
+    LisekOta::logln("radio init failed, retrying in 2s...");
     delay(2000);
     fast_link();
   }
   LisekOta::markHealthy();
   LisekOta::onSetting(on_setting);
-  Serial.println("into RX mode");
+  LisekOta::logln("into RX mode");
 }
 
 // While non-zero, the LEDs show the newly selected id until this millis() time
@@ -511,10 +511,10 @@ bool change_transmitter_id_to(uint8_t id) {
   if (id_flash_until == 0) id_flash_until = 1;
 
   if (retune(id) || set_transmitter_id(id)) {
-    Serial.printf("\r\nChanged transmitter id to %d\r\n", transmitter_id);
+    LisekOta::logf("\r\nChanged transmitter id to %d\r\n", transmitter_id);
     return true;
   } else {
-    Serial.println("failed to change transmitter id");
+    LisekOta::logln("failed to change transmitter id");
     return false;
   }
 }
@@ -587,7 +587,7 @@ void loop() {
           parseLenLine(line, size, rssi, snr);
 
           if (size < 2) {
-            Serial.println("WARN: packet of size 0 or 1 recieved");
+            LisekOta::logln("WARN: packet of size 0 or 1 recieved");
           } else {
             // Actual payload arrives on the next "+TEST: RX ..." line; stash
             // rssi/snr for it.
@@ -619,7 +619,7 @@ void loop() {
             }
           }
         } else if (line.length()) {
-          Serial.printf("module: %s\r\n", line.c_str());
+          LisekOta::logf("module: %s\r\n", line.c_str());
         }
       }
       line = "";

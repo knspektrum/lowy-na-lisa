@@ -9,6 +9,8 @@
 #include <esp_timer.h>
 #include <mbedtls/pk.h>
 #include <mbedtls/sha256.h>
+#include <miniz.h>  // ESP32 ROM inflater (tinfl), for compressed images
+#include <stdarg.h>
 #include <Preferences.h>
 
 #include "lisek_pubkey.h"
@@ -103,20 +105,52 @@ static volatile bool g_connected = false, g_hidden = false;
 static uint32_t g_hide_after_ms = 0;  // 0 = always visible
 static int64_t g_deadline_us = 0;     // esp_timer time of the rollback, while pending
 
+// Device log: the last LOG_SIZE bytes of messages (boot, radio, updates,
+// errors), readable over BLE with "log <offset>" (one chunk per request).
+static const size_t LOG_SIZE = 4096;
+static char g_log[LOG_SIZE];
+static uint32_t g_log_total = 0;  // bytes ever written; position = total % LOG_SIZE
+static portMUX_TYPE g_log_mux = portMUX_INITIALIZER_UNLOCKED;
+
+static void log_append(const char *t) {
+  char stamp[16];
+  snprintf(stamp, sizeof stamp, "[%lu] ", (unsigned long)millis());
+  portENTER_CRITICAL(&g_log_mux);
+  for (const char *q : { (const char *)stamp, t })
+    for (; *q; q++) g_log[g_log_total++ % LOG_SIZE] = *q;
+  portEXIT_CRITICAL(&g_log_mux);
+}
+
+void logf(const char *fmt, ...) {
+  char buf[256];
+  va_list ap;
+  va_start(ap, fmt);
+  vsnprintf(buf, sizeof buf, fmt, ap);
+  va_end(ap);
+  Serial.print(buf);
+  log_append(buf);
+}
+
+void logln(const String &line) {
+  logf("%s\r\n", line.c_str());
+}
+
 static void notify(const String &s) {
   g_ctrl->setValue(s);
   g_ctrl->notify();
 }
 
+static void z_free();
 static void fail(const String &why) {
-  if (g_state == IMAGE) Update.abort();
+  logf("lisek: update error: %s\r\n", why.c_str());
+  if (g_state == IMAGE) Update.abort(), z_free();
   g_state = FAILED;
   notify("error:" + why);
   refresh_adv();
 }
 
 static bool header_ok(const Header &h, String &why) {
-  if (memcmp(h.magic, "LSK1", 4) != 0) return why = "not a signed image", false;
+  if (memcmp(h.magic, "LSK1", 4) != 0 && memcmp(h.magic, "LSK2", 4) != 0) return why = "not a signed image", false;
   if (strncmp(h.role, g_role, sizeof h.role) != 0) return why = "image is for another device type", false;
   const esp_partition_t *next = esp_ota_get_next_update_partition(nullptr);
   if (!next || h.size == 0 || h.size > next->size) return why = "image does not fit", false;
@@ -133,6 +167,48 @@ static bool header_ok(const Header &h, String &why) {
   return true;
 }
 
+// Compressed images ("LSK2"): the payload is a zlib stream of the app image,
+// inflated on the fly by the ROM's tinfl into a 32 KB circular window; size and
+// SHA-256 in the signed header are those of the inflated image.
+static bool g_z = false;
+static tinfl_decompressor *g_inflator = nullptr;
+static uint8_t *g_dict = nullptr;
+static size_t g_dict_ofs = 0;
+static uint32_t g_in = 0, g_last_in_note = 0;  // compressed bytes consumed (the client's ack)
+
+static void z_free() {
+  free(g_inflator), g_inflator = nullptr;
+  free(g_dict), g_dict = nullptr;
+}
+
+// Writes inflated (or plain) image bytes; false after fail().
+static bool image_out(const uint8_t *p, size_t n) {
+  if (g_written + n > g_total) return fail("too much data"), false;
+  if (Update.write((uint8_t *)p, n) != n) return fail(String("write: ") + Update.errorString()), false;
+  mbedtls_sha256_update(&g_sha, p, n);
+  g_written += n;
+  return true;
+}
+
+static void image_finish() {
+  z_free();
+  uint8_t digest[32];
+  mbedtls_sha256_finish(&g_sha, digest);
+  mbedtls_sha256_free(&g_sha);
+  if (memcmp(digest, ((const Header *)g_hdr_buf)->sha256, 32) != 0) return fail("checksum mismatch");
+  // esp_ota_end inside checks the image itself too, then makes it the boot image.
+  if (!Update.end()) {
+    g_state = FAILED;
+    logf("lisek: update failed at end: %s\r\n", Update.errorString());
+    return notify(String("error:end: ") + Update.errorString());
+  }
+  g_state = DONE;
+  logf("lisek: update installed (%u bytes%s), rebooting\r\n", (unsigned)g_total, g_z ? ", compressed" : "");
+  notify("done");
+  refresh_adv();
+  esp_timer_start_once(g_reboot_timer, 800 * 1000);  // boot the new image, which must then be confirmed
+}
+
 static void on_data(const uint8_t *p, size_t n) {
   if (g_state == TEST) {
     n = min((uint32_t)n, g_test_len - g_test_got);
@@ -146,6 +222,7 @@ static void on_data(const uint8_t *p, size_t n) {
     for (int i = 0; i < 32; i++) snprintf(hex + 2 * i, 3, "%02x", digest[i]);
     g_state = IDLE;
     g_data_ok = true;
+    logf("lisek: update self-test passed\r\n");
     return notify(String("test-ok:") + hex);
   }
   if (g_state == HEADER) {
@@ -159,6 +236,16 @@ static void on_data(const uint8_t *p, size_t n) {
     String why;
     if (!header_ok(h, why)) return fail(why);
     if (!Update.begin(h.size)) return fail(String("begin: ") + Update.errorString());
+    g_z = memcmp(h.magic, "LSK2", 4) == 0;
+    if (g_z) {
+      g_inflator = (tinfl_decompressor *)malloc(sizeof(tinfl_decompressor));
+      g_dict = (uint8_t *)malloc(TINFL_LZ_DICT_SIZE);
+      if (!g_inflator || !g_dict) return z_free(), fail("out of memory");
+      tinfl_init(g_inflator);
+      g_dict_ofs = 0;
+    }
+    g_in = g_last_in_note = 0;
+    logf("lisek: update %.40s started (%u bytes%s)\r\n", h.version, (unsigned)h.size, g_z ? ", compressed" : "");
     mbedtls_sha256_init(&g_sha);
     mbedtls_sha256_starts(&g_sha, 0);
     g_total = h.size;
@@ -169,29 +256,32 @@ static void on_data(const uint8_t *p, size_t n) {
     refresh_adv();
   }
   if (g_state != IMAGE || n == 0) return;
-  if (g_written + n > g_total) return fail("too much data");
-  if (Update.write((uint8_t *)p, n) != n) return fail(String("write: ") + Update.errorString());
-  mbedtls_sha256_update(&g_sha, p, n);
-  g_written += n;
-  if (g_written - g_last_note >= 8192 || g_written == g_total) {  // also the client's flow-control ack
-    g_last_note = g_written;
-    notify("progress:" + String(g_written) + "/" + String(g_total));
+  g_in += n;
+  if (!g_z) {
+    if (!image_out(p, n)) return;
+  } else {
+    bool done = false;
+    for (;;) {
+      size_t in_sz = n, out_sz = TINFL_LZ_DICT_SIZE - g_dict_ofs;
+      tinfl_status st = tinfl_decompress(g_inflator, p, &in_sz, g_dict, g_dict + g_dict_ofs, &out_sz,
+                                         TINFL_FLAG_PARSE_ZLIB_HEADER | TINFL_FLAG_HAS_MORE_INPUT);
+      p += in_sz, n -= in_sz;
+      if (out_sz && !image_out(g_dict + g_dict_ofs, out_sz)) return z_free();
+      g_dict_ofs = (g_dict_ofs + out_sz) & (TINFL_LZ_DICT_SIZE - 1);
+      if (st < 0) return z_free(), fail("bad compressed data");
+      if (st == TINFL_STATUS_DONE) { done = true; break; }
+      if (st == TINFL_STATUS_NEEDS_MORE_INPUT && n == 0) break;
+    }
+    if (!done && g_written >= g_total) return z_free(), fail("too much data");
+    if (done && g_written != g_total) return z_free(), fail("compressed image has the wrong size");
   }
-  if (g_written < g_total) return;
-
-  uint8_t digest[32];
-  mbedtls_sha256_finish(&g_sha, digest);
-  mbedtls_sha256_free(&g_sha);
-  if (memcmp(digest, ((const Header *)g_hdr_buf)->sha256, 32) != 0) return fail("checksum mismatch");
-  // esp_ota_end inside checks the image itself too, then makes it the boot image.
-  if (!Update.end()) {
-    g_state = FAILED;
-    return notify(String("error:end: ") + Update.errorString());
+  // Acks count received (compressed) bytes: the client's flow-control window.
+  bool finished = g_written == g_total;
+  if (g_in - g_last_in_note >= 8192 || finished) {
+    g_last_in_note = g_in;
+    notify("progress:" + String(g_in) + "/" + String(g_total));
   }
-  g_state = DONE;
-  notify("done");
-  refresh_adv();
-  esp_timer_start_once(g_reboot_timer, 800 * 1000);  // boot the new image, which must then be confirmed
+  if (finished) image_finish();
 }
 
 static void on_command(const String &cmd) {
@@ -200,6 +290,29 @@ static void on_command(const String &cmd) {
     g_hdr_len = 0;
     g_state = HEADER;
     notify("ready");
+  } else if (cmd.startsWith("log")) {
+    // "log <offset>": one chunk of the device log from that offset (counted from
+    // the oldest byte still kept); "log-end" when there is no more.
+    uint32_t want = cmd.length() > 4 ? cmd.substring(4).toInt() : 0;
+    size_t room = min((int)g_mtu - 3, 500) - 16;
+    String chunk;
+    portENTER_CRITICAL(&g_log_mux);
+    uint32_t total = g_log_total, oldest = total > LOG_SIZE ? total - LOG_SIZE : 0;
+    for (uint32_t i = oldest + want; i < total && chunk.length() < room; i++) chunk += g_log[i % LOG_SIZE];
+    portEXIT_CRITICAL(&g_log_mux);
+    if (!chunk.length()) return notify("log-end");
+    notify("log:" + String(want) + ":" + chunk);
+  } else if (cmd == "confirm-anyway") {
+    // The radio does not answer, but the update path was proven (data test):
+    // keep the new image anyway, e.g. to install a radio fix.
+    if (!g_pending) return notify("confirmed");
+    if (!g_data_ok) return notify("error:data test missing");
+    if (esp_ota_mark_app_valid_cancel_rollback() != ESP_OK) return notify("error:confirm failed");
+    g_pending = false;
+    esp_timer_stop(g_deadline_timer);
+    logf("lisek: update confirmed without a healthy radio\r\n");
+    notify("confirmed");
+    refresh_adv();
   } else if (cmd == "abort") {
     if (g_state == IMAGE) Update.abort();
     g_state = IDLE;
@@ -220,12 +333,15 @@ static void on_command(const String &cmd) {
     if (esp_ota_mark_app_valid_cancel_rollback() != ESP_OK) return notify("error:confirm failed");
     g_pending = false;
     esp_timer_stop(g_deadline_timer);
+    logf("lisek: update confirmed\r\n");
     notify("confirmed");
     refresh_adv();
   } else if (cmd.startsWith("set ")) {
     // Panel setting "set key=value"; the sketch decides and stores it.
     int eq = cmd.indexOf('=');
-    if (eq < 0 || !g_setting || !g_setting(cmd.substring(4, eq), cmd.substring(eq + 1))) return notify("error:rejected");
+    bool ok = eq > 0 && g_setting && g_setting(cmd.substring(4, eq), cmd.substring(eq + 1));
+    logf("lisek: setting %s %s\r\n", cmd.substring(4).c_str(), ok ? "applied" : "rejected");
+    if (!ok) return notify("error:rejected");
     notify("set-ok");
   } else if (cmd == "reboot") {
     notify("rebooting");
@@ -292,7 +408,7 @@ static String info_json() {
   }
   j += ",\"hide_after\":";
   j += g_hide_after_ms / 60000;
-  j += ",\"id\":";
+  j += ",\"caps\":\"z,log,anyway\",\"id\":";
   j += g_id;
   j += "}";
   return j;
@@ -359,7 +475,7 @@ static void record_reset() {
   prefs.putString("resets", now);
   prefs.end();
   strlcpy(g_resets, now.c_str(), sizeof g_resets);
-  Serial.printf("lisek: reset history (newest first, B = brownout): %s\r\n", g_resets);
+  logf("lisek: firmware %s, reset history (newest first, B = brownout): %s\r\n", LISEK_VERSION, g_resets);
 }
 
 // Called first in begin(). Three crash resets in a row (panic or watchdog),
@@ -382,11 +498,11 @@ static void crash_guard() {
   bool usable = other && esp_ota_get_partition_description(other, &desc) == ESP_OK &&
                 !(esp_ota_get_state_partition(other, &st) == ESP_OK && (st == ESP_OTA_IMG_INVALID || st == ESP_OTA_IMG_ABORTED));
   if (!g_crash_switched && usable && esp_ota_set_boot_partition(other) == ESP_OK) {
-    Serial.printf("lisek: crash loop, booting the previous image in %s\r\n", other->label);
+    logf("lisek: crash loop, booting the previous image in %s\r\n", other->label);
     g_crash_switched = 1;
     esp_restart();
   }
-  Serial.println("lisek: crash loop, staying in Bluetooth-only safe mode");
+  logf("lisek: crash loop, staying in Bluetooth-only safe mode\r\n");
   g_safe = true;
 }
 

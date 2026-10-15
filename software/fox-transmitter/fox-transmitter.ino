@@ -89,13 +89,13 @@ String queryParam(const char *name) {
 void ensureParam(const char *name, long value) {
   String cur = queryParam(name);
   if (cur.length() && cur.toInt() == value) {
-    Serial.printf("cfg %s=%ld ok\r\n", name, value);
+    LisekOta::logf("cfg %s=%ld ok\r\n", name, value);
     return;
   }
   char cmd[32];
   snprintf(cmd, sizeof cmd, "AT+%s=%ld", name, value);
   int res = sendAT(cmd);
-  Serial.printf("cfg %s: was \"%s\", set to %ld -> %d (\"%s\")\r\n", name, cur.c_str(), value, res, lastResponse.c_str());
+  LisekOta::logf("cfg %s: was \"%s\", set to %ld -> %d (\"%s\")\r\n", name, cur.c_str(), value, res, lastResponse.c_str());
 }
 
 void enterConfig() {
@@ -127,13 +127,13 @@ bool update_transmitter_id(int id) {
   int res = sendAT((String("AT+SYNW=") + buf).c_str());
   exitConfig();
   if (res != 0) {
-    Serial.printf("set sync word failed: %d (module said \"%s\")\r\n", res, lastResponse.c_str());
+    LisekOta::logf("set sync word failed: %d (module said \"%s\")\r\n", res, lastResponse.c_str());
     return false;
   }
   transmitter_id = id;
   LisekOta::setId(id);
-  Serial.printf("updated transmitter id id=%d sync_word=%s\r\n", id, buf);
-  if (id == 8 || id == 9) Serial.println("note: ids 8-9 require binary LED mode on the receiver");
+  LisekOta::logf("updated transmitter id id=%d sync_word=%s\r\n", id, buf);
+  if (id == 8 || id == 9) LisekOta::logln("note: ids 8-9 require binary LED mode on the receiver");
   return true;
 }
 
@@ -142,10 +142,10 @@ bool save_to_flash() {
   int res = sendAT("AT&W");
   exitConfig();
   if (res != 0) {
-    Serial.printf("save to flash failed: %d (module said \"%s\")\r\n", res, lastResponse.c_str());
+    LisekOta::logf("save to flash failed: %d (module said \"%s\")\r\n", res, lastResponse.c_str());
     return false;
   }
-  Serial.printf("saved to flash\r\n");
+  LisekOta::logf("saved to flash\r\n");
   return true;
 }
 
@@ -155,7 +155,7 @@ void setup() {
   setCpuFrequencyMhz(80);
   Serial.begin(115200);
   pinMode(CONFIG_PIN, OUTPUT);
-  Serial.println("\r\n=== fox transmitter (reconstructed) ===");
+  LisekOta::logln("\r\n=== fox transmitter (reconstructed) ===");
   LisekOta::begin("transmitter");
   radio_mutex = xSemaphoreCreateMutex();
   Preferences prefs;
@@ -163,7 +163,7 @@ void setup() {
   hide_minutes = prefs.getUChar("hide_min", 0);
   prefs.end();
   advertise_hide();
-  Serial.println("firmware " LISEK_VERSION);
+  LisekOta::logln("firmware " LISEK_VERSION);
 
   enterConfig();
   unsigned long baud = 0;
@@ -176,16 +176,16 @@ void setup() {
       }
     }
     if (!baud) {
-      Serial.println("connection failed: no AT response at 115200 or 9600, retrying");
+      LisekOta::logln("connection failed: no AT response at 115200 or 9600, retrying");
       delay(2000);
     }
   }
-  Serial.printf("connection successful :) module answers at %lu baud\r\n", baud);
+  LisekOta::logf("connection successful :) module answers at %lu baud\r\n", baud);
 
   if (baud != 115200) {
     int res = sendAT("AT+SPR=9");
     Serial1.updateBaudRate(115200);
-    Serial.printf("cfg SPR: module was at %lu baud, set SPR=9 -> %d, switched to 115200\r\n", baud, res);
+    LisekOta::logf("cfg SPR: module was at %lu baud, set SPR=9 -> %d, switched to 115200\r\n", baud, res);
   } else {
     ensureParam("SPR", 9);
   }
@@ -196,17 +196,17 @@ void setup() {
 
   String sw = queryParam("SYNW");
   int id = idFromSyncWord(sw);
-  Serial.printf("stored sync word: \"%s\"\r\n", sw.c_str());
-  Serial.printf("module ALL: %s\r\n", queryParam("ALL").c_str());
+  LisekOta::logf("stored sync word: \"%s\"\r\n", sw.c_str());
+  LisekOta::logf("module ALL: %s\r\n", queryParam("ALL").c_str());
   exitConfig();
 
   if (id >= 0) {
     transmitter_id = id;
   } else {
-    Serial.println("stored sync word is not CAFE<id>x4BABE, defaulting to id=1 and rewriting it");
+    LisekOta::logln("stored sync word is not CAFE<id>x4BABE, defaulting to id=1 and rewriting it");
     update_transmitter_id(1);
   }
-  Serial.printf("transmitter_id=%d\r\n", transmitter_id);
+  LisekOta::logf("transmitter_id=%d\r\n", transmitter_id);
   LisekOta::setId(transmitter_id);
   LisekOta::markHealthy();
   LisekOta::onSetting(on_setting);

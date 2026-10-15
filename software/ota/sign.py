@@ -11,6 +11,7 @@ import hashlib
 import os
 import struct
 import sys
+import zlib
 
 from cryptography.hazmat.primitives import hashes, serialization
 from cryptography.hazmat.primitives.asymmetric import ec
@@ -38,19 +39,31 @@ def keygen():
     print(f"wrote {KEY} (back it up) and {os.path.relpath(PUBKEY_H)}")
 
 
-def sign(role, version, image_path, out_path):
-    with open(KEY, "rb") as f:
-        key = serialization.load_pem_private_key(f.read(), None)
-    image = open(image_path, "rb").read()
-    signed = struct.pack("<4s12s40sI32s", b"LSK1", role.encode(), version.encode()[:39], len(image),
+def header(key, magic, role, version, image):
+    signed = struct.pack("<4s12s40sI32s", magic, role.encode(), version.encode()[:39], len(image),
                          hashlib.sha256(image).digest())
     assert len(signed) == SIGNED_LEN
     sig = key.sign(signed, ec.ECDSA(hashes.SHA256()))
     hdr = signed + struct.pack("<B72s3x", len(sig), sig)
     assert len(hdr) == HDR_LEN
+    return hdr
+
+
+def sign(role, version, image_path, out_path):
+    """Writes out_path (LSK1: plain image, every firmware accepts it) and
+    out_path + "z" (LSK2: zlib-compressed image, for firmware whose info lists
+    the "z" capability; size and SHA-256 in the header are of the plain image)."""
+    with open(KEY, "rb") as f:
+        key = serialization.load_pem_private_key(f.read(), None)
+    image = open(image_path, "rb").read()
     with open(out_path, "wb") as f:
-        f.write(hdr + image)
-    print(f"signed {role} {version}: {len(image)} bytes -> {out_path}")
+        f.write(header(key, b"LSK1", role, version, image) + image)
+    packed = zlib.compress(image, 9)
+    assert zlib.decompress(packed) == image
+    with open(out_path + "z", "wb") as f:
+        f.write(header(key, b"LSK2", role, version, image) + packed)
+    print(f"signed {role} {version}: {len(image)} bytes -> {out_path}, compressed {len(packed)} bytes "
+          f"({100 * len(packed) // len(image)}%) -> {out_path}z")
 
 
 if __name__ == "__main__":

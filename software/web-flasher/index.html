@@ -328,6 +328,13 @@
   </form>
 </dialog>
 
+<dialog id="logDialog" aria-labelledby="logTitle">
+  <h2 id="logTitle">Dziennik urządzenia</h2>
+  <div class="muted mono" id="logName"></div>
+  <pre id="logText" class="mono" style="white-space:pre-wrap;word-break:break-word;max-height:55vh;overflow:auto;background:var(--muted);padding:10px;border-radius:var(--radius);font-size:12px"></pre>
+  <div class="dialog-actions"><button id="logClose" class="primary">Zamknij</button></div>
+</dialog>
+
 <div id="toast" role="status" aria-live="polite"></div>
 
 <script>
@@ -498,7 +505,13 @@ $("files").onchange = async e => {
 (async () => {  // served next to firmware/ (software/ota/build.sh output): load it straight away
   try {
     const m = await (await fetch("firmware/manifest.json", { cache: "no-store" })).json();
-    for (const role of Object.keys(m)) addImage(await (await fetch(`firmware/${role}.lsk`, { cache: "no-store" })).arrayBuffer());
+    for (const role of Object.keys(m)) {
+      addImage(await (await fetch(`firmware/${role}.lsk`, { cache: "no-store" })).arrayBuffer());
+      try {  // compressed variant (LSK2) for firmware that can inflate it
+        const r = await fetch(`firmware/${role}.lskz`, { cache: "no-store" });
+        if (r.ok) images[role].z = new Uint8Array(await r.arrayBuffer());
+      } catch (_) {}
+    }
   } catch (_) {}
 })();
 
@@ -678,6 +691,7 @@ function render(d) {
   // labelled actions under the card: what can be done is visible, not hidden in icons
   const ready = talk && !d.busy;  // paired: the action connects on demand, even if not seen lately
   const acts = [`<button class="act" data-a="settings" ${ready ? "" : "disabled"}>${icon("gear")}Ustawienia</button>`];
+  if ((d.caps || []).includes("log")) acts.push(`<button class="act" data-a="log" ${ready ? "" : "disabled"}>Dziennik</button>`);
   if (img) acts.push(outdated
     ? `<button class="act primary" data-a="flash" ${ready ? "" : "disabled"}>${icon("upload")}Aktualizuj do ${esc(img.version)}</button>`
     : `<button class="act" data-a="reflash" ${ready && d.version ? "" : "disabled"} title="Ma już najnowszy program">${icon("upload")}Wgraj ponownie</button>`);
@@ -769,6 +783,8 @@ async function action(d, a) {
     flash(d);
   } else if (a === "reflash") {
     if (confirm(`${title(d)} ma już program ${d.version}. Wgrać go ponownie?`)) flash(d);
+  } else if (a === "log") {
+    showDeviceLog(d);
   } else if (a === "settings") {
     try {
       if (!d.gatt || !d.gatt.connected) { d.msg = "Łączenie…"; d.cls = "warn"; render(d); await connect(d); }
@@ -799,6 +815,9 @@ async function connectInner(d) {
   if (!hookedChars.has(d.ctrl)) {
     hookedChars.add(d.ctrl);
     d.ctrl.addEventListener("characteristicvaluechanged", e => {
+      // iOS apps return a new object per reconnect whose events all still fire:
+      // handle each notification once, from the current object only
+      if (e.target !== d.ctrl) return;
       const s = td.decode(e.target.value);
       if (!s.startsWith("progress:") || /^progress:(\d+)\/(\d+)$/.test(s) && +RegExp.$1 % 262144 < 8192) dbg("note", { dev: d.name, s });
       if (d.onNote) d.onNote(s);
@@ -810,7 +829,7 @@ async function connectInner(d) {
 async function readInfo(d) {
   const i = JSON.parse(td.decode(await d.infoCh.readValue()));
   Object.assign(d, { role: i.role, version: i.version, state: i.state, healthy: i.healthy, id: i.id, mtu: i.mtu, boot: i.boot, uptime: i.uptime,
-    cfg: i.cfg && Object.keys(i.cfg).length ? i.cfg : null });
+    cfg: i.cfg && Object.keys(i.cfg).length ? i.cfg : null, caps: (i.caps || "").split(",") });
   decodeUser(d, i.user);
   d.live = true;
   d.lastSeen = Date.now();
@@ -972,6 +991,35 @@ async function dataTest(d) {
   if (got !== want) throw new Error("test aktualizacji nie przeszedł, urządzenie wróci do poprzedniej wersji");
 }
 
+// Device log over BLE: "log <offset>" returns one chunk ("log:<offset>:<text>")
+// until "log-end". Shown in a dialog and copied to the remote debug log.
+async function showDeviceLog(d) {
+  $("logName").textContent = d.name;
+  $("logText").textContent = "Wczytywanie…";
+  $("logDialog").showModal();
+  d.busy = true; render(d);
+  let text = "";
+  try {
+    if (!d.gatt || !d.gatt.connected) await connect(d);
+    for (let guard = 0; guard < 200; guard++) {
+      const n = await command(d, `log ${text.length}`, "log", 5000);
+      if (n === "log-end") break;
+      const m = /^log:(\d+):([\s\S]*)$/.exec(n);
+      if (!m) break;
+      text += m[2];
+      $("logText").textContent = text;
+    }
+    if (!text) $("logText").textContent = "(pusty)";
+    $("logText").scrollTop = $("logText").scrollHeight;
+    for (let o = 0; o < text.length; o += 300) dbg("device-log", { dev: d.name, part: o / 300, text: text.slice(o, o + 300) });
+  } catch (e) {
+    $("logText").textContent = (text || "") + `\n\nBłąd: ${e.message}`;
+  } finally {
+    d.busy = false; render(d);
+  }
+}
+$("logClose").onclick = () => $("logDialog").close();
+
 async function flash(d) {
   const img = images[d.role];
   if (!img || d.busy || !d.dev || !permitted.has(d.dev.id)) return;
@@ -1001,8 +1049,11 @@ async function flash(d) {
       const check = () => { if (failed) { clearTimeout(t); reject(failed); } else if (cond()) { clearTimeout(t); resolve(); } else wake = check; };
       check();
     });
-    for (let o = 0; o < img.bytes.length; o += chunk) {
-      const part = img.bytes.slice(o, o + chunk);
+    const bytes = img.z && (d.caps || []).includes("z") ? img.z : img.bytes;
+    const fast = !!d.data.properties.writeWithoutResponse, t0 = performance.now();
+    dbg("upload-start", { dev: d.name, compressed: bytes === img.z, bytes: bytes.length, writeWithoutResponse: fast, chunk });
+    for (let o = 0; o < bytes.length; o += chunk) {
+      const part = bytes.slice(o, o + chunk);
       if (d.data.properties.writeWithoutResponse) {
         await until(() => o - HDR - acked <= WINDOW, 20000);
         await d.data.writeValueWithoutResponse(part);
@@ -1011,10 +1062,12 @@ async function flash(d) {
         if (failed) throw failed;
         await d.data.writeValueWithResponse(part);
       }
-      d.progress = Math.max(0, acked) / (img.bytes.length - HDR);
+      d.progress = Math.max(0, acked) / (bytes.length - HDR);
       if ((o / chunk) % 8 === 0) render(d);
     }
     await until(() => finished, 30000);
+    const secs = (performance.now() - t0) / 1000;
+    dbg("upload-done", { dev: d.name, secs: secs.toFixed(1), kibps: (bytes.length / 1024 / secs).toFixed(1), writeWithoutResponse: fast });
     d.onNote = null;
     d.progress = null;
     step("Restart…");
@@ -1028,10 +1081,23 @@ async function flash(d) {
     }
     // The new program only stays once confirmed; it needs a moment to bring its radio up.
     const end = Date.now() + 90000;
+    let asked = false;
     while (d.state === "pending") {
       step("Potwierdzanie…");
       try { await command(d, "confirm", "confirmed"); }
       catch (e) {
+        // The update path was proven by the self-test; only the radio is missing.
+        // Let a person decide to keep it (e.g. a radio fix for a broken module).
+        if (/not healthy/.test(e.message) && !asked && Date.now() > end - 70000 && (d.caps || []).includes("anyway")) {
+          asked = true;
+          if (confirm(`${title(d)}: moduł radiowy nie odpowiada po aktualizacji.\n\nAktualizacje przez Bluetooth działają (test przeszedł). ` +
+                      `Zatwierdzić nową wersję mimo to? Inaczej urządzenie wróci do poprzedniej.`)) {
+            await command(d, "confirm-anyway", "confirmed");
+            dbg("confirm-anyway", { dev: d.name });
+            await readInfo(d);
+            continue;
+          }
+        }
         if (Date.now() > end) throw new Error(`nie potwierdzono (${e.message}), wróci poprzednia wersja`);
         await sleep(3000);
       }
