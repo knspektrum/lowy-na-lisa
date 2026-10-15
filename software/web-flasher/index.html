@@ -32,7 +32,8 @@
     -webkit-font-smoothing: antialiased; }
   svg.i { width: 18px; height: 18px; flex: none; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
   /* floating, fully rounded top pills */
-  .top { position: sticky; top: max(12px, env(safe-area-inset-top)); z-index: 5; max-width: 1200px; margin: 12px auto 0;
+  /* scrolls with the page: pinned pills covered the text under them */
+  .top { position: relative; z-index: 5; max-width: 1200px; margin: max(12px, env(safe-area-inset-top)) auto 0;
     padding: 0 16px; display: flex; align-items: center; justify-content: space-between; gap: 12px; pointer-events: none; }
   .pill-nav { pointer-events: auto; display: inline-flex; align-items: center; gap: 8px; min-height: 44px; padding: 8px 18px;
     border-radius: 999px; background: #000; color: #d4d4d8; text-decoration: none; font-size: 14px; font-weight: 500;
