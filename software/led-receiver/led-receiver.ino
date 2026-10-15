@@ -140,6 +140,123 @@ uint8_t id_bits(uint8_t id) {
 
 // "set leds=binary|unary" / "set channels=N" from the web panel (runs on the
 // Bluetooth task).
+// --- Signal display: scale (curve), sensitivity and smoothing, all set from
+// the web panel ("set scale=..|sens=1-5|smooth=0-2") and stored in NVS. ---
+enum Scale : uint8_t { SCALE_AUTO, SCALE_LINEAR, SCALE_NEAR, SCALE_FAR, SCALE_RELATIVE };
+const char *const SCALE_NAMES[] = { "auto", "linear", "near", "far", "relative" };
+volatile uint8_t scale = SCALE_AUTO;
+volatile uint8_t sens = 3;    // 1..5: bar starts at -130/-120/-110/-100/-90 dBm (3 = the original scale)
+volatile uint8_t smooth = 1;  // 0 off, 1 = 3 packets, 2 = 5 packets
+volatile bool signal_reset = true;
+
+int sens_floor() {
+  return -110 + (sens - 3) * 10;
+}
+
+// dB above the floor at which LED 1..7 lights, per fixed curve (7 entries).
+const uint8_t CURVE_LINEAR[7] = { 15, 30, 45, 60, 75, 90, 105 };
+const uint8_t CURVE_NEAR[7] = { 40, 60, 74, 84, 92, 99, 105 };  // big steps far away, fine steps near the fox
+const uint8_t CURVE_FAR[7] = { 6, 13, 21, 31, 45, 65, 105 };    // fine steps far away, catches the first faint signal
+
+uint8_t leds_on_curve(int rssi, int floor_dbm, const uint8_t *curve) {
+  uint8_t n = 0;
+  while (n < 7 && rssi >= floor_dbm + curve[n]) n++;
+  return n;
+}
+
+// Auto-zoom: when the bar stays at 6-7 LEDs for ZOOM_HOLD_MS it zooms in
+// (finer dB per LED, current signal back to the middle); at 0-1 LEDs it zooms
+// out again. A quick sweep on the LEDs shows each zoom.
+const uint8_t ZOOM_STEP[] = { 10, 5, 3, 2 };  // dB per LED per zoom level; the widest is full at about -40 dBm (next to the fox)
+const uint32_t ZOOM_HOLD_MS = 2000;
+uint8_t zoom = 0;
+int zoom_floor = -110;
+uint32_t zoom_since = 0;
+int8_t zoom_dir = 0;  // +1 waiting to zoom in, -1 waiting to zoom out
+
+void zoom_sweep(bool in) {
+  for (int k = 0; k < 7; k++) {
+    display_bits_on_leds(to_last_led_bits(in ? k + 1 : 7 - k));
+    delay(35);
+  }
+}
+
+uint8_t leds_auto(int rssi) {
+  int step = ZOOM_STEP[zoom];
+  int n = constrain((rssi - zoom_floor) / step, 0, 7);
+  int8_t want = n >= 6 && zoom < sizeof ZOOM_STEP - 1 ? 1 : n <= 1 && zoom > 0 ? -1 : 0;
+  if (want != zoom_dir) zoom_dir = want, zoom_since = millis();
+  if (want && millis() - zoom_since >= ZOOM_HOLD_MS) {
+    zoom += want;
+    // put the current signal in the middle of the new range (the widest zoom keeps the sensitivity floor)
+    zoom_floor = zoom ? rssi - 7 * ZOOM_STEP[zoom] / 2 : sens_floor();
+    zoom_dir = 0;
+    zoom_sweep(want > 0);
+    n = constrain((rssi - zoom_floor) / ZOOM_STEP[zoom], 0, 7);
+  }
+  return n;
+}
+
+// Relative: the weakest signal of the last RELATIVE_MS maps to 1 LED, the
+// strongest to 7, for sweeping a directional antenna.
+const uint32_t RELATIVE_MS = 10000;
+const uint8_t REL_SLOTS = 20;
+int rel_min[REL_SLOTS], rel_max[REL_SLOTS];
+uint32_t rel_slot_start = 0;
+uint8_t rel_slot = 0;
+
+uint8_t leds_relative(int rssi) {
+  uint32_t now = millis();
+  if (now - rel_slot_start >= RELATIVE_MS / REL_SLOTS) {
+    rel_slot = (rel_slot + 1) % REL_SLOTS;
+    rel_min[rel_slot] = 999, rel_max[rel_slot] = -999;
+    rel_slot_start = now;
+  }
+  rel_min[rel_slot] = min(rel_min[rel_slot], rssi);
+  rel_max[rel_slot] = max(rel_max[rel_slot], rssi);
+  int lo = 999, hi = -999;
+  for (int i = 0; i < REL_SLOTS; i++) lo = min(lo, rel_min[i]), hi = max(hi, rel_max[i]);
+  if (hi - lo < 10) {  // too little variation yet: a 10 dB window around it
+    int mid = (hi + lo) / 2;
+    lo = mid - 5, hi = mid + 5;
+  }
+  return 1 + (rssi - lo) * 6 / (hi - lo);
+}
+
+// Smoothing ring buffer
+int smooth_buf[5];
+uint8_t smooth_n = 0, smooth_i = 0;
+
+void reset_signal_display() {
+  smooth_n = smooth_i = 0;
+  zoom = 0, zoom_floor = sens_floor(), zoom_dir = 0;
+  for (int i = 0; i < REL_SLOTS; i++) rel_min[i] = 999, rel_max[i] = -999;
+  rel_slot_start = millis();
+}
+
+// Number of LEDs (0..7) for a received packet's RSSI.
+uint8_t signal_leds(int rssi) {
+  if (signal_reset) signal_reset = false, reset_signal_display();
+  uint8_t window = smooth == 0 ? 1 : smooth == 1 ? 3 : 5;
+  smooth_buf[smooth_i] = rssi;
+  smooth_i = (smooth_i + 1) % window;
+  if (smooth_n < window) smooth_n++;
+  long sum = 0;
+  for (int i = 0; i < smooth_n; i++) sum += smooth_buf[i];
+  int r = sum / smooth_n;
+  switch (scale) {
+    case SCALE_LINEAR: return leds_on_curve(r, sens_floor(), CURVE_LINEAR);
+    case SCALE_NEAR: return leds_on_curve(r, sens_floor(), CURVE_NEAR);
+    case SCALE_FAR: return leds_on_curve(r, sens_floor(), CURVE_FAR);
+    case SCALE_RELATIVE: return leds_relative(r);
+    default: return leds_auto(r);
+  }
+}
+
+String display_settings_json() {
+  return String("{\"scale\":\"") + SCALE_NAMES[scale] + "\",\"sens\":" + sens + ",\"smooth\":" + smooth + "}";
+}
+
 bool on_setting(const String &key, const String &value) {
   Preferences prefs;
   if (key == "id") {
@@ -158,6 +275,27 @@ bool on_setting(const String &key, const String &value) {
     binary_leds = value == "binary";
     prefs.begin("receiver", false);
     prefs.putBool("binary_leds", binary_leds);
+  } else if (key == "scale" || key == "sens" || key == "smooth") {
+    int v = value.toInt();
+    if (key == "scale") {
+      v = -1;
+      for (int i = 0; i < 5; i++)
+        if (value == SCALE_NAMES[i]) v = i;
+      if (v < 0) return false;
+      scale = v;
+    } else if (key == "sens") {
+      if (value != String(v) || v < 1 || v > 5) return false;
+      sens = v;
+    } else {
+      if (value != String(v) || v < 0 || v > 2) return false;
+      smooth = v;
+    }
+    prefs.begin("receiver", false);
+    prefs.putUChar(key.c_str(), v);
+    prefs.end();
+    signal_reset = true;
+    LisekOta::setInfoExtra(display_settings_json());
+    return true;
   } else if (key == "channels" && value.toInt() >= 1 && value.toInt() <= (binary_leds ? 9 : 7)) {
     channels = value.toInt();
     prefs.begin("receiver", false);
@@ -317,6 +455,10 @@ void setup() {
   Preferences prefs;
   prefs.begin("receiver", true);
   binary_leds = prefs.getBool("binary_leds", false);
+  scale = min((int)prefs.getUChar("scale", SCALE_AUTO), (int)SCALE_RELATIVE);
+  sens = constrain(prefs.getUChar("sens", 3), 1, 5);
+  smooth = min((int)prefs.getUChar("smooth", 1), 2);
+  LisekOta::setInfoExtra(display_settings_json());
   channels = constrain(prefs.getUChar("channels", 7), 1, binary_leds ? 9 : 7);
   transmitter_id = constrain(prefs.getUChar("id", 1), 1, min((int)channels, binary_leds ? 9 : 7));
   prefs.end();
@@ -362,6 +504,7 @@ uint32_t last_packet_ms = 0;
 
 bool change_transmitter_id_to(uint8_t id) {
   last_packet_ms = 0;  // the old transmitter's strength no longer applies
+  signal_reset = true;
   // Feedback first: the id shows on the LEDs the moment the button goes down.
   display_bits_on_leds(id_bits(id));
   id_flash_until = millis() + 500;
@@ -469,7 +612,8 @@ void loop() {
               rxpacket[size] = '\0';
 
               last_packet_ms = millis();
-              if (!id_flash_until && !LisekOta::updating()) display_strength_on_leds((110 + pendingRssi) / (110 / 7));
+              uint8_t leds = signal_leds(pendingRssi);
+              if (!id_flash_until && !LisekOta::updating()) display_strength_on_leds(leds);
               Serial.printf("received packet \"%s\" with rssi=%d snr=%d length=%d packet_tx_id=%d\r\n", rxpacket,
                             pendingRssi, pendingSnr, size, rxpacket[1]);
             }

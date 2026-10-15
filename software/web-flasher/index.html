@@ -290,6 +290,34 @@
       <label for="setChannels">Liczba kanałów (przycisk przełącza 1 → … → N → 1)</label>
       <select id="setChannels"></select>
     </div>
+    <div class="field">
+      <label for="setScale">Skala paska sygnału</label>
+      <select id="setScale">
+        <option value="auto">Auto-zoom: przybliża pasek, gdy jesteś blisko (domyślnie)</option>
+        <option value="linear">Liniowa: każda dioda to ten sam krok sygnału</option>
+        <option value="near">Dokładniej z bliska: drobne kroki przy lisie</option>
+        <option value="far">Dokładniej z daleka: łapie pierwszy słaby sygnał</option>
+        <option value="relative">Względna: najsłabszy/najsilniejszy z 10 s (do anteny kierunkowej)</option>
+      </select>
+    </div>
+    <div class="field">
+      <label for="setSens">Czułość (od jakiego sygnału zapala się pierwsza dioda)</label>
+      <select id="setSens">
+        <option value="1">1: od -130 dBm, najdalej</option>
+        <option value="2">2: od -120 dBm</option>
+        <option value="3">3: od -110 dBm (domyślnie)</option>
+        <option value="4">4: od -100 dBm</option>
+        <option value="5">5: od -90 dBm, trzeba podejść bliżej</option>
+      </select>
+    </div>
+    <div class="field">
+      <label for="setSmooth">Wygładzanie (mniej migania, trochę wolniej)</label>
+      <select id="setSmooth">
+        <option value="0">Wyłączone: każdy pakiet od razu</option>
+        <option value="1">Lekkie: średnia z 3 pakietów (domyślnie)</option>
+        <option value="2">Mocne: średnia z 5 pakietów</option>
+      </select>
+    </div>
     <p class="muted small-text">Odbiornik zapamięta ustawienia po wyłączeniu. Jeśli wybrany numer nie mieści się w nowych
     ustawieniach, odbiornik wróci do kanału 1.</p>
     </div>
@@ -371,6 +399,7 @@ const POLLED_ONLINE_MS = 75000;
 const STORE = "lisek-fleet-v1";
 const ROLES = { R: "receiver", T: "transmitter" };
 const ROLE_NAMES = { receiver: "Odbiornik", transmitter: "Lis (nadajnik)" };
+const SCALE_LABELS = { auto: "auto-zoom", linear: "liniowa", near: "dokładniej z bliska", far: "dokładniej z daleka", relative: "względna" };
 const STATES = { o: "ok", p: "pending", u: "updating", i: "installed", s: "safe" };
 const STATE_LABELS = { ok: "Działa", pending: "Czeka na potwierdzenie", updating: "Odbiera program", installed: "Wgrany, restart" };
 
@@ -629,6 +658,8 @@ function render(d) {
   else pill = `<span class="pill ${d.state === "ok" ? "ok" : "warn"}">${esc(STATE_LABELS[d.state] || d.state || "?")}</span>`;
   const facts = [];
   if (d.role === "receiver" && d.channels) facts.push(`<span>Kanały <b>1-${maxChannels(d)}</b></span>`, `<span>Diody <b>${d.binary ? "binarnie" : "zwykle"}</b></span>`);
+  if (d.role === "receiver" && d.cfg) facts.push(`<span>Skala <b>${esc(SCALE_LABELS[d.cfg.scale] || d.cfg.scale)}</b></span>`,
+    `<span>Czułość <b>${esc(d.cfg.sens)}</b></span>`);
   if (d.role === "transmitter" && d.hide) facts.push(`<span>Ukrywa się po <b>${d.hide} min</b></span>`);
   const version = knownVersion(d);
   facts.push(`<span>Program <b class="mono">${esc(version || "?")}</b> ${outdated ? `<span class="tag">→ ${esc(img.version)}</span>` : img && version ? '<span class="tag ok">aktualny</span>' : ""}</span>`);
@@ -778,7 +809,8 @@ async function connectInner(d) {
 }
 async function readInfo(d) {
   const i = JSON.parse(td.decode(await d.infoCh.readValue()));
-  Object.assign(d, { role: i.role, version: i.version, state: i.state, healthy: i.healthy, id: i.id, mtu: i.mtu, boot: i.boot, uptime: i.uptime });
+  Object.assign(d, { role: i.role, version: i.version, state: i.state, healthy: i.healthy, id: i.id, mtu: i.mtu, boot: i.boot, uptime: i.uptime,
+    cfg: i.cfg && Object.keys(i.cfg).length ? i.cfg : null });
   decodeUser(d, i.user);
   d.live = true;
   d.lastSeen = Date.now();
@@ -836,6 +868,10 @@ function openSettings(d) {
   $("setName").textContent = d.name;
   $("setForm").leds.value = d.binary ? "binary" : "unary";
   fillChannels(!!d.binary, d.channels || 7);
+  const cfg = d.cfg || {};
+  $("setScale").value = cfg.scale || "auto";
+  $("setSens").value = String(cfg.sens || 3);
+  $("setSmooth").value = String(cfg.smooth ?? 1);
   fillIdOptions(rx ? maxChannels(d) : 9, d.id);
   $("settings").showModal();
 }
@@ -863,6 +899,12 @@ $("settings").onclose = async () => {
       if (binary !== !!d.binary) await command(d, `set leds=${binary ? "binary" : "unary"}`, "set-ok");
       if (channels !== d.channels) await command(d, `set channels=${channels}`, "set-ok");
       if (id !== d.id) await command(d, `set id=${id}`, "set-ok");
+      const cfg = d.cfg || {}, sc = $("setScale").value, se = +$("setSens").value, sm = +$("setSmooth").value;
+      if (d.cfg) {  // firmware without these settings has no cfg; skip instead of failing the save
+        if (sc !== cfg.scale) await command(d, `set scale=${sc}`, "set-ok");
+        if (se !== cfg.sens) await command(d, `set sens=${se}`, "set-ok");
+        if (sm !== cfg.smooth) await command(d, `set smooth=${sm}`, "set-ok");
+      }
       toast(`Zapisano: kanał ${id}, ${channels} kanałów, diody ${binary ? "binarnie" : "zwykle"}`);
     } else {
       if (hide !== d.hide) await command(d, `set hide=${hide}`, "set-ok");

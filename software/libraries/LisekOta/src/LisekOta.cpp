@@ -71,6 +71,9 @@ static bool g_safe = false;
 // Boot timing (ms since reset): Bluetooth advertising, and the sketch's radio
 // check (markHealthy). Reported in the info JSON as "boot".
 static uint32_t g_t_ble = 0, g_t_ready = 0;
+// Sketch-specific settings as a JSON object, reported in the info JSON as "cfg".
+static char g_extra[160] = "{}";
+static portMUX_TYPE g_extra_mux = portMUX_INITIALIZER_UNLOCKED;
 static volatile State g_state = IDLE;
 static uint8_t g_hdr_buf[HDR_LEN];
 static size_t g_hdr_len = 0;
@@ -271,7 +274,13 @@ static String info_json() {
   j += g_mtu;
   j += ",\"resets\":\"";
   j += g_resets;
-  j += "\",\"boot\":\"ble=";
+  char extra[sizeof g_extra];
+  portENTER_CRITICAL(&g_extra_mux);
+  memcpy(extra, g_extra, sizeof extra);
+  portEXIT_CRITICAL(&g_extra_mux);
+  j += "\",\"cfg\":";
+  j += extra;
+  j += ",\"boot\":\"ble=";
   j += g_t_ble;
   j += ",ready=";
   j += g_t_ready;
@@ -481,6 +490,12 @@ void onSetting(bool (*handler)(const String &key, const String &value)) {
 void setUserBits(uint8_t value) {
   g_user = value & 0x1f;
   refresh_adv();
+}
+
+void setInfoExtra(const String &json) {
+  portENTER_CRITICAL(&g_extra_mux);
+  strlcpy(g_extra, json.length() < sizeof g_extra ? json.c_str() : "{}", sizeof g_extra);
+  portEXIT_CRITICAL(&g_extra_mux);
 }
 
 void markHealthy() {

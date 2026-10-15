@@ -49,6 +49,10 @@ void setUserBits(uint8_t value);
 // confirmation. Visible again only after a restart.
 void hideAfter(uint32_t minutes);
 
+// Sketch settings as a JSON object (e.g. {"scale":"auto"}), shown in the panel;
+// reported in the info JSON as "cfg". Safe to call from any task.
+void setInfoExtra(const String &json);
+
 // True while an update is being received (the sketch can show it on LEDs).
 bool updating();
 
