@@ -237,6 +237,8 @@
   <p>Urządzenia dodaje się po jednym; strona co 30 s sprawdza, czy są włączone. Po włączeniu
   <code>chrome://flags/#enable-experimental-web-platform-features</code> widzi je na bieżąco i pamięta między wizytami
   (Windows, macOS, Android), a na macOS i Androidzie „Skanuj okolicę” dodaje wszystkie naraz.</p>
+  <p>Strona wysyła dziennik zdarzeń i błędów (bez danych osobowych, z nazwą przeglądarki) na serwer strony,
+  żeby dało się zdiagnozować problemy z Bluetooth.</p>
   <p>Aktualizacja: urządzenie przyjmuje tylko podpisany program dla swojego typu. Po restarcie nowy program musi się zgłosić
   i potwierdzić, że radio działa; inaczej po 5 minutach (albo po awarii) wraca poprzednia wersja. Nie zamykaj strony, dopóki
   stan nie pokaże „Zaktualizowano”.</p>
@@ -297,6 +299,44 @@
 <div id="toast" role="status" aria-live="polite"></div>
 
 <script>
+// --- remote debug log: events and errors go to the server's access log as
+// GET log?s=<session>&n=<seq>&d=<json lines> (software/ota/remote-log.sh reads them) ---
+const DBG = { s: Math.random().toString(36).slice(2, 8), n: 0, q: [] };
+function dbg(ev, data) {
+  try {
+    DBG.q.push(JSON.stringify(Object.assign({ t: Math.round(performance.now()), ev }, data || {})));
+    if (DBG.q.length > 200) DBG.q.splice(0, DBG.q.length - 200);
+  } catch (_) {}
+}
+function dbgFlush() {
+  while (DBG.q.length) {
+    let batch = [];
+    while (DBG.q.length && encodeURIComponent(batch.concat(DBG.q[0]).join("\n")).length < 1800) batch.push(DBG.q.shift());
+    if (!batch.length) batch = [DBG.q.shift().slice(0, 600)];
+    const url = `log?s=${DBG.s}&n=${DBG.n++}&d=${encodeURIComponent(batch.join("\n"))}`;
+    try { fetch(url, { cache: "no-store", keepalive: true }).catch(() => {}); } catch (_) {}
+  }
+}
+setInterval(dbgFlush, 2000);
+addEventListener("pagehide", dbgFlush);
+addEventListener("error", e => dbg("js-error", { msg: e.message, src: `${e.filename}:${e.lineno}:${e.colno}` }));
+addEventListener("unhandledrejection", e => dbg("unhandled", { msg: String(e.reason && (e.reason.stack || e.reason.message) || e.reason).slice(0, 400) }));
+for (const level of ["error", "warn"]) {
+  const orig = console[level].bind(console);
+  console[level] = (...a) => { dbg("console-" + level, { msg: a.map(String).join(" ").slice(0, 400) }); orig(...a); };
+}
+const errInfo = e => ({ name: e && e.name, msg: e && e.message });
+if (navigator.bluetooth && navigator.bluetooth.requestDevice) {
+  const orig = navigator.bluetooth.requestDevice.bind(navigator.bluetooth);
+  navigator.bluetooth.requestDevice = async opts => {
+    dbg("requestDevice", { filters: JSON.stringify(opts && opts.filters) });
+    try { const dev = await orig(opts); dbg("requestDevice-ok", { name: dev.name }); return dev; }
+    catch (e) { dbg("requestDevice-fail", errInfo(e)); throw e; }
+  };
+}
+dbg("start", { ua: navigator.userAgent, bt: !!navigator.bluetooth, getDevices: !!(navigator.bluetooth && navigator.bluetooth.getDevices),
+  scan: !!(navigator.bluetooth && navigator.bluetooth.requestLEScan), secure: isSecureContext, page: location.href });
+
 const SVC = "4c49534b-0001-4f54-8000-00805f9b34fb";
 const INFO = "4c49534b-0002-4f54-8000-00805f9b34fb";
 const CTRL = "4c49534b-0003-4f54-8000-00805f9b34fb";
@@ -329,6 +369,7 @@ if (!bt) $("unsupported").hidden = false;
 if (bt) $("scan").hidden = false;
 
 function toast(msg) {
+  dbg("toast", { msg });
   const t = $("toast");
   t.textContent = msg;
   t.classList.add("show");
@@ -548,6 +589,7 @@ function knownVersion(d) {
   return d.usbVersion || d.version;
 }
 function render(d) {
+  if (d.msg !== d.loggedMsg) { d.loggedMsg = d.msg; if (d.msg) dbg("status", { dev: d.name, msg: d.msg, v: d.version }); }
   if (!d.row) {
     d.row = document.createElement("article");
     $("rows").appendChild(d.row);
@@ -686,6 +728,11 @@ $("flashAll").onclick = () => flashable().forEach(flash);
 
 // --- GATT ---
 async function connect(d) {
+  const t0 = performance.now();
+  try { await connectInner(d); dbg("connect-ok", { dev: d.name, ms: Math.round(performance.now() - t0), v: d.version, state: d.state, mtu: d.mtu }); }
+  catch (e) { dbg("connect-fail", Object.assign({ dev: d.name, ms: Math.round(performance.now() - t0) }, errInfo(e))); throw e; }
+}
+async function connectInner(d) {
   d.gatt = await d.dev.gatt.connect();
   const svc = await d.gatt.getPrimaryService(SVC);
   d.infoCh = await svc.getCharacteristic(INFO);
@@ -693,7 +740,11 @@ async function connect(d) {
   d.data = await svc.getCharacteristic(DATA);
   if (!d.ctrl.hooked) {  // the same object comes back on every reconnect
     d.ctrl.hooked = true;
-    d.ctrl.addEventListener("characteristicvaluechanged", e => d.onNote && d.onNote(td.decode(e.target.value)));
+    d.ctrl.addEventListener("characteristicvaluechanged", e => {
+      const s = td.decode(e.target.value);
+      if (!s.startsWith("progress:") || /^progress:(\d+)\/(\d+)$/.test(s) && +RegExp.$1 % 262144 < 8192) dbg("note", { dev: d.name, s });
+      if (d.onNote) d.onNote(s);
+    });
   }
   await d.ctrl.startNotifications();
   await readInfo(d);
@@ -725,6 +776,7 @@ function note(d, want, ms) {
   });
 }
 async function command(d, cmd, want, ms = 5000) {
+  dbg("cmd", { dev: d.name, cmd });
   const p = note(d, want, ms);
   await d.ctrl.writeValueWithResponse(te.encode(cmd));
   return p;

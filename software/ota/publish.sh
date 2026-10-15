@@ -10,6 +10,6 @@ cd "$(dirname "$0")/../web-flasher"
 [ -f firmware/manifest.json ] || { echo "run software/ota/build.sh first" >&2; exit 1; }
 dest=/opt/docker/data/swag/config/www/mxg.sh/lowy-na-lisa
 rsync -rlt --delete --chmod=D755,F644 -e "ssh -o BatchMode=yes" \
-  index.html spektrum-logo.png inter-var.woff2 inter-LICENSE.txt devices.json firmware \
+  index.html log spektrum-logo.png inter-var.woff2 inter-LICENSE.txt devices.json firmware \
   "la-casa:$dest/"
 echo "published $(cat firmware/manifest.json) -> https://mxg.sh/lowy-na-lisa/"
