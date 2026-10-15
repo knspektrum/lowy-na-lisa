@@ -27,7 +27,12 @@
 
 #define MODULE_RX 16  // ESP32 RX2 <- LoRa-E5 TX
 #define MODULE_TX 17  // ESP32 TX2 -> LoRa-E5 RX
-#define MODULE_BAUD 9600  // LoRa-E5 default AT baud
+#define MODULE_BAUD 115200  // set on the LoRa-E5 by fast_link(); its factory default is 9600
+#define MODULE_BAUD_DEFAULT 9600
+// At 9600 baud one received packet ("+TEST: LEN:..." plus "+TEST: RX "<64 hex>"",
+// ~111 chars) takes ~116 ms on the wire, longer than the transmitter's 100 ms
+// interval: packets queued up and the LEDs lagged further and further behind.
+// At 115200 the same lines take ~10 ms.
 
 // Same constants as receiver.ino.
 #define BASE_RF_FREQUENCY_HZ 863000000UL
@@ -202,6 +207,35 @@ bool tune_and_receive(uint8_t id) {
   return true;
 }
 
+// True when the module answers "AT" at the current Serial1 baud.
+bool module_answers(int tries) {
+  for (int i = 0; i < tries; i++) {
+    if (sendAT("AT", 300) == "+AT: OK") return true;
+  }
+  return false;
+}
+
+// Puts the UART link to the LoRa-E5 at MODULE_BAUD. The module keeps its baud
+// rate across power-off, so this only switches it once (from the 9600 default).
+void fast_link() {
+  Serial1.updateBaudRate(MODULE_BAUD);
+  sendAT("AT+TEST=STOP", 200);  // a still-streaming RXLRPKT session ignores plain AT
+  if (module_answers(3)) return;
+  Serial1.updateBaudRate(MODULE_BAUD_DEFAULT);
+  sendAT("AT+TEST=STOP", 200);
+  if (!module_answers(5)) {
+    Serial1.updateBaudRate(MODULE_BAUD);  // neither rate answers: leave it to the normal retries
+    return;
+  }
+  String r = sendAT("AT+UART=BR, " + String(MODULE_BAUD));
+  Serial.printf("radio: LoRa-E5 at %d baud, switching to %d: \"%s\"\r\n", MODULE_BAUD_DEFAULT, MODULE_BAUD, r.c_str());
+  sendAT("AT+RESET");  // the new rate takes effect after a reset
+  delay(1500);
+  Serial1.updateBaudRate(MODULE_BAUD);
+  while (Serial1.available()) Serial1.read();
+  Serial.printf("radio: LoRa-E5 answers at %d: %s\r\n", MODULE_BAUD, module_answers(5) ? "yes" : "no");
+}
+
 // Full radio init: enters AT+TEST P2P mode at the frequency for `id` and
 // starts continuous packet receive. Equivalent to receiver.ino's
 // set_transmitter_id() (channel part) + Radio.Rx(0). Used at boot and as a
@@ -305,12 +339,15 @@ void setup() {
   }
   display_bits_on_leds(0);
 
+  Serial1.setRxBufferSize(1024);
   Serial1.begin(MODULE_BAUD, SERIAL_8N1, MODULE_RX, MODULE_TX);
   delay(200);
+  fast_link();
 
   while (!set_transmitter_id(transmitter_id)) {
     Serial.println("radio init failed, retrying in 2s...");
     delay(2000);
+    fast_link();
   }
   LisekOta::markHealthy();
   LisekOta::onSetting(on_setting);
