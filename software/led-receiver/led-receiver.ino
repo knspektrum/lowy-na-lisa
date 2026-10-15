@@ -566,7 +566,8 @@ void loop() {
   // A firmware update over Bluetooth fills the LEDs as it arrives.
   if (LisekOta::updating()) {
     uint32_t total, done = LisekOta::progress(&total);
-    display_strength_on_leds(total ? 1 + done * 6 / total : 0);
+    // all 7 LEDs evenly (one per ~14%), full once installed until the reboot
+    display_strength_on_leds(total ? max(1, (int)(((uint64_t)done * 7 + total - 1) / total)) : 0);
   }
 
   // A digit over USB serial does the same thing.

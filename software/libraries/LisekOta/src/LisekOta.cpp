@@ -626,7 +626,7 @@ void setId(uint8_t id) {
 }
 
 bool updating() {
-  return g_state == IMAGE;
+  return g_state == IMAGE || g_state == DONE;  // DONE: installed, rebooting
 }
 
 uint32_t progress(uint32_t *total) {
