@@ -334,6 +334,13 @@ if (navigator.bluetooth && navigator.bluetooth.requestDevice) {
     catch (e) { dbg("requestDevice-fail", errInfo(e)); throw e; }
   };
 }
+try {  // what this browser's Bluetooth bridge offers (iOS apps differ), to find any scanning API
+  const b = navigator.bluetooth, names = new Set();
+  for (let o = b; o && o !== Object.prototype; o = Object.getPrototypeOf(o)) Object.getOwnPropertyNames(o).forEach(n => names.add(n));
+  const bridges = window.webkit && window.webkit.messageHandlers ? Object.keys(window.webkit.messageHandlers) : [];
+  const globals = Object.keys(window).filter(k => /ble|blue|scan|webble|bluefy/i.test(k));
+  dbg("bt-api", { bt: b ? [...names].join(",") : "none", bridges: bridges.join(","), globals: globals.join(",") });
+} catch (e) { dbg("bt-api-fail", errInfo(e)); }
 dbg("start", { ua: navigator.userAgent, bt: !!navigator.bluetooth, getDevices: !!(navigator.bluetooth && navigator.bluetooth.getDevices),
   scan: !!(navigator.bluetooth && navigator.bluetooth.requestLEScan), secure: isSecureContext, page: location.href });
 

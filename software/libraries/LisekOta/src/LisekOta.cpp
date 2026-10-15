@@ -77,6 +77,21 @@ static mbedtls_sha256_context g_sha;
 
 static BLECharacteristic *g_info, *g_ctrl;
 static void refresh_adv();
+
+// Fast advertising (211 ms, Apple's recommended interval for quick discovery)
+// for FAST_ADV_MS after power-on and after every disconnect, so phones find the
+// device quickly while someone is setting it up or updating it; then once a
+// second, which costs almost nothing on battery.
+static const uint32_t FAST_ADV_MS = 5 * 60 * 1000;
+static volatile int64_t g_fast_until_us = 0;
+static volatile bool g_adv_fast = false;
+static void set_adv_speed(bool fast) {
+  BLEAdvertising *adv = BLEDevice::getAdvertising();
+  adv->setMinInterval(fast ? 338 : 1600);  // 211.25 ms : 1000 ms (units of 0.625 ms)
+  adv->setMaxInterval(fast ? 352 : 1760);
+  g_adv_fast = fast;
+  if (fast) g_fast_until_us = esp_timer_get_time() + (int64_t)FAST_ADV_MS * 1000;
+}
 static esp_timer_handle_t g_reboot_timer, g_deadline_timer, g_hide_timer;
 static volatile bool g_connected = false, g_hidden = false;
 static uint32_t g_hide_after_ms = 0;  // 0 = always visible
@@ -297,7 +312,10 @@ class ServerCb : public BLEServerCallbacks {
       if (g_state == TEST) mbedtls_sha256_free(&g_sha);
       g_state = IDLE;
     }
-    if (!g_hidden) BLEDevice::startAdvertising();
+    if (!g_hidden) {
+      set_adv_speed(true);
+      BLEDevice::startAdvertising();
+    }
   }
   void onMtuChanged(BLEServer *, esp_ble_gatts_cb_param_t *param) override {
     g_mtu = param->mtu.mtu;
@@ -409,13 +427,17 @@ void begin(const char *role) {
   ad.setCompleteServices(BLEUUID(SVC_UUID));
   adv->setAdvertisementData(ad);
   refresh_adv();
-  adv->setMinInterval(1600);  // 1000 ms
-  adv->setMaxInterval(1760);  // 1100 ms
+  set_adv_speed(true);
   BLEDevice::startAdvertising();
 
   // Going quiet after hideAfter(): checked once a second from the timer task.
   esp_timer_create_args_t hide_args = {};
   hide_args.callback = [](void *) {
+    if (g_adv_fast && !g_connected && !g_hidden && esp_timer_get_time() > g_fast_until_us) {
+      BLEDevice::stopAdvertising();
+      set_adv_speed(false);
+      BLEDevice::startAdvertising();
+    }
     bool busy = g_connected || g_pending || g_state == HEADER || g_state == IMAGE || g_state == DONE;
     if (g_hidden || !g_hide_after_ms || busy || esp_timer_get_time() / 1000 < g_hide_after_ms) return;
     g_hidden = true;
