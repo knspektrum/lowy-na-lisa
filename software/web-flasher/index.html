@@ -728,6 +728,7 @@ async function action(d, a) {
 $("flashAll").onclick = () => flashable().forEach(flash);
 
 // --- GATT ---
+const hookedChars = new WeakSet();
 async function connect(d) {
   const t0 = performance.now();
   try { await connectInner(d); dbg("connect-ok", { dev: d.name, ms: Math.round(performance.now() - t0), v: d.version, state: d.state, mtu: d.mtu }); }
@@ -739,8 +740,10 @@ async function connectInner(d) {
   d.infoCh = await svc.getCharacteristic(INFO);
   d.ctrl = await svc.getCharacteristic(CTRL);
   d.data = await svc.getCharacteristic(DATA);
-  if (!d.ctrl.hooked) {  // the same object comes back on every reconnect
-    d.ctrl.hooked = true;
+  // the same object comes back on every reconnect; Bluefy drops expando
+  // properties on it, so remember hooked objects in a WeakSet instead
+  if (!hookedChars.has(d.ctrl)) {
+    hookedChars.add(d.ctrl);
     d.ctrl.addEventListener("characteristicvaluechanged", e => {
       const s = td.decode(e.target.value);
       if (!s.startsWith("progress:") || /^progress:(\d+)\/(\d+)$/.test(s) && +RegExp.$1 % 262144 < 8192) dbg("note", { dev: d.name, s });
