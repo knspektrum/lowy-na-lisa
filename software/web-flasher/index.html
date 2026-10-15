@@ -366,7 +366,8 @@ let activeScan = null;
 if (!bt) $("unsupported").hidden = false;
 // Let the browser decide whether nearby BLE scanning is available; some builds expose
 // Web Bluetooth but reject requestLEScan. Keep the control visible so the user can try.
-if (bt) $("scan").hidden = false;
+// only where scanning everything exists (Chromium on macOS/Android with the flag); Bluefy and Linux lack it
+if (typeof bt?.requestLEScan === "function") $("scan").hidden = false;
 
 function toast(msg) {
   dbg("toast", { msg });
