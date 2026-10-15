@@ -68,6 +68,9 @@ static const uint32_t CRASH_MAGIC = 0x4c534b31;
 static const uint32_t STABLE_MS = 60 * 1000;  // a boot this long counts as healthy
 RTC_NOINIT_ATTR static uint32_t g_crash_magic, g_crash_count, g_crash_switched;
 static bool g_safe = false;
+// Boot timing (ms since reset): Bluetooth advertising, and the sketch's radio
+// check (markHealthy). Reported in the info JSON as "boot".
+static uint32_t g_t_ble = 0, g_t_ready = 0;
 static volatile State g_state = IDLE;
 static uint8_t g_hdr_buf[HDR_LEN];
 static size_t g_hdr_len = 0;
@@ -268,6 +271,10 @@ static String info_json() {
   j += g_mtu;
   j += ",\"resets\":\"";
   j += g_resets;
+  j += "\",\"boot\":\"ble=";
+  j += g_t_ble;
+  j += ",ready=";
+  j += g_t_ready;
   j += "\",\"uptime\":";
   j += (uint32_t)(esp_timer_get_time() / 1000000);
   if (g_pending) {
@@ -429,6 +436,7 @@ void begin(const char *role) {
   refresh_adv();
   set_adv_speed(true);
   BLEDevice::startAdvertising();
+  g_t_ble = millis();
 
   // Going quiet after hideAfter(): checked once a second from the timer task.
   esp_timer_create_args_t hide_args = {};
@@ -476,6 +484,7 @@ void setUserBits(uint8_t value) {
 }
 
 void markHealthy() {
+  if (!g_t_ready) g_t_ready = millis();
   g_healthy = true;
   refresh_adv();
 }

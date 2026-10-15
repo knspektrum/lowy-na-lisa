@@ -754,7 +754,7 @@ $("flashAll").onclick = () => flashable().forEach(flash);
 const hookedChars = new WeakSet();
 async function connect(d) {
   const t0 = performance.now();
-  try { await connectInner(d); dbg("connect-ok", { dev: d.name, ms: Math.round(performance.now() - t0), v: d.version, state: d.state, mtu: d.mtu }); }
+  try { await connectInner(d); dbg("connect-ok", { dev: d.name, ms: Math.round(performance.now() - t0), v: d.version, state: d.state, mtu: d.mtu, boot: d.boot, uptime: d.uptime }); }
   catch (e) { dbg("connect-fail", Object.assign({ dev: d.name, ms: Math.round(performance.now() - t0) }, errInfo(e))); throw e; }
 }
 async function connectInner(d) {
@@ -778,7 +778,7 @@ async function connectInner(d) {
 }
 async function readInfo(d) {
   const i = JSON.parse(td.decode(await d.infoCh.readValue()));
-  Object.assign(d, { role: i.role, version: i.version, state: i.state, healthy: i.healthy, id: i.id, mtu: i.mtu });
+  Object.assign(d, { role: i.role, version: i.version, state: i.state, healthy: i.healthy, id: i.id, mtu: i.mtu, boot: i.boot, uptime: i.uptime });
   decodeUser(d, i.user);
   d.live = true;
   d.lastSeen = Date.now();
