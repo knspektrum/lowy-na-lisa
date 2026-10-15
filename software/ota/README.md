@@ -4,6 +4,7 @@ Odbiorniki ESP32 i nadajniki można aktualizować i sprawdzać bez kabla, ze str
 
 ## Jak to działa
 - Każde urządzenie nadaje przez Bluetooth LE (raz na sekundę) swoją nazwę `lisek-R-xxxx` (odbiornik) albo `lisek-T-xxxx` (nadajnik; `xxxx` to końcówka adresu MAC płytki), id, stan i wersję programu
+- Auto-flasher zapisuje w rejestrze wersję i datę flashowania przez USB, gdy uruchomiony program ją zgłosi. Brak odpowiedzi modułu radiowego nie unieważnia wgrania; stan radia jest zapisywany osobno. Jeśli wersja zgadza się z aktualnym programem, auto-flasher nie wgrywa jej ponownie i może tylko ponownie sprawdzić radio
 - Lisy można ustawić tak, żeby milkły 10-60 minut po włączeniu (domyślnie nie milkną), żeby nie dało się ich namierzyć telefonem
 - Wersja to skrót commita (`5a431fb`), z `+` gdy program zbudowano z niezacommitowanych zmian
 - Bluetooth dokłada ok. 1-3 mA do kilkudziesięciu mA, które i tak pobiera ESP32; wyłączone urządzenie nic nie pobiera
@@ -25,12 +26,14 @@ software/ota/usb-flash.sh transmitter /dev/ttyUSB2
 
 ## Aktualizacja
 
+Panel z najnowszym programem jest publicznie pod **https://mxg.sh/lowy-na-lisa/** (Chrome/Edge/Android, na iPhonie w Bluefy). Po `build.sh` opublikuj nową wersję: `software/ota/publish.sh`.
+
 1. Zbuduj i podpisz programy: `software/ota/build.sh` (wynik w `software/web-flasher/firmware/`)
-2. Otwórz stronę z `localhost` (Web Bluetooth działa tylko przez https albo z `localhost`):
+2. Otwórz panel przez localhost (wymagane przez Web Bluetooth); na Linuksie uruchom prosty serwer strony:
    ```bash
-   python3 -m http.server 8765 --bind 127.0.0.1 --directory software/web-flasher
+   python3 software/web-flasher/local_server.py
    ```
-   i wejdź na http://localhost:8765. Programy wczytują się same; stronę można też otworzyć skądkolwiek i wczytać pliki `.lsk` ręcznie
+   Otwórz http://localhost:8765. Skanowanie, ustawienia i aktualizacje działają przez Web Bluetooth w przeglądarce. Kliknij **Skanuj okolicę** i zaakceptuj zgodę na skanowanie; połączenie/aktualizacja nie wymaga osobnego systemowego parowania. Z innego komputera otwórz panel przez HTTPS.
 3. **Dodaj urządzenie** dodaje jedno urządzenie przez okno wyboru Chrome (okno pokazuje wszystkie włączone w pobliżu)
 4. **Aktualizuj** (strzałka) przy urządzeniu albo **Aktualizuj włączone**
 5. Nie zamykaj strony, dopóki stan nie pokaże „Zaktualizowano”: bez potwierdzenia urządzenie wróci do poprzedniej wersji
@@ -49,7 +52,7 @@ Windows 10+  |  dodawanie, wersje, aktualizacje, stan co 30 s  |  + lista pamię
 macOS  |  dodawanie, wersje, aktualizacje, stan co 30 s  |  + to samo oraz **Skanuj okolicę** (wszystkie naraz, bez wybierania)
 Android  |  dodawanie, wersje, aktualizacje, stan co 30 s  |  + to samo oraz **Skanuj okolicę**
 ChromeOS  |  dodawanie, wersje, aktualizacje, stan co 30 s  |  + lista pamiętana między wizytami
-Linux  |  nic  |  dodawanie, wersje, aktualizacje, stan co 30 s, lista pamiętana
+Linux  |  Web Bluetooth po włączeniu obsługi w przeglądarce |  dodawanie, wersje, aktualizacje, stan co 30 s, lista pamiętana
 
 „Stan co 30 s”: strona łączy się po kolei z dodanymi urządzeniami i odczytuje wersję; urządzenie, które nie odpowiada przez ok. minutę, jest „wyłączone”. Bez flagi po odświeżeniu strony urządzenia trzeba dodać ponownie (lista z wersjami i czasem ostatniego sygnału zostaje). Źródło: [stan implementacji Web Bluetooth](https://github.com/WebBluetoothCG/web-bluetooth/blob/main/implementation-status.md).
 
