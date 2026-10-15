@@ -10,6 +10,9 @@
   /* KN Spektrum house style (management-dash): red primary, zinc neutrals, 0.5rem radius; Inter */
   @font-face { font-family: "Inter"; src: url("inter-var.woff2") format("woff2"); font-weight: 100 900; font-display: swap; }
   :root {
+    /* below the iPhone status bar: the safe area when the browser reports it,
+       else a measured fallback set by the script (in-app iOS browsers) */
+    --top-inset: env(safe-area-inset-top, 0px);
     --background: #f4f4f5; --foreground: #111; --card: #fff; --primary: #ef4444; --primary-hover: #dc2626; --primary-fg: #fff;
     --muted: #f4f4f5; --muted-fg: #71717a; --border: #e4e4e7; --radius: 0.5rem;
     --ok: #16a34a; --ok-bg: #dcfce7; --ok-fg: #166534; --bad: #dc2626; --bad-bg: #fee2e2; --bad-fg: #991b1b;
@@ -33,7 +36,7 @@
   svg.i { width: 18px; height: 18px; flex: none; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
   /* floating, fully rounded top pills */
   /* scrolls with the page: pinned pills covered the text under them */
-  .top { position: relative; z-index: 5; max-width: 1200px; margin: max(12px, env(safe-area-inset-top)) auto 0;
+  .top { position: relative; z-index: 5; max-width: 1200px; margin: calc(12px + var(--top-inset)) auto 0;
     padding: 0 16px; display: flex; align-items: center; justify-content: space-between; gap: 12px; pointer-events: none; }
   .pill-nav { pointer-events: auto; display: inline-flex; align-items: center; gap: 8px; min-height: 44px; padding: 8px 18px;
     border-radius: 999px; background: #000; color: #d4d4d8; text-decoration: none; font-size: 14px; font-weight: 500;
@@ -342,6 +345,18 @@ try {  // what this browser's Bluetooth bridge offers (iOS apps differ), to find
   const globals = Object.keys(window).filter(k => /ble|blue|scan|webble|bluefy/i.test(k));
   dbg("bt-api", { bt: b ? [...names].join(",") : "none", bridges: bridges.join(","), globals: globals.join(",") });
 } catch (e) { dbg("bt-api-fail", errInfo(e)); }
+// Some iOS in-app browsers draw the page under the status bar but report a zero
+// safe area: measure, and fall back to the status bar height on a full-screen iPhone view.
+try {
+  const probe = document.createElement("div");
+  probe.style.cssText = "position:fixed;top:0;height:env(safe-area-inset-top,0px);visibility:hidden";
+  document.documentElement.appendChild(probe);
+  const inset = probe.getBoundingClientRect().height;
+  probe.remove();
+  const fullScreen = Math.abs(innerHeight - screen.height) < 2;
+  if (!inset && /iPhone|iPad/.test(navigator.userAgent) && fullScreen) document.documentElement.style.setProperty("--top-inset", "50px");
+  dbg("layout", { inset, innerH: innerHeight, screenH: screen.height, fullScreen });
+} catch (_) {}
 dbg("start", { ua: navigator.userAgent, bt: !!navigator.bluetooth, getDevices: !!(navigator.bluetooth && navigator.bluetooth.getDevices),
   scan: !!(navigator.bluetooth && navigator.bluetooth.requestLEScan), secure: isSecureContext, page: location.href });
 
